@@ -9,7 +9,7 @@ const PRODUCTOS = [
   },
   {
     emoji: "🧀",
-    name: "Dedos de queso",
+    name: "Palos de queso",
     desc: "Queso fundido envuelto en una mezcla dorada e irresistible. Para compartir… o no.",
     tag: "Imperdible",
   },
