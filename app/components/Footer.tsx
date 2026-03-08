@@ -39,7 +39,7 @@ export default function Footer() {
       {/* CTA empanadas */}
       <div className="bg-[var(--color-accent)] py-4 px-4">
         <p className="max-w-6xl mx-auto text-center text-sm font-semibold tracking-wide text-white/95">
-          🫓 Tu estómago está leyendo esto y ya sabe lo que quiere.{" "}
+          🫓 Tu paladar está leyendo esto y ya sabe lo que quiere.{" "}
           <span className="underline decoration-white/50 underline-offset-2">
             Un MEKATICO de MixMekatos.
           </span>{" "}
