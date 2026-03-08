@@ -1,17 +1,27 @@
-import HeroCarousel from "./components/HeroCarousel";
+﻿import HeroCarousel from "./components/HeroCarousel";
+import HomeHero from "./components/home/HomeHero";
+import HomeCanales from "./components/home/HomeCanales";
+import HomeProductos from "./components/home/HomeProductos";
+import HomeCTA from "./components/home/HomeCTA";
+import HomeValores from "./components/home/HomeValores";
+import HomeMayorista from "./components/home/HomeMayorista";
 
 export default function InicioPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-(--color-bg)">
       <HeroCarousel />
-      <section className="flex flex-col items-center justify-center px-4 py-16 bg-[var(--color-bg)]">
-        <h1 className="text-4xl sm:text-5xl font-bold text-[var(--color-text)] text-center">
-          MixMekatos
-        </h1>
-        <p className="mt-4 text-lg text-[var(--color-text-muted)] text-center max-w-md">
-          Prueba el mejor sabor
-        </p>
-      </section>
+      <HomeHero />
+      <HomeCanales />
+      <HomeProductos />
+      <HomeCTA
+        emoji="🫓"
+        titulo="Hay problemas que se resuelven con una empanada."
+        subtitulo="¿Hambre? Empanada. ¿Antojo? Empanada. ¿Reunión en la oficina? Empanadas para todos. La solución lleva maíz y queso."
+        ctaLabel="Quiero mis empanadas ahora 🌶️"
+        ctaHref="/productos"
+      />
+      <HomeValores />
+      <HomeMayorista />
     </main>
   );
 }
