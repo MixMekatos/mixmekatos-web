@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
 
 :root {
   /* Paleta acorde al logo, suave para no saturar */
@@ -9,6 +11,15 @@
   --color-text-muted: #57534e;
   --color-bg: #fefdfb;
   --color-nav: #ffffff;
+
+  /* Breakpoints (sincronizados con app/lib/breakpoints.ts) */
+  --bp-width-sm: 640px;
+  --bp-width-md: 768px;
+  --bp-width-lg: 1024px;
+  --bp-width-xl: 1280px;
+  --bp-width-2xl: 1536px;
+  --bp-height-short: 500px;
+  --bp-height-tall: 700px;
 }
 
 @theme inline {
