@@ -7,11 +7,12 @@ import {
   MessageCircle,
   MapPin,
   Phone,
+  Gift,
 } from "lucide-react";
 
-const WHATSAPP_NUMBER = "573001234567";
+const WHATSAPP_NUMBER = "573016.46264";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-const PHONE_FAKE = "+57 (604) 321 0000";
+const PHONE_FAKE = "+57 (602) 321 0000";
 
 const REDES = [
   {
@@ -35,9 +36,9 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-[var(--color-bar)] text-white">
+    <footer className="bg-bar text-white">
       {/* CTA empanadas */}
-      <div className="bg-[var(--color-accent)] py-4 px-4">
+      <div className="bg-accent py-4 px-4">
         <p className="max-w-6xl mx-auto text-center text-sm font-semibold tracking-wide text-white/95">
           🫓 Tu paladar está leyendo esto y ya sabe lo que quiere.{" "}
           <span className="underline decoration-white/50 underline-offset-2">
@@ -131,6 +132,13 @@ export default function Footer() {
             <p className="text-xs text-white/55 -mt-1 pl-6">
               Pedidos y eventos
             </p>
+            <Link
+              href="/fidelizacion"
+              className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-stone-900 transition hover:bg-amber-300 hover:scale-[1.02] w-fit mt-1"
+            >
+              <Gift className="h-4 w-4" />
+              Club MixMekatos
+            </Link>
           </div>
 
           {/* Col 4 — Ubicación */}
