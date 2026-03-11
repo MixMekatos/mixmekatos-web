@@ -1,10 +1,16 @@
-export default function ProductosPage() {
+import { getProductRepository } from "@/app/lib/productRepository";
+import FeaturedCarousel from "@/app/components/products/FeaturedCarousel";
+import ProductosPageClient from "./ProductosPageClient";
+
+export default async function ProductosPage() {
+  const repo = getProductRepository();
+  const allProducts = await repo.findAll();
+  const featured = allProducts.filter((p) => p.tags?.includes("destacado"));
+
   return (
-    <main className="min-h-[60vh] py-16 px-4">
-      <div className="max-w-2xl mx-auto text-center">
-        <h1 className="text-3xl font-semibold text-[var(--color-text)]">Productos</h1>
-        <p className="mt-6 text-[var(--color-text-muted)]">Contenido próximamente.</p>
-      </div>
+    <main className="min-h-screen bg-(--color-bg)">
+      <FeaturedCarousel products={featured} />
+      <ProductosPageClient initialProducts={allProducts} />
     </main>
   );
 }

@@ -11,7 +11,7 @@ export default function HomeHero() {
         <span className="text-accent">lo hacemos nosotros</span>
       </h1>
       <p className="mt-5 text-lg text-(--color-text-muted) max-w-xl mx-auto">
-        Empanadas de maíz horneadas, dedos de queso y más mekatos irresistibles.
+        Empanadas de maíz horneadas, palos de queso y más mekatos irresistibles.
         Pídelos a domicilio, encuéntralos en supermercados o llévate un lote para tu próximo evento.
       </p>
       <div className="mt-8 flex flex-wrap justify-center gap-4">

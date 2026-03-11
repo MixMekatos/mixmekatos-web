@@ -12,6 +12,7 @@ const links = [
   { href: "/productos", label: "Productos" },
   { href: "/trucos-de-la-casa", label: "Trucos de la casa" },
   { href: "/eventos", label: "Eventos" },
+  { href: "/fidelizacion", label: "Club MixMekatos 🎁" },
   { href: "/donde-estamos", label: "Dónde estamos" },
   { href: "/contacto", label: "Contacto" },
 ] as const;
@@ -21,13 +22,11 @@ export default function Navbar() {
   const { isDesktop, isShortViewport } = useViewport();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  /* Hamburger en móvil y tablet; enlaces en fila solo en desktop (≥1024px) para evitar salto de línea */
   const showHamburger = !isDesktop;
   const isCompact = isShortViewport;
 
   return (
     <header className="sticky top-0 z-50 shadow-sm">
-      {/* Barra superior: más compacta en viewports cortos */}
       <div
         className="text-white text-center px-4 text-sm transition-[padding] duration-200"
         style={{
@@ -41,7 +40,7 @@ export default function Navbar() {
         </p>
       </div>
 
-      <nav className="relative bg-[var(--color-nav)] border-b border-stone-200/80">
+      <nav className="relative bg-(--color-nav) border-b border-stone-200/80">
         <div
           className="max-w-6xl mx-auto px-4 flex flex-row items-center justify-between gap-3 transition-[padding] duration-200"
           style={{
@@ -51,7 +50,7 @@ export default function Navbar() {
         >
           <Link
             href="/"
-            className="flex items-center w-2/5 min-w-[90px] shrink-0"
+            className="flex items-center w-2/5 min-w-22.5 shrink-0"
             onClick={() => setMenuOpen(false)}
           >
             <Image
@@ -72,7 +71,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setMenuOpen((o) => !o)}
-                className="p-2 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-accent)] hover:bg-stone-100 transition-colors"
+                className="p-2 rounded-md text-(--color-text-muted) hover:text-accent hover:bg-stone-100 transition-colors"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
               >
@@ -101,7 +100,6 @@ export default function Navbar() {
                 </svg>
               </button>
 
-              {/* Menú desplegable móvil */}
               {menuOpen && (
                 <div
                   className="absolute top-full left-0 right-0 bg-white border-b border-stone-200/80 shadow-lg"
@@ -118,8 +116,8 @@ export default function Navbar() {
                             className={
                               "block py-2.5 px-3 rounded-md text-[15px] font-medium transition-colors " +
                               (isActive
-                                ? "text-[var(--color-accent)] bg-[var(--color-accent)]/10"
-                                : "text-[var(--color-text-muted)] hover:text-[var(--color-accent)] hover:bg-stone-50")
+                                ? "text-accent bg-accent/10"
+                                : "text-(--color-text-muted) hover:text-accent hover:bg-stone-50")
                             }
                           >
                             {label}
@@ -141,8 +139,8 @@ export default function Navbar() {
                       href={href}
                       className={
                         isActive
-                          ? "text-[var(--color-accent)]"
-                          : "text-[var(--color-text-muted)] hover:text-[var(--color-accent)] transition-colors"
+                          ? "text-accent"
+                          : "text-(--color-text-muted) hover:text-accent transition-colors"
                       }
                     >
                       {label}
