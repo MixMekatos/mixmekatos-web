@@ -8,27 +8,27 @@ export default function DondeEstamosPage() {
   interface Card {
     id: number
     icon: LucideIcon,
-    title: String,
-    info: String,
+    title: string,
+    info: string,
     closed: boolean
   }
 
   interface Contact {
     id: number,
     icon: LucideIcon,
-    title: String,
-    info: String,
-    url: String,
-    color: String,
-    bg: String,
-    colorButton: String
+    title: string,
+    info: string,
+    url: string,
+    color: string,
+    bg: string,
+    colorButton: string
   }
 
   interface marketplace {
     id: number,
     image: string,
-    name: String,
-    address: String
+    name: string,
+    address: string
   }
 
   const INFO_CARD: Card[] = [

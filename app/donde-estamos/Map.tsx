@@ -1,9 +1,7 @@
 "use client";
 
-import { Map, MapMarker, MarkerContent, MarkerPopup } from "@/app/components/ui/map";
+import { Map, MapMarker, MarkerContent } from "@/app/components/ui/map";
 import { MapPin } from "lucide-react";
-import { useState } from "react";
-
 
 export default function MapLocation() {
     const LONGITUD = -75.57
