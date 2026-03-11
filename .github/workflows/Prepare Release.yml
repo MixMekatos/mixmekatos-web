@@ -1,0 +1,85 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Tipo de bump de versión'
+        required: true
+        type: choice
+        default: 'minor'
+        options:
+          - minor
+          - major
+      base_branch:
+        description: 'Rama base desde la que crear el release'
+        required: false
+        default: 'develop'
+        type: string
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.base_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Bump version and extract
+        id: bump
+        run: |
+          npm version ${{ inputs.bump_type }} --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check branch does not exist
+        run: |
+          if git ls-remote --exit-code --heads origin "release/${{ steps.bump.outputs.version }}" > /dev/null 2>&1; then
+            echo "::error::La rama release/${{ steps.bump.outputs.version }} ya existe"
+            exit 1
+          fi
+
+      - name: Configure git
+        run: |
+          git config user.name "MixMekatos-Bot"
+          git config user.email "tics@mixmekatos.com"
+
+      - name: Create release branch
+        run: git checkout -b release/${{ steps.bump.outputs.version }}
+
+      - name: Commit version bump
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.version }}"
+
+      - name: Push release branch
+        run: git push origin release/${{ steps.bump.outputs.version }}
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "Release v${{ steps.bump.outputs.version }}" \
+            --body "## Release v${{ steps.bump.outputs.version }}
+
+          PR generado automáticamente por el workflow **Prepare Release**.
+
+          ### Cambios incluidos
+          - Bump \`${{ inputs.bump_type }}\` → versión \`${{ steps.bump.outputs.version }}\` en \`package.json\` y \`package-lock.json\`
+
+          > Una vez mergeado a \`main\`, el workflow **Release** creará automáticamente el tag \`v${{ steps.bump.outputs.version }}\` y el GitHub Release correspondiente." \
+            --base main \
+            --head release/${{ steps.bump.outputs.version }} \
+            --label "release"
