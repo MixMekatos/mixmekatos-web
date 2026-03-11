@@ -53,6 +53,12 @@ jobs:
       - name: Push hotfix branch
         run: git push origin hotfix/${{ steps.bump.outputs.version }}
 
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "hotfix" --color "e4e669" --description "Hotfix urgente en producción" --force
+
       - name: Create Pull Request → main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
