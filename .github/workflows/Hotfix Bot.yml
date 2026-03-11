@@ -1,0 +1,111 @@
+name: Hotfix Bot
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  hotfix:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'hotfix/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version
+        id: version
+        run: |
+          BRANCH=${{ github.event.pull_request.head.ref }}
+          VERSION=${BRANCH#hotfix/}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Configure git
+        run: |
+          git config user.name "MixMekatos-Bot"
+          git config user.email "tics@mixmekatos.com"
+
+      - name: Create and push tag
+        run: |
+          git tag v${{ steps.version.outputs.version }}
+          git push origin v${{ steps.version.outputs.version }}
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v${{ steps.version.outputs.version }} \
+            --title "v${{ steps.version.outputs.version }} (hotfix)" \
+            --generate-notes \
+            --latest
+
+    
+      - name: Back-merge main → develop
+        id: backmerge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch --all
+
+          if ! git ls-remote --exit-code --heads origin develop > /dev/null 2>&1; then
+            echo "::warning::La rama develop no existe, se omite el back-merge"
+            echo "merge_result=skipped" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          git checkout develop
+          git pull origin develop
+
+          if git merge --no-commit --no-ff origin/main; then
+            if git diff --cached --quiet; then
+              echo "develop ya estaba al día con main, no se necesita back-merge"
+              git merge --abort 2>/dev/null || true
+              echo "merge_result=noop" >> $GITHUB_OUTPUT
+            else
+              git commit -m "chore: back-merge hotfix v${{ steps.version.outputs.version }} main → develop [skip ci]"
+              git push origin develop
+              echo "merge_result=success" >> $GITHUB_OUTPUT
+            fi
+          else
+            git merge --abort
+            echo "merge_result=conflict" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Open PR on conflict
+        if: steps.backmerge.outputs.merge_result == 'conflict'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BACKMERGE_BRANCH="bot/hotfix-back-merge-v${{ steps.version.outputs.version }}"
+
+          git checkout -b $BACKMERGE_BRANCH origin/main
+          git push origin $BACKMERGE_BRANCH
+
+          gh pr create \
+            --title "⚠️ Back-merge hotfix v${{ steps.version.outputs.version }} → develop (conflictos)" \
+            --body "El bot detectó **conflictos** al intentar propagar el hotfix \`v${{ steps.version.outputs.version }}\` a \`develop\`.
+
+          ### ¿Por qué es importante?
+          Si no se mergea este PR, el bug corregido en producción **volverá a aparecer** en el próximo release.
+
+          ### Cómo resolverlo
+          \`\`\`bash
+          git fetch origin
+          git checkout bot/hotfix-back-merge-v${{ steps.version.outputs.version }}
+          git merge origin/develop
+          
+          git push origin bot/hotfix-back-merge-v${{ steps.version.outputs.version }}
+          \`\`\`
+          Luego aprobar y mergear este PR.
+
+          > Este PR fue creado automáticamente por el workflow **Hotfix Bot**." \
+            --base develop \
+            --head $BACKMERGE_BRANCH \
+            --label "hotfix,back-merge,needs-attention"

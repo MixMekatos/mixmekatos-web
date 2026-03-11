@@ -1,0 +1,78 @@
+name: Prepare Hotfix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Bump patch version and extract
+        id: bump
+        run: |
+          npm version patch --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check branch does not exist
+        run: |
+          if git ls-remote --exit-code --heads origin "hotfix/${{ steps.bump.outputs.version }}" > /dev/null 2>&1; then
+            echo "::error::La rama hotfix/${{ steps.bump.outputs.version }} ya existe"
+            exit 1
+          fi
+
+      - name: Configure git
+        run: |
+          git config user.name "MixMekatos-Bot"
+          git config user.email "tics@mixmekatos.com"
+
+      - name: Create hotfix branch
+        run: git checkout -b hotfix/${{ steps.bump.outputs.version }}
+
+      - name: Commit version bump
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.version }} (hotfix)"
+
+      - name: Push hotfix branch
+        run: git push origin hotfix/${{ steps.bump.outputs.version }}
+
+      - name: Create Pull Request → main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --title "Hotfix v${{ steps.bump.outputs.version }}" \
+            --body "## Hotfix v${{ steps.bump.outputs.version }}
+
+          PR generado automáticamente por el workflow **Prepare Hotfix**.
+
+          ### ¿Qué incluye?
+          - Bump \`patch\` → versión \`${{ steps.bump.outputs.version }}\` en \`package.json\` y \`package-lock.json\`
+          - **Agrega aquí los commits con el fix antes de mergear**
+
+          ### Próximos pasos
+          1. Haz los commits del fix directamente en esta rama \`hotfix/${{ steps.bump.outputs.version }}\`
+          2. El admin aprueba y mergea este PR → \`main\`
+          3. El workflow **Hotfix Bot** creará el tag \`v${{ steps.bump.outputs.version }}\`, el GitHub Release y hará back-merge automático a \`develop\`
+
+          > ⚠️ No mergear hasta tener el fix aplicado en esta rama." \
+            --base main \
+            --head hotfix/${{ steps.bump.outputs.version }} \
+            --label "hotfix"
