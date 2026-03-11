@@ -13,6 +13,7 @@ import {
   CATEGORY_BG,
 } from "@/app/lib/products";
 import ProductModal from "./ProductModal";
+import Image from "next/image";
 
 function StarsMini({ rating }: { rating: number }) {
   return (
@@ -60,7 +61,7 @@ export default function ProductCard({ product }: Props) {
               <span className="text-6xl select-none">{CATEGORY_EMOJI[product.category]}</span>
             </div>
           ) : (
-            <img
+            <Image
               src={mainImage}
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

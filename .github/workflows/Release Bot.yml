@@ -10,9 +10,14 @@ jobs:
   release:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract version
         id: version
@@ -21,17 +26,58 @@ jobs:
           VERSION=${BRANCH#release/}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Update package.json
-        run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version
-
-      - name: Commit version
+      - name: Configure git
         run: |
           git config user.name "MixMekatos-Bot"
           git config user.email "tics@mixmekatos.com"
-          git add package.json
-          git commit -m "release v${{ steps.version.outputs.version }}"
 
-      - name: Create tag
+      - name: Create and push tag
         run: |
           git tag v${{ steps.version.outputs.version }}
-          git push origin main --tags
+          git push origin v${{ steps.version.outputs.version }}
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create v${{ steps.version.outputs.version }} \
+            --title "v${{ steps.version.outputs.version }}" \
+            --generate-notes
+
+      - name: Back-merge main → develop
+        id: backmerge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git fetch origin develop || { echo "La rama develop no existe, se omite el back-merge"; exit 0; }
+          git checkout develop
+          git pull origin develop
+
+          if git merge --no-commit --no-ff origin/main; then
+            git commit -m "chore: back-merge main v${{ steps.version.outputs.version }} → develop [skip ci]"
+            git push origin develop
+            echo "merge_result=success" >> $GITHUB_OUTPUT
+          else
+            git merge --abort
+            echo "merge_result=conflict" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Open PR on conflict
+        if: steps.backmerge.outputs.merge_result == 'conflict'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BACKMERGE_BRANCH="bot/back-merge-v${{ steps.version.outputs.version }}"
+          git checkout -b $BACKMERGE_BRANCH origin/main
+          git push origin $BACKMERGE_BRANCH
+
+          gh pr create \
+            --title "⚠️ Back-merge v${{ steps.version.outputs.version }} → develop (conflictos)" \
+            --body "El bot detectó **conflictos** al intentar nivelar \`develop\` con \`main\` tras el release \`v${{ steps.version.outputs.version }}\`.
+
+          Resuelve los conflictos manualmente y mergea este PR para mantener \`develop\` sincronizado.
+
+          > Este PR fue creado automáticamente por el workflow **Release**." \
+            --base develop \
+            --head $BACKMERGE_BRANCH \
+            --label "back-merge,needs-attention"

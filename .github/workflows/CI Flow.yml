@@ -5,7 +5,10 @@ on:
     branches: [develop, main]
 
   push:
-    branches: [develop]
+    branches:
+      - develop
+      - 'hotfix/**'
+      - 'release/**'
 
 jobs:
   build:
