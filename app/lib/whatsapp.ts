@@ -1,17 +1,5 @@
-/**
- * Envía un cupón vía WhatsApp usando la API de Twilio.
- *
- * Si las variables de entorno TWILIO_* no están configuradas,
- * retorna { sent: false } — la solicitud queda como `pending_whatsapp`
- * para envío manual por el administrador.
- *
- * Variables requeridas en .env.local:
- *   TWILIO_ACCOUNT_SID   — Account SID de Twilio
- *   TWILIO_AUTH_TOKEN    — Auth Token de Twilio
- *   TWILIO_WA_FROM       — Número origen, ej. "whatsapp:+14155238886"
- */
 export async function sendCouponViaWhatsApp(
-  toNumber: string,      // número E.164 sin +, ej. "573001234567"
+  toNumber: string,
   couponCode: string,
   requesterName: string
 ): Promise<{ sent: boolean }> {

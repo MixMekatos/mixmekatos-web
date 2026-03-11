@@ -43,7 +43,6 @@ export type Database = {
   };
 };
 
-// Cliente del browser (usa anon key pública)
 export function createBrowserClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -51,7 +50,6 @@ export function createBrowserClient() {
   return createClient<Database>(url, key);
 }
 
-// Cliente del servidor (usa service role key — solo en API routes)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createServerClient(): ReturnType<typeof createClient<any>> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

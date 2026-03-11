@@ -1,7 +1,4 @@
-/**
- * Breakpoints compartidos entre TS y CSS.
- * Usar los mismos valores en media queries y en useViewport.
- */
+
 export const breakpoints = {
   width: {
     xs: 0,
@@ -12,16 +9,15 @@ export const breakpoints = {
     "2xl": 1536,
   },
   height: {
-    short: 0,      // < 500px altura
-    medium: 500,   // 500–700px
-    tall: 700,     // > 700px
+    short: 0,      
+    medium: 500,   
+    tall: 700,     
   },
 } as const;
 
 export type WidthBreakpoint = keyof typeof breakpoints.width;
 export type HeightBreakpoint = keyof typeof breakpoints.height;
 
-/** Valores en px para usar en CSS custom properties */
 export const breakpointValues = {
   "width-sm": `${breakpoints.width.sm}px`,
   "width-md": `${breakpoints.width.md}px`,

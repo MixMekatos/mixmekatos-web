@@ -46,7 +46,6 @@ export default function ProductCard({ product }: Props) {
   return (
     <>
       <article className="group flex flex-col rounded-2xl border border-stone-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-        {/* ── Imagen ── */}
         <button
           onClick={() => setOpen(true)}
           className="relative w-full aspect-4/3 overflow-hidden focus:outline-none"
@@ -69,7 +68,6 @@ export default function ProductCard({ product }: Props) {
             />
           )}
 
-          {/* Chips superiores izquierda */}
           <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
             {product.discount && (
               <span className="rounded-full bg-rose-500 text-white px-2 py-0.5 text-[11px] font-bold shadow-sm">
@@ -87,13 +85,11 @@ export default function ProductCard({ product }: Props) {
             )}
           </div>
 
-          {/* Chip categoría inferior derecha */}
           <span className="absolute bottom-2 right-2 rounded-full bg-black/40 backdrop-blur-sm px-2 py-0.5 text-[10px] font-medium text-white">
             {CATEGORIES[product.category]}
           </span>
         </button>
 
-        {/* ── Cuerpo ── */}
         <div className="flex flex-col gap-2 p-4 flex-1">
           <h3 className="font-semibold text-(--color-text) text-sm leading-snug line-clamp-2">
             {product.name}

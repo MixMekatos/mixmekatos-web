@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Carousel } from "flowbite-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-/** Imágenes del carrusel. Añade más rutas en public/ para nuevas slides. */
 const CAROUSEL_SLIDES = [
   { src: "/layout/banner-example.jpg", alt: "MixMekatos - Prueba el mejor sabor" },
   { src: "/layout/banner-example.jpg", alt: "MixMekatos - Prueba el mejor sabor" },

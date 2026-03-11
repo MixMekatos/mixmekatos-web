@@ -25,7 +25,6 @@ export default function FeaturedCarousel({ products }: Props) {
   return (
     <section className="bg-stone-50 px-4 py-10 overflow-hidden">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-6 gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-accent mb-1">
@@ -54,11 +53,7 @@ export default function FeaturedCarousel({ products }: Props) {
           </div>
         </div>
 
-        {/*
-          Scroll container.
-          Card widths → mobile: 85% (1 visible + hint), sm: 46% (2), lg: 31% (3), xl: 23% (4)
-          scrollBy(clientWidth) scrolls exactly one "page" of visible cards.
-        */}
+        
         <div
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2

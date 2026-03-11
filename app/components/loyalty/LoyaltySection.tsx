@@ -42,7 +42,6 @@ const TIERS = [
 export default function LoyaltySection() {
   return (
     <section className="w-full">
-      {/* Hero banner */}
       <div className="bg-bar text-white py-14 px-4 text-center">
         <p className="text-sm font-semibold uppercase tracking-widest text-white/70 mb-3">
           Club MixMekatos
@@ -57,7 +56,6 @@ export default function LoyaltySection() {
         </p>
       </div>
 
-      {/* Tier cards */}
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {TIERS.map((tier) => {
@@ -67,7 +65,6 @@ export default function LoyaltySection() {
                 key={tier.tag}
                 className="flex flex-col rounded-3xl bg-white border border-stone-100 shadow-sm overflow-hidden"
               >
-                {/* Header */}
                 <div className="px-6 pt-6 pb-4 flex items-center gap-3">
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-extrabold ${tier.headerColor}`}
@@ -82,7 +79,6 @@ export default function LoyaltySection() {
                   </div>
                 </div>
 
-                {/* Prize badge */}
                 <div className="mx-6 mb-4 flex items-center gap-2 rounded-xl bg-stone-50 border border-stone-100 px-4 py-2.5">
                   <Gift className={`h-4 w-4 shrink-0 ${tier.prizeColor}`} />
                   <div className="leading-tight">
@@ -97,7 +93,6 @@ export default function LoyaltySection() {
                   </span>
                 </div>
 
-                {/* Steps */}
                 <ul className="mx-6 mb-6 flex flex-col gap-2.5">
                   {tier.steps.map((step, i) => (
                     <li

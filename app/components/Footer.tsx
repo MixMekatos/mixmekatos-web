@@ -10,7 +10,7 @@ import {
   Gift,
 } from "lucide-react";
 
-const WHATSAPP_NUMBER = "573016.46264";
+const WHATSAPP_NUMBER = "573016046264";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 const PHONE_FAKE = "+57 (602) 321 0000";
 
@@ -37,7 +37,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-bar text-white">
-      {/* CTA empanadas */}
       <div className="bg-accent py-4 px-4">
         <p className="max-w-6xl mx-auto text-center text-sm font-semibold tracking-wide text-white/95">
           🫓 Tu paladar está leyendo esto y ya sabe lo que quiere.{" "}
@@ -49,10 +48,8 @@ export default function Footer() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-10">
-        {/* Grid principal */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
 
-          {/* Col 1 — Marca + redes */}
           <div className="col-span-2 md:col-span-1 flex flex-col gap-4">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
               Síguenos
@@ -74,7 +71,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 2 — Pídelo por app */}
           <div className="flex flex-col gap-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
               Pídelo por app
@@ -111,7 +107,6 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* Col 3 — Contacto */}
           <div className="flex flex-col gap-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
               Contacto
@@ -141,7 +136,6 @@ export default function Footer() {
             </Link>
           </div>
 
-          {/* Col 4 — Ubicación */}
           <div className="flex flex-col gap-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
               Ubicación
@@ -155,9 +149,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Línea inferior */}
         <div className="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Izquierda: copyright + crédito */}
           <div className="text-center sm:text-left">
             <p className="text-xs text-white/60">
               © {year} MixMekatos. Todos los derechos reservados.
@@ -167,7 +159,7 @@ export default function Footer() {
               <span aria-hidden>❤️</span>{" "}
               por{" "}
               <a
-                href="https://nexcodex.com"
+                href="https://nexcodex.co"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold text-white/70 underline underline-offset-2 hover:text-white"
@@ -177,7 +169,6 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Derecha: logo */}
           <Link href="/" className="inline-block shrink-0">
             <Image
               src="/logo.png"

@@ -48,7 +48,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
 
   const body = (
     <div className="flex flex-col gap-6">
-      {/* Categorías */}
       <div>
         <p className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-3">
           Categoría
@@ -73,7 +72,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
         </ul>
       </div>
 
-      {/* Rango de precio */}
       <div>
         <p className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-3">
           Precio
@@ -120,7 +118,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
         </div>
       </div>
 
-      {/* Etiquetas */}
       <div>
         <p className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-3">
           Etiquetas
@@ -142,7 +139,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
         </div>
       </div>
 
-      {/* Ordenar por */}
       <div>
         <label className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-2 block">
           Ordenar por
@@ -161,7 +157,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
         </select>
       </div>
 
-      {/* Limpiar */}
       {hasActive && (
         <button
           onClick={clearAll}
@@ -176,7 +171,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
 
   return (
     <>
-      {/* ── Mobile / Tablet toggle ── */}
       <div className="lg:hidden mb-4">
         <button
           onClick={() => setMobileOpen((o) => !o)}
@@ -199,7 +193,6 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
         )}
       </div>
 
-      {/* ── Desktop sidebar ── */}
       <aside className="hidden lg:block w-56 shrink-0">
         <div className="sticky top-24 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-5">

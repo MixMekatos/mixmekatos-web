@@ -3,7 +3,7 @@ import { createServerClient } from "@/app/lib/supabase";
 import { generateCouponCode, sanitizeWaNumber } from "@/app/lib/coupons";
 import { sendCouponViaWhatsApp } from "@/app/lib/whatsapp";
 
-const FOLLOW_COOLDOWN_DAYS = 60; 
+const FOLLOW_COOLDOWN_DAYS = 60;
 const HASHTAG_COOLDOWN_DAYS = 30;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_PLATFORMS = ["instagram", "tiktok", "facebook"] as const;
@@ -11,7 +11,6 @@ const ALLOWED_REWARD_TYPES = ["follow", "hashtag"] as const;
 type SocialPlatform = (typeof ALLOWED_PLATFORMS)[number];
 type RewardType = (typeof ALLOWED_REWARD_TYPES)[number];
 
-/* ---- POST /api/loyalty ---- */
 export async function POST(req: NextRequest) {
   let formData: FormData;
   try {
@@ -19,7 +18,6 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "FormData invalido" }, { status: 400 });
   }
-
 
   const honeypot = formData.get("website");
   if (honeypot) {
@@ -36,7 +34,6 @@ export async function POST(req: NextRequest) {
   const screenshot = formData.get("screenshot") as File | null;
   const post_url_raw = (formData.get("post_url") as string | null)?.trim() || null;
 
-  // ---- Validaciones ----
   if (!reward_type || !ALLOWED_REWARD_TYPES.includes(reward_type)) {
     return NextResponse.json({ error: "Tipo de recompensa invalido" }, { status: 422 });
   }
@@ -62,7 +59,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "El archivo debe ser una imagen" }, { status: 422 });
   }
 
-  // Validar URL del post solo si se proporcionó
   let post_url: string | null = null;
   if (post_url_raw) {
     try {
@@ -83,7 +79,6 @@ export async function POST(req: NextRequest) {
 
   const supabase = createServerClient();
 
-  // ---- Anti-abuso: cooldown por (wa_number + social_platform + reward_type) ----
   const cooldownDays =
     reward_type === "follow" ? FOLLOW_COOLDOWN_DAYS : HASHTAG_COOLDOWN_DAYS;
   const cooldownDate = new Date(
@@ -109,7 +104,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // ---- Subir screenshot a Storage ----
   const ext = screenshot.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const fileName = `${reward_type}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
   const arrayBuffer = await screenshot.arrayBuffer();
@@ -130,7 +124,6 @@ export async function POST(req: NextRequest) {
     .from("loyalty-screenshots")
     .getPublicUrl(fileName);
 
-  // ---- FLUJO FOLLOW: codigo auto + enviar por WhatsApp ----
   if (reward_type === "follow") {
     let code = "";
     let attempts = 0;
@@ -173,7 +166,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ sent: true, via_whatsapp: sent }, { status: 201 });
   }
 
-  // ---- FLUJO HASHTAG: guardar para revision manual ----
   const { error: insertError } = await supabase.from("coupon_requests").insert({
     social_handle,
     social_platform,

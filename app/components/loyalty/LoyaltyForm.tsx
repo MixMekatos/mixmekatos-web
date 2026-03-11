@@ -81,7 +81,7 @@ export default function LoyaltyForm() {
       fd.append("wa_number",      waNumber);
       fd.append("screenshot",     file);
       if (postUrl.trim()) fd.append("post_url", postUrl.trim());
-      fd.append("website", ""); // honeypot - debe quedar vacio
+      fd.append("website", "");  
 
       const res  = await fetch("/api/loyalty", { method: "POST", body: fd });
       const json = await res.json() as {
@@ -104,7 +104,6 @@ export default function LoyaltyForm() {
     }
   }
 
-  /* ---- Pantallas de exito ---- */
   if (result?.type === "follow") {
     return (
       <div className="flex flex-col items-center gap-6 py-8 text-center">
@@ -156,7 +155,6 @@ export default function LoyaltyForm() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Tabs */}
       <div className="flex rounded-2xl bg-stone-100 p-1 gap-1">
         {TABS.map((tab) => (
           <button
@@ -175,7 +173,6 @@ export default function LoyaltyForm() {
         ))}
       </div>
 
-      {/* Hint de premio */}
       <div
         className={`rounded-xl px-4 py-3 text-sm ${
           isFollow ? "bg-pink-50 text-pink-800" : "bg-amber-50 text-amber-800"
@@ -187,7 +184,6 @@ export default function LoyaltyForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        {/* Nombre */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="lf-name" className="text-sm font-semibold text-(--color-text)">
             Tu nombre
@@ -205,7 +201,6 @@ export default function LoyaltyForm() {
           />
         </div>
 
-        {/* Red social */}
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-(--color-text)">
             Red social
@@ -228,7 +223,6 @@ export default function LoyaltyForm() {
           </div>
         </div>
 
-        {/* Handle */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="lf-handle" className="text-sm font-semibold text-(--color-text)">
             Tu usuario en {platformLabel}
@@ -250,7 +244,6 @@ export default function LoyaltyForm() {
           </div>
         </div>
 
-        {/* URL del post — solo para hashtag */}
         {!isFollow && (
           <div className="flex flex-col gap-1.5">
             <label htmlFor="lf-posturl" className="text-sm font-semibold text-(--color-text)">
@@ -271,7 +264,6 @@ export default function LoyaltyForm() {
           </div>
         )}
 
-        {/* Screenshot */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-semibold text-(--color-text)">
             {isFollow
@@ -311,7 +303,6 @@ export default function LoyaltyForm() {
           />
         </div>
 
-        {/* WhatsApp */}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="lf-wa" className="text-sm font-semibold text-(--color-text)">
             Tu numero de WhatsApp
@@ -332,17 +323,14 @@ export default function LoyaltyForm() {
           </p>
         </div>
 
-        {/* Honeypot invisible */}
         <input type="text" name="website" className="hidden" tabIndex={-1} aria-hidden="true" />
 
-        {/* Error */}
         {error && (
           <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}

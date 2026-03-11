@@ -38,7 +38,7 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
           author_name: authorName,
           rating,
           review_body: body,
-          honeypot: "", // campo real - vacío; el honeypot invisible lo pone el input oculto
+          honeypot: "", // campo  vacío; el honeypot invisible lo pone el input oculto
         }),
       });
 
@@ -76,7 +76,6 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl bg-stone-50 border border-stone-100 p-4">
       <h4 className="text-sm font-bold text-(--color-text)">Deja tu reseña</h4>
 
-      {/* Stars picker */}
       <div className="flex items-center gap-1" role="group" aria-label="Calificación">
         {[1, 2, 3, 4, 5].map((s) => (
           <button
@@ -98,7 +97,6 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
         ))}
       </div>
 
-      {/* Nombre */}
       <div className="flex flex-col gap-1">
         <label htmlFor="review-name" className="text-xs font-semibold text-(--color-text-muted) uppercase tracking-wide">
           Tu nombre
@@ -115,7 +113,6 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
         />
       </div>
 
-      {/* Texto */}
       <div className="flex flex-col gap-1">
         <label htmlFor="review-body" className="text-xs font-semibold text-(--color-text-muted) uppercase tracking-wide">
           Tu opinión
@@ -133,7 +130,6 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
         <p className="text-xs text-(--color-text-muted) text-right">{body.length}/1000</p>
       </div>
 
-      {/* Honeypot — invisible para humanos */}
       <input
         type="text"
         name="honeypot_field"

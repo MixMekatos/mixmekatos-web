@@ -22,13 +22,11 @@ export default function Navbar() {
   const { isDesktop, isShortViewport } = useViewport();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  /* Hamburger en móvil y tablet; enlaces en fila solo en desktop (≥1024px) para evitar salto de línea */
   const showHamburger = !isDesktop;
   const isCompact = isShortViewport;
 
   return (
     <header className="sticky top-0 z-50 shadow-sm">
-      {/* Barra superior: más compacta en viewports cortos */}
       <div
         className="text-white text-center px-4 text-sm transition-[padding] duration-200"
         style={{
@@ -102,7 +100,6 @@ export default function Navbar() {
                 </svg>
               </button>
 
-              {/* Menú desplegable móvil */}
               {menuOpen && (
                 <div
                   className="absolute top-full left-0 right-0 bg-white border-b border-stone-200/80 shadow-lg"

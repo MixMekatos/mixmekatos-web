@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/app/lib/supabase";
 
-/* ---- Rate limit simple por IP: 1 reseña por producto cada 24 h ---- */
 const rateLimitMap = new Map<string, number>();
 
 function isRateLimited(ip: string, productId: string): boolean {
@@ -12,7 +11,6 @@ function isRateLimited(ip: string, productId: string): boolean {
   return false;
 }
 
-/* ---- GET /api/reviews?product_id=xxx ---- */
 export async function GET(req: NextRequest) {
   const productId = req.nextUrl.searchParams.get("product_id");
   if (!productId) {
@@ -35,7 +33,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ reviews: data });
 }
 
-/* ---- POST /api/reviews ---- */
+
 export async function POST(req: NextRequest) {
   let body: unknown;
   try {
@@ -47,9 +45,8 @@ export async function POST(req: NextRequest) {
   const { product_id, author_name, rating, review_body, honeypot } =
     body as Record<string, unknown>;
 
-  // Honeypot: si está relleno, es un bot
   if (honeypot) {
-    return NextResponse.json({ ok: true }); // respuesta falsa para no alertar al bot
+    return NextResponse.json({ ok: true }); 
   }
 
   if (

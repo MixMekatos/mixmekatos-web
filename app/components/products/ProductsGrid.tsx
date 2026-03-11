@@ -4,9 +4,24 @@ import ProductCard from "./ProductCard";
 
 interface Props {
   products: Product[];
+  loading?: boolean;
 }
 
-export default function ProductsGrid({ products }: Props) {
+function ProductSkeleton() {
+  return <div className="rounded-2xl bg-stone-100 animate-pulse h-64" />;
+}
+
+export default function ProductsGrid({ products, loading = false }: Props) {
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <ProductSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
@@ -20,12 +35,7 @@ export default function ProductsGrid({ products }: Props) {
   }
 
   return (
-    /*
-      Columnas:
-        xs  → 1 col
-        sm  → 2 cols  (sin sidebar)
-        xl  → 3 cols  (con sidebar de 224px en 1280px+ de pantalla)
-    */
+   
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
       {products.map((product) => (
         <ProductCard key={product.id} product={product} />

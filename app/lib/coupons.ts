@@ -1,4 +1,4 @@
-const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin I, O, 0, 1 (confusos)
+const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; 
 
 export function generateCouponCode(): string {
   let code = "MEKA-";
@@ -9,7 +9,6 @@ export function generateCouponCode(): string {
 }
 
 export function sanitizeWaNumber(raw: string): string {
-  // Deja solo dígitos, agrega 57 si empieza por 3 (Colombia)
   const digits = raw.replace(/\D/g, "");
   if (digits.startsWith("57")) return digits;
   if (digits.startsWith("3")) return "57" + digits;

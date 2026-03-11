@@ -22,7 +22,6 @@ import {
 import ReviewForm from "./ReviewForm";
 import ReviewsList from "./ReviewsList";
 
-/* --- Stars helper --- */
 function Stars({ rating, size = "md" }: { rating: number; size?: "sm" | "md" }) {
   const sz = size === "sm" ? "h-3.5 w-3.5" : "h-5 w-5";
   return (
@@ -41,7 +40,6 @@ function Stars({ rating, size = "md" }: { rating: number; size?: "sm" | "md" }) 
   );
 }
 
-/* --- Types --- */
 interface NewReview {
   id: string;
   author_name: string;
@@ -57,7 +55,6 @@ interface Props {
 
 const WHATSAPP_NUMBER = "573016046264";
 
-/* ================================================================== */
 export default function ProductModal({ product, onClose }: Props) {
   const [imgIndex, setImgIndex] = useState(0);
   const [imgError, setImgError] = useState<Record<number, boolean>>({});
@@ -71,7 +68,6 @@ export default function ProductModal({ product, onClose }: Props) {
     `Hola! Me interesa el producto: ${product.name} - ${formatPrice(product.price)}`
   )}`;
 
-  /* Body scroll lock + Escape */
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -90,10 +86,8 @@ export default function ProductModal({ product, onClose }: Props) {
   const nextImg = () =>
     setImgIndex((i) => (i + 1) % product.images.length);
 
-  /* -- Gallery panel -- */
   const GalleryPanel = () => (
     <div className="flex flex-col gap-3">
-      {/* Main image */}
       <div
         className={`relative w-full rounded-2xl overflow-hidden
           aspect-square lg:aspect-auto lg:flex-1
@@ -113,14 +107,12 @@ export default function ProductModal({ product, onClose }: Props) {
           </span>
         )}
 
-        {/* Discount badge */}
         {product.discount && (
           <span className="absolute top-3 left-3 rounded-full bg-rose-500 px-2.5 py-1 text-xs font-bold text-white shadow">
             -{product.discount}%
           </span>
         )}
 
-        {/* Prev / Next arrows */}
         {product.images.length > 1 && (
           <>
             <button
@@ -141,7 +133,6 @@ export default function ProductModal({ product, onClose }: Props) {
         )}
       </div>
 
-      {/* Thumbnails strip */}
       {hasImages && product.images.length > 1 && (
         <div className="flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden">
           {product.images.map((src, i) => {
@@ -178,10 +169,8 @@ export default function ProductModal({ product, onClose }: Props) {
     </div>
   );
 
-  /* -- Details panel -- */
   const DetailsPanel = () => (
     <div className="flex flex-col gap-5">
-      {/* Tags */}
       <div className="flex flex-wrap gap-2">
         <span className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs font-medium text-(--color-text-muted)">
           {CATEGORIES[product.category]}
@@ -198,7 +187,6 @@ export default function ProductModal({ product, onClose }: Props) {
         ))}
       </div>
 
-      {/* Price */}
       <div className="flex items-end flex-wrap gap-x-3 gap-y-1">
         <p className="text-3xl font-extrabold text-(--color-text)">
           {formatPrice(product.price)}
@@ -215,7 +203,6 @@ export default function ProductModal({ product, onClose }: Props) {
         )}
       </div>
 
-      {/* Rating summary */}
       <div className="flex items-center gap-2">
         <Stars rating={product.rating} />
         <span className="text-sm font-semibold text-(--color-text)">
@@ -226,7 +213,6 @@ export default function ProductModal({ product, onClose }: Props) {
         </span>
       </div>
 
-      {/* Characteristics */}
       <div className="grid grid-cols-2 gap-2.5">
         <div className="flex items-center gap-2.5 rounded-xl bg-stone-50 border border-stone-100 p-3">
           <Scale className="h-5 w-5 text-(--color-text-muted) shrink-0" />
@@ -244,7 +230,6 @@ export default function ProductModal({ product, onClose }: Props) {
         </div>
       </div>
 
-      {/* Description */}
       <div>
         <h3 className="text-sm font-bold text-(--color-text) mb-1.5">Descripcion</h3>
         <p className="text-sm text-(--color-text-muted) leading-relaxed">
@@ -252,7 +237,6 @@ export default function ProductModal({ product, onClose }: Props) {
         </p>
       </div>
 
-      {/* Ingredients */}
       {product.ingredients && product.ingredients.length > 0 && (
         <div>
           <h3 className="text-sm font-bold text-(--color-text) mb-2">Ingredientes</h3>
@@ -269,7 +253,6 @@ export default function ProductModal({ product, onClose }: Props) {
         </div>
       )}
 
-      {/* Stock indicator */}
       <div className="flex items-center gap-2">
         <span
           className={`h-2 w-2 rounded-full shrink-0 ${
@@ -289,7 +272,6 @@ export default function ProductModal({ product, onClose }: Props) {
         </span>
       </div>
 
-      {/* CTA */}
       <a
         href={whatsappUrl}
         target="_blank"
@@ -322,7 +304,6 @@ export default function ProductModal({ product, onClose }: Props) {
           overflow-hidden
         "
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md text-(--color-text-muted) hover:bg-stone-100 transition"
@@ -331,7 +312,6 @@ export default function ProductModal({ product, onClose }: Props) {
           <X className="h-4 w-4" />
         </button>
 
-        {/* LEFT / TOP: Gallery */}
         <div
           className="
             lg:w-[42%] lg:shrink-0
@@ -340,31 +320,26 @@ export default function ProductModal({ product, onClose }: Props) {
             [&::-webkit-scrollbar]:hidden
           "
         >
-          {/* Product name - mobile only */}
           <h2 className="lg:hidden font-bold text-(--color-text) text-lg leading-snug pr-10 mb-3">
             {product.name}
           </h2>
           <GalleryPanel />
         </div>
 
-        {/* RIGHT / BOTTOM: Details + Reviews (scrollable) */}
         <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar-track]:bg-stone-50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-stone-300 [&::-webkit-scrollbar]:w-1.5">
           <div className="p-5 lg:p-8 flex flex-col gap-0">
-            {/* Product name - desktop only */}
             <h2 className="hidden lg:block font-bold text-(--color-text) text-2xl leading-snug mb-5">
               {product.name}
             </h2>
 
             <DetailsPanel />
 
-            {/* Reviews list */}
             <ReviewsList
               productId={product.id}
               optimisticReview={newReview}
               baseRating={product.rating}
             />
 
-            {/* Review form */}
             <div className="mt-5 mb-1">
               <ReviewForm
                 productId={product.id}

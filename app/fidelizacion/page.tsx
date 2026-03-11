@@ -12,7 +12,6 @@ export default function FidelizacionPage() {
     <main>
       <LoyaltySection />
 
-      {/* Form section */}
       <div className="max-w-lg mx-auto px-4 pb-20">
         <div className="rounded-3xl bg-white border border-stone-100 shadow-sm p-6 sm:p-8">
           <h2 className="text-xl font-bold text-(--color-text) mb-1">

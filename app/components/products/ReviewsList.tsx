@@ -13,9 +13,7 @@ interface Review {
 
 interface Props {
   productId: string;
-  /** Reseña recién añadida por el usuario — se antepone sin refetch */
   optimisticReview?: Review | null;
-  /** Calificación promedio actual del producto (para el breakdown) */
   baseRating: number;
 }
 
@@ -77,18 +75,15 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
 
   useEffect(() => { fetchReviews(); }, [fetchReviews]);
 
-  // Anteponer reseña optimista
   const displayReviews: Review[] = optimisticReview
     ? [optimisticReview, ...reviews.filter((r) => r.id !== optimisticReview.id)]
     : reviews;
 
-  // Rating promedio de las reseñas cargadas (o base si aún no hay)
   const computedRating =
     displayReviews.length > 0
       ? displayReviews.reduce((acc, r) => acc + r.rating, 0) / displayReviews.length
       : baseRating;
 
-  // Breakdown de estrellas
   function pctForStar(star: number) {
     if (displayReviews.length === 0) return 0;
     const count = displayReviews.filter((r) => Math.round(r.rating) === star).length;
@@ -97,7 +92,6 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
 
   return (
     <div className="flex flex-col gap-5 pt-6 mt-4 border-t border-stone-100">
-      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h3 className="font-bold text-(--color-text) text-base">
           Reseñas de clientes
@@ -117,7 +111,6 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
         )}
       </div>
 
-      {/* Rating breakdown */}
       {displayReviews.length > 0 && (
         <div className="flex flex-col gap-1.5">
           {[5, 4, 3, 2, 1].map((star) => {
@@ -139,7 +132,6 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
         </div>
       )}
 
-      {/* States */}
       {loading && (
         <div className="flex flex-col gap-3">
           {[1, 2].map((i) => (
@@ -164,7 +156,6 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
         </p>
       )}
 
-      {/* Lista de reseñas */}
       {!loading && displayReviews.length > 0 && (
         <div className="flex flex-col gap-5">
           {displayReviews.map((review) => (
