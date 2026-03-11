@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.base_branch }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_PR_GHA_RELEASE_TK }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -68,13 +68,13 @@ jobs:
 
       - name: Ensure labels exist
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PR_GHA_RELEASE_TK }}
         run: |
           gh label create "release" --color "0075ca" --description "Release version" --force
 
       - name: Create Pull Request
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_PR_GHA_RELEASE_TK }}
         run: |
           gh pr create \
             --title "Release v${{ steps.bump.outputs.version }}" \
