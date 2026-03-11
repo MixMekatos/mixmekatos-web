@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Loader2, CheckCircle, Upload, X, Clock } from "lucide-react";
+import Image from "next/image";
 
 type Platform = "instagram" | "tiktok" | "facebook";
 type RewardType = "follow" | "hashtag";
@@ -272,7 +273,11 @@ export default function LoyaltyForm() {
           </label>
           {preview ? (
             <div className="relative rounded-2xl overflow-hidden border border-stone-200 max-h-48">
-              <img src={preview} alt="Vista previa" className="w-full h-full object-cover" />
+              <Image
+                src={preview}
+                alt="Vista previa"
+                className="w-full h-full object-cover"
+              />
               <button
                 type="button"
                 onClick={clearFile}

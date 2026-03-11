@@ -81,7 +81,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg bg-black/25 h-10 w-32 transition hover:bg-black/40"
             >
-              <img
+              <Image
                 src="https://upload.wikimedia.org/wikipedia/commons/0/06/Rappi_logo.svg"
                 alt="Rappi"
                 className="h-5 w-auto"
@@ -96,7 +96,7 @@ export default function Footer() {
               className="inline-flex items-center justify-center rounded-lg h-10 w-32 overflow-hidden transition hover:opacity-90 hover:scale-105"
               style={{ backgroundColor: "#FFBB00" }}
             >
-              <img
+              <Image
                 src="/branding/didi.jpg"
                 alt="DiDi Food"
                 className="w-[160%] h-auto scale-100"
