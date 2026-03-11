@@ -179,7 +179,7 @@ export default function LoyaltyForm() {
         }`}
       >
         {isFollow
-          ? "Siguenos en Instagram, TikTok o Facebook y recibe un producto a tu eleccion gratis."
+          ? "Siguenos en Instagram, TikTok o Facebook y recibe un premio especial sorpresa."
           : "Haz una publicacion etiquetando @mixmekatos con #MixMekatos y gana un premio sorpresa especial."}
       </div>
 

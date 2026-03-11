@@ -8,7 +8,7 @@ const TIERS = [
     headerColor: "bg-pink-100 text-pink-700",
     prizeColor: "text-pink-600",
     title: "Siguenos en redes sociales",
-    prize: "Un producto a tu eleccion",
+    prize: "Premio especial sorpresa",
     steps: [
       "Siguenos en Instagram, TikTok o Facebook",
       "Toma un screenshot mostrando que nos sigues",
