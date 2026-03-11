@@ -56,38 +56,21 @@ interface Props {
 
 const WHATSAPP_NUMBER = "573016046264";
 
-export default function ProductModal({ product, onClose }: Props) {
-  const [imgIndex, setImgIndex] = useState(0);
-  const [imgError, setImgError] = useState<Record<number, boolean>>({});
-  const [newReview, setNewReview] = useState<NewReview | null>(null);
+interface GalleryPanelProps {
+  product: Product;
+  imgIndex: number;
+  imgError: Record<number, boolean>;
+  onPrev: () => void;
+  onNext: () => void;
+  onThumbClick: (i: number) => void;
+  onImgError: (i: number) => void;
+}
 
+function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClick, onImgError }: GalleryPanelProps) {
   const hasImages = product.images.length > 0;
   const currentImgOk = hasImages && !imgError[imgIndex];
-  const visibleTags = product.tags?.filter((t) => t !== "destacado") ?? [];
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    `Hola! Me interesa el producto: ${product.name} - ${formatPrice(product.price)}`
-  )}`;
-
-  useEffect(() => {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [onClose]);
-
-  const prevImg = () =>
-    setImgIndex((i) => (i - 1 + product.images.length) % product.images.length);
-  const nextImg = () =>
-    setImgIndex((i) => (i + 1) % product.images.length);
-
-  const GalleryPanel = () => (
+  return (
     <div className="flex flex-col gap-3">
       <div
         className={`relative w-full rounded-2xl overflow-hidden
@@ -100,7 +83,7 @@ export default function ProductModal({ product, onClose }: Props) {
             src={product.images[imgIndex]}
             alt={`${product.name} - imagen ${imgIndex + 1}`}
             className="w-full h-full object-cover"
-            onError={() => setImgError((p) => ({ ...p, [imgIndex]: true }))}
+            onError={() => onImgError(imgIndex)}
           />
         ) : (
           <span className="text-[96px] select-none leading-none">
@@ -117,14 +100,14 @@ export default function ProductModal({ product, onClose }: Props) {
         {product.images.length > 1 && (
           <>
             <button
-              onClick={prevImg}
+              onClick={onPrev}
               className="absolute left-2 top-1/2 -translate-y-1/2 h-9 w-9 flex items-center justify-center rounded-full bg-black/35 text-white hover:bg-black/55 transition"
               aria-label="Imagen anterior"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
-              onClick={nextImg}
+              onClick={onNext}
               className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 flex items-center justify-center rounded-full bg-black/35 text-white hover:bg-black/55 transition"
               aria-label="Imagen siguiente"
             >
@@ -141,7 +124,7 @@ export default function ProductModal({ product, onClose }: Props) {
             return (
               <button
                 key={i}
-                onClick={() => setImgIndex(i)}
+                onClick={() => onThumbClick(i)}
                 className={`shrink-0 h-14 w-14 rounded-xl overflow-hidden border-2 transition-all ${
                   i === imgIndex
                     ? "border-accent opacity-100 scale-105"
@@ -153,7 +136,7 @@ export default function ProductModal({ product, onClose }: Props) {
                     src={src}
                     alt=""
                     className="w-full h-full object-cover"
-                    onError={() => setImgError((p) => ({ ...p, [i]: true }))}
+                    onError={() => onImgError(i)}
                   />
                 ) : (
                   <div
@@ -169,8 +152,15 @@ export default function ProductModal({ product, onClose }: Props) {
       )}
     </div>
   );
+}
 
-  const DetailsPanel = () => (
+function DetailsPanel({ product }: { product: Product }) {
+  const visibleTags = product.tags?.filter((t) => t !== "destacado") ?? [];
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+    `Hola! Me interesa el producto: ${product.name} - ${formatPrice(product.price)}`
+  )}`;
+
+  return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap gap-2">
         <span className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs font-medium text-(--color-text-muted)">
@@ -284,6 +274,30 @@ export default function ProductModal({ product, onClose }: Props) {
       </a>
     </div>
   );
+}
+
+export default function ProductModal({ product, onClose }: Props) {
+  const [imgIndex, setImgIndex] = useState(0);
+  const [imgError, setImgError] = useState<Record<number, boolean>>({});
+  const [newReview, setNewReview] = useState<NewReview | null>(null);
+
+  const prevImg = () =>
+    setImgIndex((i) => (i - 1 + product.images.length) % product.images.length);
+  const nextImg = () =>
+    setImgIndex((i) => (i + 1) % product.images.length);
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
 
   return (
     <div
@@ -324,7 +338,15 @@ export default function ProductModal({ product, onClose }: Props) {
           <h2 className="lg:hidden font-bold text-(--color-text) text-lg leading-snug pr-10 mb-3">
             {product.name}
           </h2>
-          <GalleryPanel />
+          <GalleryPanel
+            product={product}
+            imgIndex={imgIndex}
+            imgError={imgError}
+            onPrev={prevImg}
+            onNext={nextImg}
+            onThumbClick={setImgIndex}
+            onImgError={(i) => setImgError((p) => ({ ...p, [i]: true }))}
+          />
         </div>
 
         <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar-track]:bg-stone-50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-stone-300 [&::-webkit-scrollbar]:w-1.5">
@@ -333,7 +355,7 @@ export default function ProductModal({ product, onClose }: Props) {
               {product.name}
             </h2>
 
-            <DetailsPanel />
+            <DetailsPanel product={product} />
 
             <ReviewsList
               productId={product.id}

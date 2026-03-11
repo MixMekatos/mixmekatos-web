@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useTransition } from "react";
 import {
   DEFAULT_FILTERS,
   type FilterState,
@@ -26,23 +26,15 @@ interface Props {
 export default function ProductosPageClient({ initialProducts }: Props) {
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [loading, setLoading] = useState(false);
-  const isFirst = useRef(true);
+  const [isPending, startTransition] = useTransition();
 
-  useEffect(() => {
-    if (isFirst.current) {
-      isFirst.current = false;
-      return;
-    }
-    setLoading(true);
-    fetch(buildUrl(filters))
-      .then((r) => r.json())
-      .then((data: Product[]) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, [filters]);
+  function handleFiltersChange(newFilters: FilterState) {
+    setFilters(newFilters);
+    startTransition(async () => {
+      const data: Product[] = await fetch(buildUrl(newFilters)).then((r) => r.json());
+      setProducts(data);
+    });
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -58,11 +50,11 @@ export default function ProductosPageClient({ initialProducts }: Props) {
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         <ProductFilters
           filters={filters}
-          onChange={setFilters}
+          onChange={handleFiltersChange}
           totalResults={products.length}
         />
         <div className="flex-1 min-w-0 w-full">
-          <ProductsGrid products={products} loading={loading} />
+          <ProductsGrid products={products} loading={isPending} />
         </div>
       </div>
     </div>
