@@ -60,56 +60,54 @@ jobs:
             exit 0
           fi
 
-          git checkout develop
-          git pull origin develop
+          BACKMERGE_BRANCH="bot/hotfix-back-merge-v${{ steps.version.outputs.version }}"
 
-          if git merge --no-commit --no-ff origin/main; then
+          # Crear rama temporal desde main como base para el PR
+          git checkout -b $BACKMERGE_BRANCH origin/main
+
+          # Intentar merge sin commit para detectar conflictos
+          if git merge --no-commit --no-ff origin/develop; then
             if git diff --cached --quiet; then
               echo "develop ya estaba al día con main, no se necesita back-merge"
-              git merge --abort 2>/dev/null || true
               echo "merge_result=noop" >> $GITHUB_OUTPUT
             else
               git commit -m "chore: back-merge hotfix v${{ steps.version.outputs.version }} main → develop [skip ci]"
-              git push origin develop
-              echo "merge_result=success" >> $GITHUB_OUTPUT
+              git push origin $BACKMERGE_BRANCH
+              echo "merge_result=pr" >> $GITHUB_OUTPUT
             fi
           else
             git merge --abort
+            git push origin $BACKMERGE_BRANCH
             echo "merge_result=conflict" >> $GITHUB_OUTPUT
           fi
 
-      - name: Open PR on conflict
-        if: steps.backmerge.outputs.merge_result == 'conflict'
+      - name: Create back-merge PR
+        if: steps.backmerge.outputs.merge_result == 'pr' || steps.backmerge.outputs.merge_result == 'conflict'
         env:
           GH_TOKEN: ${{ secrets.GH_PR_GHA_RELEASE_TK }}
         run: |
           BACKMERGE_BRANCH="bot/hotfix-back-merge-v${{ steps.version.outputs.version }}"
+          CONFLICT_NOTE=""
+          TITLE="chore: back-merge hotfix v${{ steps.version.outputs.version }} → develop"
 
-          git checkout -b $BACKMERGE_BRANCH origin/main
-          git push origin $BACKMERGE_BRANCH
+          if [ "${{ steps.backmerge.outputs.merge_result }}" = "conflict" ]; then
+            CONFLICT_NOTE="\n> ⚠️ **Se detectaron conflictos.** Resuélvelos en la rama antes de mergear. Si no se mergea este PR, el bug corregido **volverá a aparecer** en el próximo release."
+            TITLE="⚠️ Back-merge hotfix v${{ steps.version.outputs.version }} → develop (conflictos)"
+          fi
 
           gh label create "hotfix" --color "e4e669" --description "Hotfix urgente en producción" --force
           gh label create "back-merge" --color "c5def5" --description "Requiere back-merge manual" --force
-          gh label create "needs-attention" --color "e11d48" --description "Requiere revisión urgente" --force
 
-          gh pr create \
-            --title "⚠️ Back-merge hotfix v${{ steps.version.outputs.version }} → develop (conflictos)" \
-            --body "El bot detectó **conflictos** al intentar propagar el hotfix \`v${{ steps.version.outputs.version }}\` a \`develop\`.
+          PR_URL=$(gh pr create \
+            --title "$TITLE" \
+            --body "## Back-merge hotfix v${{ steps.version.outputs.version }} → \`develop\`
 
-          ### ¿Por qué es importante?
-          Si no se mergea este PR, el bug corregido en producción **volverá a aparecer** en el próximo release.
-
-          ### Cómo resolverlo
-          \`\`\`bash
-          git fetch origin
-          git checkout bot/hotfix-back-merge-v${{ steps.version.outputs.version }}
-          git merge origin/develop
-          
-          git push origin bot/hotfix-back-merge-v${{ steps.version.outputs.version }}
-          \`\`\`
-          Luego aprobar y mergear este PR.
-
-          > Este PR fue creado automáticamente por el workflow **Hotfix Bot**." \
+          PR generado automáticamente por el workflow **Hotfix Bot** para propagar el hotfix a \`develop\` y evitar que el bug vuelva en el próximo release.$CONFLICT_NOTE" \
             --base develop \
             --head $BACKMERGE_BRANCH \
-            --label "hotfix,back-merge,needs-attention"
+            --label "hotfix,back-merge")
+
+          echo "PR creado: $PR_URL"
+
+          # Activar auto-merge (se mergea solo cuando pasen los checks)
+          gh pr merge $PR_URL --auto --merge || echo "::notice::Auto-merge no disponible, aprueba el PR manualmente: $PR_URL"

@@ -49,38 +49,61 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_PR_GHA_RELEASE_TK }}
         run: |
-          git fetch origin develop || { echo "La rama develop no existe, se omite el back-merge"; exit 0; }
-          git checkout develop
-          git pull origin develop
+          git fetch --all
 
-          if git merge --no-commit --no-ff origin/main; then
-            git commit -m "chore: back-merge main v${{ steps.version.outputs.version }} → develop [skip ci]"
-            git push origin develop
-            echo "merge_result=success" >> $GITHUB_OUTPUT
+          if ! git ls-remote --exit-code --heads origin develop > /dev/null 2>&1; then
+            echo "::warning::La rama develop no existe, se omite el back-merge"
+            echo "merge_result=skipped" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          BACKMERGE_BRANCH="bot/back-merge-v${{ steps.version.outputs.version }}"
+
+          # Crear rama temporal desde main como base para el PR
+          git checkout -b $BACKMERGE_BRANCH origin/main
+
+          # Intentar merge sin commit para detectar conflictos
+          if git merge --no-commit --no-ff origin/develop; then
+            if git diff --cached --quiet; then
+              echo "develop ya estaba al día con main, no se necesita back-merge"
+              echo "merge_result=noop" >> $GITHUB_OUTPUT
+            else
+              git commit -m "chore: back-merge main v${{ steps.version.outputs.version }} → develop [skip ci]"
+              git push origin $BACKMERGE_BRANCH
+              echo "merge_result=pr" >> $GITHUB_OUTPUT
+            fi
           else
             git merge --abort
+            git push origin $BACKMERGE_BRANCH
             echo "merge_result=conflict" >> $GITHUB_OUTPUT
           fi
 
-      - name: Open PR on conflict
-        if: steps.backmerge.outputs.merge_result == 'conflict'
+      - name: Create back-merge PR
+        if: steps.backmerge.outputs.merge_result == 'pr' || steps.backmerge.outputs.merge_result == 'conflict'
         env:
           GH_TOKEN: ${{ secrets.GH_PR_GHA_RELEASE_TK }}
         run: |
           BACKMERGE_BRANCH="bot/back-merge-v${{ steps.version.outputs.version }}"
-          git checkout -b $BACKMERGE_BRANCH origin/main
-          git push origin $BACKMERGE_BRANCH
+          CONFLICT_NOTE=""
+          TITLE="chore: back-merge main v${{ steps.version.outputs.version }} → develop"
+
+          if [ "${{ steps.backmerge.outputs.merge_result }}" = "conflict" ]; then
+            CONFLICT_NOTE="\n> ⚠️ **Se detectaron conflictos.** Resuélvelos en la rama antes de mergear."
+            TITLE="⚠️ Back-merge v${{ steps.version.outputs.version }} → develop (conflictos)"
+          fi
 
           gh label create "back-merge" --color "c5def5" --description "Requiere back-merge manual" --force
-          gh label create "needs-attention" --color "e11d48" --description "Requiere revisión urgente" --force
 
-          gh pr create \
-            --title "⚠️ Back-merge v${{ steps.version.outputs.version }} → develop (conflictos)" \
-            --body "El bot detectó **conflictos** al intentar nivelar \`develop\` con \`main\` tras el release \`v${{ steps.version.outputs.version }}\`.
+          PR_URL=$(gh pr create \
+            --title "$TITLE" \
+            --body "## Back-merge v${{ steps.version.outputs.version }} → \`develop\`
 
-          Resuelve los conflictos manualmente y mergea este PR para mantener \`develop\` sincronizado.
-
-          > Este PR fue creado automáticamente por el workflow **Release**." \
+          PR generado automáticamente por el workflow **Release** para mantener \`develop\` sincronizado con \`main\` tras el release \`v${{ steps.version.outputs.version }}\`.$CONFLICT_NOTE" \
             --base develop \
             --head $BACKMERGE_BRANCH \
-            --label "back-merge,needs-attention"
+            --label "back-merge")
+
+          echo "PR creado: $PR_URL"
+
+          # Activar auto-merge (se mergea solo cuando pasen los checks)
+          gh pr merge $PR_URL --auto --merge || echo "::notice::Auto-merge no disponible, aprueba el PR manualmente: $PR_URL"
