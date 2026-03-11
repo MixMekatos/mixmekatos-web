@@ -21,6 +21,7 @@ import {
 } from "@/app/lib/products";
 import ReviewForm from "./ReviewForm";
 import ReviewsList from "./ReviewsList";
+import Image from "next/image";
 
 function Stars({ rating, size = "md" }: { rating: number; size?: "sm" | "md" }) {
   const sz = size === "sm" ? "h-3.5 w-3.5" : "h-5 w-5";
@@ -95,7 +96,7 @@ export default function ProductModal({ product, onClose }: Props) {
         style={{ minHeight: "220px" }}
       >
         {currentImgOk ? (
-          <img
+          <Image
             src={product.images[imgIndex]}
             alt={`${product.name} - imagen ${imgIndex + 1}`}
             className="w-full h-full object-cover"
@@ -148,7 +149,7 @@ export default function ProductModal({ product, onClose }: Props) {
                 }`}
               >
                 {ok ? (
-                  <img
+                  <Image
                     src={src}
                     alt=""
                     className="w-full h-full object-cover"

@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
   DEFAULT_FILTERS,
-  MAX_PRICE,
   type FilterState,
   type Product,
 } from "@/app/lib/products";
