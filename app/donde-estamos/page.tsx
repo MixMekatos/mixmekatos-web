@@ -129,7 +129,7 @@ export default function DondeEstamosPage() {
       <div className="grid md:grid-cols-3 grid-cols-2 mx-auto max-w-5xl gap-5 pt-5">
         {INFO_MARKETPLACE.map((market) => (
           <div key={market.id} className="flex flex-col border border-stone-200 rounded-xl bg-white shadow items-center justify-center p-4">
-            <Image className="rounded-xl object-cover" src={market.image} alt="" width={120} height={120} />
+            <Image src={market.image} alt="" width={120} height={120} />
             <div className="flex flex-col justify-center items-center p-2">
               <p className="text-(--color-bar) font-semibold text-2xl">{market.name}</p>
               <div className="flex flex-row items-center justify-center gap-1">
