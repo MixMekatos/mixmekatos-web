@@ -10,7 +10,7 @@ export default function HomeMayorista() {
             ¿Necesitas producto al por mayor?
           </h2>
           <p className="mt-2 text-sm text-(--color-text-muted) max-w-md">
-            Vendemos congelado prefrito en grandes cantidades para eventos, empresas y revendedores.
+            Vendemos congelado prefrito en grandes cantidades para eventos, empresas y distribuidores.
             Precio especial, entrega a tiempo y el mismo sabor que enamora.
           </p>
           <Link
