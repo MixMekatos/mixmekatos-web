@@ -1,4 +1,4 @@
-import { Heart, Hash, Gift, Clock } from "lucide-react";
+import { Heart, Hash, Gift } from "lucide-react";
 
 const TIERS = [
   {
@@ -7,9 +7,6 @@ const TIERS = [
     icon: Heart,
     headerColor: "bg-pink-100 text-pink-700",
     prizeColor: "text-pink-600",
-    badgeColor: "bg-green-100 text-green-700",
-    badgeLabel: "Automatico",
-    badgeIcon: null,
     title: "Siguenos en redes sociales",
     prize: "Un producto a tu eleccion",
     steps: [
@@ -25,9 +22,6 @@ const TIERS = [
     icon: Hash,
     headerColor: "bg-amber-100 text-amber-700",
     prizeColor: "text-amber-600",
-    badgeColor: "bg-amber-100 text-amber-700",
-    badgeLabel: "Con verificacion",
-    badgeIcon: Clock,
     title: "Publica con #MixMekatos",
     prize: "Premio especial sorpresa",
     steps: [
@@ -59,7 +53,6 @@ export default function LoyaltySection() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {TIERS.map((tier) => {
-            const BadgeIcon = tier.badgeIcon;
             return (
               <div
                 key={tier.tag}
@@ -85,12 +78,6 @@ export default function LoyaltySection() {
                     <p className="text-xs text-(--color-text-muted)">Premio</p>
                     <p className={`text-sm font-bold ${tier.prizeColor}`}>{tier.prize}</p>
                   </div>
-                  <span
-                    className={`ml-auto flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-0.5 ${tier.badgeColor}`}
-                  >
-                    {BadgeIcon && <BadgeIcon className="h-3 w-3" />}
-                    {tier.badgeLabel}
-                  </span>
                 </div>
 
                 <ul className="mx-6 mb-6 flex flex-col gap-2.5">
