@@ -66,6 +66,12 @@ jobs:
       - name: Push release branch
         run: git push origin release/${{ steps.bump.outputs.version }}
 
+      - name: Ensure labels exist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "release" --color "0075ca" --description "Release version" --force
+
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

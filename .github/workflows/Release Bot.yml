@@ -71,6 +71,9 @@ jobs:
           git checkout -b $BACKMERGE_BRANCH origin/main
           git push origin $BACKMERGE_BRANCH
 
+          gh label create "back-merge" --color "c5def5" --description "Requiere back-merge manual" --force
+          gh label create "needs-attention" --color "e11d48" --description "Requiere revisión urgente" --force
+
           gh pr create \
             --title "⚠️ Back-merge v${{ steps.version.outputs.version }} → develop (conflictos)" \
             --body "El bot detectó **conflictos** al intentar nivelar \`develop\` con \`main\` tras el release \`v${{ steps.version.outputs.version }}\`.
