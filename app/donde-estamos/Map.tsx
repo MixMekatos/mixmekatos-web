@@ -10,7 +10,7 @@ export default function MapLocation() {
 
     return (
         <>
-            <Map center={[LONGITUD, LATITUD]} zoom={16} theme="light">
+            <Map center={[LONGITUD, LATITUD]} zoom={15} theme="light">
                 <MapMarker
                     longitude={LONGITUD}
                     latitude={LATITUD}
