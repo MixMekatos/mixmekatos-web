@@ -1,5 +1,5 @@
 "use client";
-import { Map, Store, Clock, LucideIcon, MessageSquareText, ArrowRight, Phone, MapPin } from "lucide-react";
+import { Map, Store, Clock, LucideIcon, MessageSquareText, ArrowRight, Phone, MapPin, SquareArrowOutUpRight } from "lucide-react";
 import MapLocation from "./Map";
 import Image from "next/image";
 
@@ -29,6 +29,14 @@ export default function DondeEstamosPage() {
     image: string,
     name: string,
     address: string
+  }
+
+  interface Platform {
+    id: number,
+    title: string,
+    description: string,
+    url: string,
+    image: string
   }
 
   const INFO_CARD: Card[] = [
@@ -93,6 +101,38 @@ export default function DondeEstamosPage() {
 
   ]
 
+  const INFO_PLATFORM: platform[] = [
+    {
+      id: 1,
+      title: "Rappi",
+      description: "Sabor artesanal a domicilio",
+      url: "https://rappi.com.co/",
+      image: "https://static.vecteezy.com/system/resources/previews/067/941/720/non_2x/rappi-logo-rounded-hd-free-png.png"
+    },
+    {
+      id: 2,
+      title: "Didi",
+      description: "Pide tus empanadas favoritas",
+      url: "https://web.didiglobal.com/co/pasajero/",
+      image: "https://brandlogos.net/wp-content/uploads/2022/09/didi_food-logo_brandlogos.net_9ptmf-512x512.png"
+    },
+    {
+      id: 3,
+      title: "Uber",
+      description: "Pide a domicilio",
+      url: "https://www.uber.com/global/es/sign-in/",
+      image: "https://scontent.fbog23-1.fna.fbcdn.net/v/t39.30808-6/352395053_1301403327449484_5481400940176293068_n.png?_nc_cat=101&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=2enlSzQ142kQ7kNvwFCHDtZ&_nc_oc=AdlJ9lCsCJKA-2YQ9L7ZMTRUHkp9YIEf5sGocOjmsjxq5ckSWWqDXUw4aV2x6slTUdM&_nc_zt=23&_nc_ht=scontent.fbog23-1.fna&_nc_gid=bXN5wsDqMNMgmtb_Sc4Eng&_nc_ss=8&oh=00_Afw8cJ48-J8cJTGQQ1g-kMDvCZIdeQTQqZ3CYsCWAgPVHQ&oe=69B7D8AD"
+    }
+  ]
+
+  const TITLE_SECTIONS = ((title: string) => {
+    return (
+      <div className="flex justify-center mx-auto text-center pt-10">
+        <p className="font-bold text-3xl px-4">{title}</p>
+      </div>
+    )
+  })
+
   return (
     <main className="min-h-[60vh] py-16 px-4">
       <div className="max-w-2xl mx-auto text-center">
@@ -100,7 +140,7 @@ export default function DondeEstamosPage() {
         <p className="mt-6 text-[var(--color-text-muted)]">Estamos ubicados en el corazon de Medellin, listos para enviarte el mejor sabor artesanal de nuestras famosas empanadas y deditos de queso.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 max-w-5xl mx-auto pt-10 gap-5">
-        <div className="h-[350px] w-full p-0 overflow-hidden rounded-2xl md:col-span-2 shadow-sm">
+        <div className="h-[350px] w-full p-0 overflow-hidden rounded-2xl md:col-span-2 shadow-xl">
           <MapLocation />
         </div>
         <section className="bg-white p-5 rounded-2xl border border-stone-200 md:col-span-1 shadow-sm">
@@ -123,13 +163,11 @@ export default function DondeEstamosPage() {
           </div>
         </section>
       </div>
-      <div className="flex justify-center mx-auto text-center pt-5">
-        <p className="font-bold text-3xl px-4">Encuentranos en Supermercados</p>
-      </div>
+      {TITLE_SECTIONS("Encuentranos en Supermercados")}
       <div className="grid md:grid-cols-3 grid-cols-2 mx-auto max-w-5xl gap-5 pt-5">
         {INFO_MARKETPLACE.map((market) => (
-          <div key={market.id} className="flex flex-col border border-stone-200 rounded-xl bg-white shadow items-center justify-center p-4">
-            <Image src={market.image} alt="" width={120} height={120} />
+          <div key={market.id} className="flex flex-col border border-stone-200 rounded-xl bg-white shadow items-center justify-center p-4 hover:shadow-xl hover:scale-105 transition-all duration-300">
+            <Image className="rounded-xl" src={market.image} alt="" width={100} height={100} />
             <div className="flex flex-col justify-center items-center p-2">
               <p className="text-(--color-bar) font-semibold text-2xl">{market.name}</p>
               <div className="flex flex-row items-center justify-center gap-1">
@@ -140,10 +178,23 @@ export default function DondeEstamosPage() {
           </div>
         ))}
       </div>
-
-      <div className="grid md:grid-cols-2 grid-cols-1 mx-auto max-w-5xl gap-5 pt-5">
+      {TITLE_SECTIONS("Pide por Apps de Domicilio")}
+      <div className="grid md:grid-cols-3 grid-cols-2 mx-auto max-w-5xl gap-5 pt-5">
+        {INFO_PLATFORM.map((platform) => (
+          <div key={platform.id} className="flex flex-col border border-stone-200 rounded-xl bg-white items-center justify-center shadow p-4 hover:scale-105 hover:shadow-xl transition-all duration-300">
+            <Image className="rounded-xl" src={platform.image} alt="" width={100} height={100} />
+            <div className="flex flex-col justify-center items-center p-2">
+              <p className="font-semibold text-2xl text-(--color-bar)">{platform.title}</p>
+              <p className="text-sm text-(--color-text-muted) pt-2">{platform.description}</p>
+              <a href={platform.url} className="flex text-(--color-bar) font-bold justify-center items-center gap-1 pt-4"> Abrir App <SquareArrowOutUpRight size={15} /></a>
+            </div>
+          </div>
+        ))}
+      </div>
+      {TITLE_SECTIONS("Contactanos")}
+      <div className="grid md:grid-cols-2 grid-cols-1 mx-auto max-w-5xl gap-5 pt-6">
         {INFO_CONCTAC.map((contact) => (
-          <div key={contact.id} className="flex flex-row border border-stone-200 rounded-xl bg-white shadow items-center justify-between p-6">
+          <div key={contact.id} className="flex flex-row border border-stone-200 rounded-xl bg-white shadow items-center justify-between p-6 hover:scale-105 transition-all duration-300">
             <div className="flex flex-row">
               <contact.icon className={`p-2 ${contact.bg} rounded-lg ${contact.color}`} size={45} />
               <div className="ps-5">
