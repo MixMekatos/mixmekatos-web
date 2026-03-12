@@ -31,7 +31,7 @@ export default function DondeEstamosPage() {
     address: string
   }
 
-  interface platform {
+  interface Platform {
     id: number,
     title: string,
     description: string,
