@@ -24,7 +24,7 @@ export default function DondeEstamosPage() {
     colorButton: string
   }
 
-  interface marketplace {
+  interface Marketplace {
     id: number,
     image: string,
     name: string,
@@ -79,7 +79,7 @@ export default function DondeEstamosPage() {
     }
   ]
 
-  const INFO_MARKETPLACE: marketplace[] = [
+  const INFO_MARKETPLACE: Marketplace[] = [
     {
       id: 1,
       image: "https://plazadelriocc.com/wp-content/uploads/2022/12/logo-exito.jpg",
@@ -101,7 +101,7 @@ export default function DondeEstamosPage() {
 
   ]
 
-  const INFO_PLATFORM: platform[] = [
+  const INFO_PLATFORM: Platform[] = [
     {
       id: 1,
       title: "Rappi",
