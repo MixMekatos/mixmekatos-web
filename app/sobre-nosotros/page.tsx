@@ -59,16 +59,14 @@ export default function SobreNosotrosPage() {
               />
               <div className="absolute bottom-[-25px] bg-white rounded-lg md:w-[240px] w-[200px] shadow-2xl p-5 -rotate-3">
                 <p className="text-bar md:text-lg text-sm">
-                  "El secreto no está en la receta, sino en las manos que la preparan."
+                  &quot;El secreto no está en la receta, sino en las manos que la preparan.&quot;
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="">
-        <Timeline />
-      </div>
+      <Timeline />
       <div className="max-w-4xl mx-auto text-center pt-5">
         <h1 className="text-[10px] text-bar tracking-widest">COMO TRABAJAMOS</h1>
         <h1 className="text-3xl">Nuestros Valores</h1>

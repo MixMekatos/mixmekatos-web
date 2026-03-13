@@ -4,7 +4,7 @@ interface Hito {
     year?: string;
     title: string;
     description?: string;
-    image?: string;
+    image?: string | undefined;
 }
 const hitos: Hito[] = [
     {
@@ -91,7 +91,7 @@ function Card({ year, title, description }: Hito) {
 function Imagen({ title, image }: Hito) {
     return (
         <Image
-            src={image}
+            src={image || ""}
             alt={title}
             width={400}
             height={240}
