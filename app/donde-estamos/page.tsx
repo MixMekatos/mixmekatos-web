@@ -26,9 +26,9 @@ export default function DondeEstamosPage() {
 
   interface Marketplace {
     id: number,
-    image: string,
+    image: string | LucideIcon,
     name: string,
-    address: string
+    address: string[]
   }
 
   interface Platform {
@@ -82,29 +82,40 @@ export default function DondeEstamosPage() {
   const INFO_MARKETPLACE: Marketplace[] = [
     {
       id: 1,
-      image: "https://plazadelriocc.com/wp-content/uploads/2022/12/logo-exito.jpg",
-      name: "Grupo Exito",
-      address: "varias sedes en medellin"
+      image: "/branding/almacenes_paraiso.png",
+      name: "Almacenes Paraiso",
+      address: ["Tunja(Muiscas, Sur)", "Duitama(Clínica Boyacá)", "Sogamoso ( Carrera 11, Torres del Nogal)", "Yopal"]
     },
     {
       id: 2,
-      image: "https://co.tubono.com/wp-content/uploads/sites/17/2019/10/Jumbo_colombia.png",
-      name: "Jumbo",
-      address: "En la comuna 13"
+      image: "/branding/pasadena.png",
+      name: "Pasadena",
+      address: ["Sogamoso", "Duitama", "Paipa"]
     },
     {
       id: 3,
-      image: "https://metrocentro.com.co/wp-content/uploads/2024/02/4-1.png",
-      name: "Tiendas ara",
-      address: "Toda Colombia"
+      image: "/branding/la_granja.png",
+      name: "La Granja",
+      address: ["Tunja (Norte)", "Tunja (Peñitas)", "Tunja (La 14 Sur)"]
     },
-
+    {
+      id: 4,
+      image: "/branding/el_chispazo.png",
+      name: "El Chispazo",
+      address: ["Tunja (Maldonado)"]
+    },
+    {
+      id: 5,
+      image: Store,
+      name: "Nuevo punto",
+      address: ["Proximamente..."]
+    }
   ]
 
   const INFO_PLATFORM: Platform[] = [
     {
       id: 1,
-      title: "Rappi",
+      title: "Alamcenes Paraiso",
       description: "Sabor artesanal a domicilio",
       url: "https://rappi.com.co/",
       image: "https://static.vecteezy.com/system/resources/previews/067/941/720/non_2x/rappi-logo-rounded-hd-free-png.png"
@@ -114,7 +125,7 @@ export default function DondeEstamosPage() {
       title: "Didi",
       description: "Pide tus empanadas favoritas",
       url: "https://web.didiglobal.com/co/pasajero/",
-      image: "https://brandlogos.net/wp-content/uploads/2022/09/didi_food-logo_brandlogos.net_9ptmf-512x512.png"
+      image: "/branding/didi.jpg"
     },
     {
       id: 3,
@@ -167,13 +178,19 @@ export default function DondeEstamosPage() {
       <div className="grid md:grid-cols-3 grid-cols-2 mx-auto max-w-5xl gap-5 pt-5">
         {INFO_MARKETPLACE.map((market) => (
           <div key={market.id} className="flex flex-col border border-stone-200 rounded-xl bg-white shadow items-center justify-center p-4 hover:shadow-xl hover:scale-105 transition-all duration-300">
-            <Image className="rounded-xl" src={market.image} alt="" width={100} height={100} />
+            {typeof market.image === "string" ? (
+              <Image src={market.image} alt="" width={100} height={100} />
+            ) : (
+              <market.image size={40} color="var(--color-bar)" />
+            )}
             <div className="flex flex-col justify-center items-center p-2">
-              <p className="text-bar font-semibold text-2xl">{market.name}</p>
-              <div className="flex flex-row items-center justify-center gap-1">
-                <MapPin className="text-bar" size={15} />
-                <span className="text-(--color-text-muted) text-sm">{market.address}</span>
-              </div>
+              <p className="text-bar font-semibold text-2xl pb-2">{market.name}</p>
+              {market.address.map((address, i) => (
+                <div key={i} className="flex flex-row items-center justify-center gap-1 text-center">
+                  <MapPin className="text-bar" size={15} />
+                  <span className="text-(--color-text-muted) text-sm">{address}</span>
+                </div>
+              ))}
             </div>
           </div>
         ))}
