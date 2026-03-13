@@ -136,8 +136,8 @@ export default function DondeEstamosPage() {
   return (
     <main className="min-h-[60vh] py-16 px-4">
       <div className="max-w-2xl mx-auto text-center">
-        <h1 className="text-6xl font-semibold text-[var(--color-text)]">Dónde estamos</h1>
-        <p className="mt-6 text-[var(--color-text-muted)]">Estamos ubicados en el corazon de Medellin, listos para enviarte el mejor sabor artesanal de nuestras famosas empanadas y deditos de queso.</p>
+        <h1 className="text-6xl font-semibold text-(--color-text)">Dónde estamos</h1>
+        <p className="mt-6 text-(--color-text-muted)">Estamos ubicados en el corazon de Medellin, listos para enviarte el mejor sabor artesanal de nuestras famosas empanadas y deditos de queso.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 max-w-5xl mx-auto pt-10 gap-5">
         <div className="h-[350px] w-full p-0 overflow-hidden rounded-2xl md:col-span-2 shadow-xl">
@@ -155,7 +155,7 @@ export default function DondeEstamosPage() {
                   <p className="font-semibold">{card.title}</p>
                   <p className="text-(--color-text-muted) text-sm">{card.info}</p>
                   {card.closed && (
-                    <p className="text-(--color-bar) text-xs font-semibold">Lunes: Cerrado por descanso</p>
+                    <p className="text-bar text-xs font-semibold">Lunes: Cerrado por descanso</p>
                   )}
                 </div>
               </div>
@@ -169,9 +169,9 @@ export default function DondeEstamosPage() {
           <div key={market.id} className="flex flex-col border border-stone-200 rounded-xl bg-white shadow items-center justify-center p-4 hover:shadow-xl hover:scale-105 transition-all duration-300">
             <Image className="rounded-xl" src={market.image} alt="" width={100} height={100} />
             <div className="flex flex-col justify-center items-center p-2">
-              <p className="text-(--color-bar) font-semibold text-2xl">{market.name}</p>
+              <p className="text-bar font-semibold text-2xl">{market.name}</p>
               <div className="flex flex-row items-center justify-center gap-1">
-                <MapPin className="text-(--color-bar)" size={15} />
+                <MapPin className="text-bar" size={15} />
                 <span className="text-(--color-text-muted) text-sm">{market.address}</span>
               </div>
             </div>
@@ -184,9 +184,9 @@ export default function DondeEstamosPage() {
           <div key={platform.id} className="flex flex-col border border-stone-200 rounded-xl bg-white items-center justify-center shadow p-4 hover:scale-105 hover:shadow-xl transition-all duration-300">
             <Image className="rounded-xl" src={platform.image} alt="" width={100} height={100} />
             <div className="flex flex-col justify-center items-center p-2">
-              <p className="font-semibold text-2xl text-(--color-bar)">{platform.title}</p>
+              <p className="font-semibold text-2xl text-bar">{platform.title}</p>
               <p className="text-sm text-(--color-text-muted) pt-2">{platform.description}</p>
-              <a href={platform.url} className="flex text-(--color-bar) font-bold justify-center items-center gap-1 pt-4"> Abrir App <SquareArrowOutUpRight size={15} /></a>
+              <a href={platform.url} className="flex text-bar font-bold justify-center items-center gap-1 pt-4"> Abrir App <SquareArrowOutUpRight size={15} /></a>
             </div>
           </div>
         ))}
