@@ -185,8 +185,8 @@ export default function DondeEstamosPage() {
             )}
             <div className="flex flex-col justify-center items-center p-2">
               <p className="text-bar font-semibold text-2xl pb-2">{market.name}</p>
-              {market.address.map((address) => (
-                <div className="flex flex-row items-center justify-center gap-1 text-center">
+              {market.address.map((address, i) => (
+                <div key={i} className="flex flex-row items-center justify-center gap-1 text-center">
                   <MapPin className="text-bar" size={15} />
                   <span className="text-(--color-text-muted) text-sm">{address}</span>
                 </div>
