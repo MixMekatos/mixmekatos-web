@@ -115,7 +115,7 @@ export default function DondeEstamosPage() {
   const INFO_PLATFORM: Platform[] = [
     {
       id: 1,
-      title: "Alamcenes Paraiso",
+      title: "Rappi",
       description: "Sabor artesanal a domicilio",
       url: "https://rappi.com.co/",
       image: "https://static.vecteezy.com/system/resources/previews/067/941/720/non_2x/rappi-logo-rounded-hd-free-png.png"
