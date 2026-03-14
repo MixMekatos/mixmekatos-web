@@ -43,10 +43,10 @@ export default function Timeline() {
                     const esImpar = i % 2 === 0;
 
                     return (
-                        <div key={hito.year} className="grid grid-cols-[1fr_48px_1fr] items-start">
+                        <div key={hito.year} className="flex flex-col md:grid md:grid-cols-[1fr_48px_1fr] items-start">
 
                             {/* Columna izquierda */}
-                            <div className="flex pr-6 pb-12 h-full items-center">
+                            <div className="hidden md:flex pr-6 pb-12 h-full items-center">
                                 {esImpar ? (
                                     <Card year={hito.year} title={hito.title} description={hito.description} />
                                 ) : (
@@ -55,19 +55,25 @@ export default function Timeline() {
                             </div>
 
                             {/* Línea central */}
-                            <div className="flex flex-col items-center h-full">
+                            <div className="hidden md:flex md:flex-col items-center h-full">
                                 <div className="w-px flex-1 bg-slate-200 min-h-6" />
                                 <div className="w-3 h-3 rounded-full bg-accent border-2 border-white ring-1 ring-bar mt-4 shrink-0" />
                                 <div className="w-px flex-1 bg-slate-200 min-h-16" />
                             </div>
 
                             {/* Columna derecha */}
-                            <div className="flex pl-6 pb-12 h-full items-center">
+                            <div className="hidden md:flex pl-6 pb-12 h-full items-center">
                                 {esImpar ? (
                                     <Imagen title={hito.title} image={hito.image} />
                                 ) : (
                                     <Card year={hito.year} title={hito.title} description={hito.description} />
                                 )}
+                            </div>
+
+                            {/* Mobile: Card arriba e imagen siempre abajo */}
+                            <div className="flex flex-col gap-4 pb-8 md:hidden">
+                                <Card year={hito.year} title={hito.title} description={hito.description} />
+                                <Imagen title={hito.title} image={hito.image} />
                             </div>
 
                         </div>
