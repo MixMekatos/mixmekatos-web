@@ -122,17 +122,17 @@ export default function DondeEstamosPage() {
     },
     {
       id: 2,
-      title: "Didi",
+      title: "Didi Food",
       description: "Pide tus empanadas favoritas",
       url: "https://web.didiglobal.com/co/pasajero/",
       image: "/branding/didi.jpg"
     },
     {
       id: 3,
-      title: "Uber",
+      title: "Uber Eats",
       description: "Pide a domicilio",
       url: "https://www.uber.com/global/es/sign-in/",
-      image: "https://scontent.fbog23-1.fna.fbcdn.net/v/t39.30808-6/352395053_1301403327449484_5481400940176293068_n.png?_nc_cat=101&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=2enlSzQ142kQ7kNvwFCHDtZ&_nc_oc=AdlJ9lCsCJKA-2YQ9L7ZMTRUHkp9YIEf5sGocOjmsjxq5ckSWWqDXUw4aV2x6slTUdM&_nc_zt=23&_nc_ht=scontent.fbog23-1.fna&_nc_gid=bXN5wsDqMNMgmtb_Sc4Eng&_nc_ss=8&oh=00_Afw8cJ48-J8cJTGQQ1g-kMDvCZIdeQTQqZ3CYsCWAgPVHQ&oe=69B7D8AD"
+      image: "https://static.vecteezy.com/system/resources/previews/018/970/114/non_2x/uber-eats-editorial-logo-free-vector.jpg"
     }
   ]
 
