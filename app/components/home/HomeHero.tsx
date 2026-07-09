@@ -66,9 +66,14 @@ export default function HomeHero() {
         return;
       }
 
-      gsap.set(entranceEls, { opacity: 0, y: 40 });
-      gsap.set(eyebrowRef.current, { x: -28 });
-      gsap.set(dataPanelRef.current, { opacity: 0, y: 32, scale: 0.94 });
+      // Larger travel distances and per-element easing (stage 14 - the
+      // previous version, uniform power3.out over 40px/28px, read as too
+      // subtle to register as a real entrance/exit, "no me convencen").
+      gsap.set(headlineRef.current, { opacity: 0, y: 70 });
+      gsap.set(subcopyRef.current, { opacity: 0, y: 55 });
+      gsap.set(ctaRef.current, { opacity: 0, y: 40 });
+      gsap.set(eyebrowRef.current, { opacity: 0, x: -60 });
+      gsap.set(dataPanelRef.current, { opacity: 0, y: 60, scale: 0.82, rotate: -3 });
 
       // Tied to a ScrollTrigger (not just mount) so it isn't a one-shot: it
       // plays immediately on load (the hero already satisfies "top top" at
@@ -78,7 +83,6 @@ export default function HomeHero() {
       // all and only ever played once on mount, which read as static on
       // scroll ("no tienen scroll arriba, siguen estaticos").
       const tl = gsap.timeline({
-        defaults: { ease: "power3.out", duration: 0.7 },
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
@@ -86,11 +90,27 @@ export default function HomeHero() {
           toggleActions: "play reverse play none",
         },
       });
-      tl.to(eyebrowRef.current, { opacity: 1, y: 0, x: 0 })
-        .to(headlineRef.current, { opacity: 1, y: 0 }, "-=0.45")
-        .to(subcopyRef.current, { opacity: 1, y: 0 }, "-=0.4")
-        .to(ctaRef.current, { opacity: 1, y: 0 }, "-=0.35")
-        .to(dataPanelRef.current, { opacity: 1, y: 0, scale: 1 }, "-=0.5");
+      tl.to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" })
+        .to(
+          headlineRef.current,
+          { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" },
+          "-=0.4"
+        )
+        .to(
+          subcopyRef.current,
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+          "-=0.55"
+        )
+        .to(
+          ctaRef.current,
+          { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.5)" },
+          "-=0.4"
+        )
+        .to(
+          dataPanelRef.current,
+          { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 1, ease: "expo.out" },
+          "-=0.75"
+        );
 
       // Scroll-scrubbed parallax: the data panel drifts up and scales
       // slightly faster than the text column as the hero exits, so the two

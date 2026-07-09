@@ -139,6 +139,17 @@ function ProductDataRow({ sku, tone }: { sku: Product; tone: "onPhoto" | "onSurf
  * as it scrolls away in either direction, not just when re-entering from
  * below. Previously a card that scrolled off the top going down stayed
  * frozen in its revealed state indefinitely.
+ *
+ * Stage 14: still read as too large per repeated direct feedback - the real
+ * issue was never the height number, it was proportion: a single column of
+ * full-container-width (~1150px) cards reads as oversized no matter how
+ * short they are. Rebuilt as an actual 3-column grid (1 col mobile, 2
+ * tablet, 3 desktop) - at roughly a third of the width each, the cards read
+ * as a confident product grid instead of stacked banners. Entrance is more
+ * dramatic to match ("entradas y salidas con scroll llamativas"): larger
+ * scale/y travel and a small per-card rotation direction that alternates,
+ * so the three cards feel like they're settling into place from slightly
+ * different angles rather than identically.
  */
 export default function HomeProductos() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -164,7 +175,7 @@ export default function HomeProductos() {
       // row) rather than arriving as one flat block. Each card gets its own
       // timeline/ScrollTrigger so cards further down the page don't wait on
       // ones above them.
-      cardEls.forEach((card) => {
+      cardEls.forEach((card, index) => {
         const innerEls = gsap.utils.toArray<HTMLElement>(
           [
             ".stack-card-eyebrow",
@@ -175,11 +186,17 @@ export default function HomeProductos() {
           card
         );
 
+        // Alternating rotation direction per card (-1)^index, so the three
+        // cards settle from slightly different angles instead of all
+        // arriving identically - a small touch that reads as more crafted
+        // once the cards are a modest grid size rather than full-width bars.
+        const rotateFrom = index % 2 === 0 ? -4 : 4;
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: card,
-            start: "top 85%",
-            end: "bottom 15%",
+            start: "top 88%",
+            end: "bottom 12%",
             // Genuine enter/exit in both scroll directions: play on enter
             // scrolling down, reverse on leave scrolling down (the card
             // exits the same way it entered instead of staying static once
@@ -193,29 +210,29 @@ export default function HomeProductos() {
 
         tl.fromTo(
           card,
-          { autoAlpha: 0, scale: 0.88, y: 70, rotate: -1.5 },
+          { autoAlpha: 0, scale: 0.78, y: 100, rotate: rotateFrom },
           {
             autoAlpha: 1,
             scale: 1,
             y: 0,
             rotate: 0,
-            duration: 0.8,
-            ease: "power3.out",
+            duration: 0.9,
+            ease: "expo.out",
           }
         );
 
         if (innerEls.length) {
-          gsap.set(innerEls, { opacity: 0, y: 16 });
+          gsap.set(innerEls, { opacity: 0, y: 20 });
           tl.to(
             innerEls,
             {
               opacity: 1,
               y: 0,
-              duration: 0.45,
+              duration: 0.5,
               ease: "power2.out",
-              stagger: 0.12,
+              stagger: 0.1,
             },
-            "-=0.35"
+            "-=0.45"
           );
         }
       });
@@ -224,7 +241,7 @@ export default function HomeProductos() {
         "(min-width: 768px)": () => {
           imageEls.forEach((imgWrap) => {
             gsap.to(imgWrap, {
-              y: 40,
+              y: 26,
               ease: "none",
               scrollTrigger: {
                 trigger: imgWrap.closest(".stack-card"),
@@ -239,7 +256,7 @@ export default function HomeProductos() {
         "(max-width: 767px)": () => {
           imageEls.forEach((imgWrap) => {
             gsap.to(imgWrap, {
-              y: 20,
+              y: 16,
               ease: "none",
               scrollTrigger: {
                 trigger: imgWrap.closest(".stack-card"),
@@ -268,25 +285,25 @@ export default function HomeProductos() {
       </div>
 
       <div ref={containerRef} className="relative px-4">
-        <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:gap-10">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {PRODUCTS.map((product) => {
             const sku = getSku(product.skuId);
             return (
               <article
                 key={product.id}
-                className="stack-card group relative flex h-[380px] items-end overflow-hidden rounded-3xl sm:h-[440px]"
+                className="stack-card group relative flex aspect-[4/5] items-end overflow-hidden rounded-3xl"
               >
                 {product.variant === "photo" ? (
                   <>
                     <div
                       className="stack-card-image absolute inset-x-0"
-                      style={{ top: -60, bottom: -60 }}
+                      style={{ top: -30, bottom: -30 }}
                     >
                       <Image
                         src={product.image as string}
                         alt={product.imageAlt as string}
                         fill
-                        sizes="(min-width: 768px) 80vw, 100vw"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                         className={`object-cover transition duration-300 motion-safe:group-hover:scale-105 ${
                           product.imagePosition ?? ""
                         }`}
@@ -302,40 +319,36 @@ export default function HomeProductos() {
                       aria-hidden="true"
                       className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent"
                     />
-                    <span className="stack-card-eyebrow absolute top-5 right-5 rounded-full bg-white/90 px-2.5 py-0.5 text-[9px] font-semibold text-ink shadow-sm backdrop-blur-sm sm:top-6 sm:right-6">
+                    <span className="stack-card-eyebrow absolute top-4 right-4 rounded-full bg-white/90 px-2.5 py-0.5 text-[9px] font-semibold text-ink shadow-sm backdrop-blur-sm">
                       {product.eyebrow}
                     </span>
-                    <div className="relative w-full p-5 sm:p-6 md:p-8">
-                      <h3 className="stack-card-title font-display text-xl font-semibold text-white sm:text-2xl md:text-3xl">
+                    <div className="relative w-full p-4 sm:p-5">
+                      <h3 className="stack-card-title font-display text-lg font-semibold text-white sm:text-xl">
                         {product.title}
                       </h3>
-                      <p className="stack-card-desc mt-2 max-w-md text-sm text-white/85 sm:text-base">
+                      <p className="stack-card-desc mt-1.5 text-xs text-white/85 sm:text-sm">
                         {product.description}
                       </p>
-                      <div className="max-w-md">
-                        <ProductDataRow sku={sku} tone={product.dataRowTone} />
-                      </div>
+                      <ProductDataRow sku={sku} tone={product.dataRowTone} />
                     </div>
                   </>
                 ) : (
-                  <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-5 sm:p-6 md:p-8">
+                  <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-4 sm:p-5">
                     <div
                       aria-hidden="true"
                       className="absolute inset-0 bg-gradient-to-br from-glow/15 via-transparent to-transparent"
                     />
-                    <span className="stack-card-eyebrow relative w-fit rounded-full bg-glow/15 px-2.5 py-0.5 font-display text-[10px] font-semibold uppercase tracking-[0.15em] text-glow">
+                    <span className="stack-card-eyebrow relative w-fit rounded-full bg-glow/15 px-2.5 py-0.5 font-display text-[9px] font-semibold uppercase tracking-[0.15em] text-glow">
                       {product.eyebrow}
                     </span>
                     <div className="relative">
-                      <h3 className="stack-card-title font-display text-xl font-semibold text-ink-text sm:text-2xl md:text-3xl">
+                      <h3 className="stack-card-title font-display text-lg font-semibold text-ink-text sm:text-xl">
                         {product.title}
                       </h3>
-                      <p className="stack-card-desc mt-2 max-w-md text-sm text-ink-text-muted sm:text-base">
+                      <p className="stack-card-desc mt-1.5 text-xs text-ink-text-muted sm:text-sm">
                         {product.description}
                       </p>
-                      <div className="max-w-md">
-                        <ProductDataRow sku={sku} tone={product.dataRowTone} />
-                      </div>
+                      <ProductDataRow sku={sku} tone={product.dataRowTone} />
                     </div>
                   </div>
                 )}
