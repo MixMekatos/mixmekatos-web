@@ -93,14 +93,14 @@ function ProductDataRow({ sku, tone }: { sku: Product; tone: "onPhoto" | "onSurf
 
   return (
     <div
-      className={`relative mt-4 flex flex-wrap items-center border-t pt-3 text-sm font-semibold sm:text-base ${borderClass} ${textClass}`}
+      className={`stack-card-datarow relative mt-3 flex flex-wrap items-center border-t pt-2.5 text-xs font-semibold sm:text-sm ${borderClass} ${textClass}`}
     >
-      <span className="pr-4">{formatPrice(sku.price)}</span>
-      <span className={`border-l pl-4 pr-4 ${dividerClass}`}>
+      <span className="pr-3">{formatPrice(sku.price)}</span>
+      <span className={`border-l pl-3 pr-3 ${dividerClass}`}>
         {sku.weight} · {sku.unit}
       </span>
-      <span className={`inline-flex items-center gap-1 border-l pl-4 ${dividerClass}`}>
-        <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+      <span className={`inline-flex items-center gap-1 border-l pl-3 ${dividerClass}`}>
+        <Star className="h-3 w-3 fill-current" aria-hidden="true" />
         {sku.rating} ({sku.ratingCount})
       </span>
     </div>
@@ -111,19 +111,28 @@ function ProductDataRow({ sku, tone }: { sku: Product; tone: "onPhoto" | "onSurf
  * Stage 10 rebuild: the previous version pinned each card at full-viewport
  * height (`min-h-[100dvh]`), which read as bloated and made the
  * `rounded-3xl` corner radius visually imperceptible at that scale ("una
- * card sale hasta sin bordes redondeados"). Cards are now a fixed, generous
- * but genuinely finite height (520px / 600px at sm+) so the radius is
- * actually visible and the section reads as a confident showcase rather
+ * card sale hasta sin bordes redondeados"). Cards became a fixed, generous
+ * but genuinely finite height (520px / 600px at sm+) so the radius was
+ * actually visible and the section read as a confident showcase rather
  * than a screen takeover.
  *
- * The pin/stack mechanic is replaced with a pronounced per-card scroll
- * entrance (scale 0.85 -> 1, y 80 -> 0, fade in) via GSAP ScrollTrigger,
- * plus the same photo parallax from the previous stage (kept, magnitude
- * tuned down to match the smaller card). Isolated from the Framer Motion
- * primitives used elsewhere on the page (GSAP and Framer Motion must never
- * share a component tree). `ScrollTrigger.matchMedia` still gates the
- * parallax magnitude by breakpoint; the entrance reveal itself is cheap
- * enough (no pin, no layout thrash) to run at every width.
+ * Stage 11: still too big per direct feedback ("las card de productos aun
+ * estan muy grandes"). Shrunk further to 380px / 440px, with the internal
+ * type scale (eyebrow, title, description, ProductDataRow) and padding
+ * trimmed one notch to match, so the smaller card reads as deliberately
+ * compact rather than merely cropped.
+ *
+ * The pin/stack mechanic is replaced with a per-card scroll entrance
+ * orchestrated as a small internal sequence rather than one flat tween: the
+ * card container reveals first (scale/rotate/y/fade), then the eyebrow,
+ * title, description and data row each get their own short staggered
+ * fade-up so the card reads as "built" rather than dropped in as a single
+ * block. Plus the same photo parallax from the previous stage (kept,
+ * magnitude tuned down to match the smaller card). Isolated from the
+ * Framer Motion primitives used elsewhere on the page (GSAP and Framer
+ * Motion must never share a component tree). `ScrollTrigger.matchMedia`
+ * still gates the parallax magnitude by breakpoint; the entrance reveal
+ * itself is cheap enough (no pin, no layout thrash) to run at every width.
  */
 export default function HomeProductos() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -143,26 +152,58 @@ export default function HomeProductos() {
       const cardEls = gsap.utils.toArray<HTMLElement>(".stack-card");
       const imageEls = gsap.utils.toArray<HTMLElement>(".stack-card-image");
 
-      // Pronounced entrance: each card scales/fades/rises into place as it
-      // crosses into view. This is the section's signature scroll moment
-      // now that full-viewport pinning is gone.
+      // Orchestrated entrance: the card container reveals first (scale +
+      // slight rotate + rise + fade), then its content reveals itself in a
+      // short staggered sequence (eyebrow -> title -> description -> data
+      // row) rather than arriving as one flat block. Each card gets its own
+      // timeline/ScrollTrigger so cards further down the page don't wait on
+      // ones above them.
       cardEls.forEach((card) => {
-        gsap.fromTo(
+        const innerEls = gsap.utils.toArray<HTMLElement>(
+          [
+            ".stack-card-eyebrow",
+            ".stack-card-title",
+            ".stack-card-desc",
+            ".stack-card-datarow",
+          ].join(","),
+          card
+        );
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+        });
+
+        tl.fromTo(
           card,
-          { autoAlpha: 0, scale: 0.85, y: 80 },
+          { autoAlpha: 0, scale: 0.88, y: 70, rotate: -1.5 },
           {
             autoAlpha: 1,
             scale: 1,
             y: 0,
-            duration: 0.9,
+            rotate: 0,
+            duration: 0.8,
             ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
           }
         );
+
+        if (innerEls.length) {
+          gsap.set(innerEls, { opacity: 0, y: 16 });
+          tl.to(
+            innerEls,
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.45,
+              ease: "power2.out",
+              stagger: 0.12,
+            },
+            "-=0.35"
+          );
+        }
       });
 
       ScrollTrigger.matchMedia({
@@ -219,7 +260,7 @@ export default function HomeProductos() {
             return (
               <article
                 key={product.id}
-                className="stack-card group relative flex h-[520px] items-end overflow-hidden rounded-3xl sm:h-[600px]"
+                className="stack-card group relative flex h-[380px] items-end overflow-hidden rounded-3xl sm:h-[440px]"
               >
                 {product.variant === "photo" ? (
                   <>
@@ -247,14 +288,14 @@ export default function HomeProductos() {
                       aria-hidden="true"
                       className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent"
                     />
-                    <span className="absolute top-6 right-6 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-ink shadow-sm backdrop-blur-sm sm:top-8 sm:right-8">
+                    <span className="stack-card-eyebrow absolute top-5 right-5 rounded-full bg-white/90 px-2.5 py-0.5 text-[9px] font-semibold text-ink shadow-sm backdrop-blur-sm sm:top-6 sm:right-6">
                       {product.eyebrow}
                     </span>
-                    <div className="relative w-full p-6 sm:p-8 md:p-10">
-                      <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">
+                    <div className="relative w-full p-5 sm:p-6 md:p-8">
+                      <h3 className="stack-card-title font-display text-xl font-semibold text-white sm:text-2xl md:text-3xl">
                         {product.title}
                       </h3>
-                      <p className="mt-3 max-w-md text-base text-white/85 sm:text-lg">
+                      <p className="stack-card-desc mt-2 max-w-md text-sm text-white/85 sm:text-base">
                         {product.description}
                       </p>
                       <div className="max-w-md">
@@ -263,19 +304,19 @@ export default function HomeProductos() {
                     </div>
                   </>
                 ) : (
-                  <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-6 sm:p-8 md:p-10">
+                  <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-5 sm:p-6 md:p-8">
                     <div
                       aria-hidden="true"
                       className="absolute inset-0 bg-gradient-to-br from-glow/15 via-transparent to-transparent"
                     />
-                    <span className="relative w-fit rounded-full bg-glow/15 px-3 py-1 font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-glow">
+                    <span className="stack-card-eyebrow relative w-fit rounded-full bg-glow/15 px-2.5 py-0.5 font-display text-[10px] font-semibold uppercase tracking-[0.15em] text-glow">
                       {product.eyebrow}
                     </span>
                     <div className="relative">
-                      <h3 className="font-display text-2xl font-semibold text-ink-text sm:text-3xl md:text-4xl">
+                      <h3 className="stack-card-title font-display text-xl font-semibold text-ink-text sm:text-2xl md:text-3xl">
                         {product.title}
                       </h3>
-                      <p className="mt-3 max-w-md text-base text-ink-text-muted sm:text-lg">
+                      <p className="stack-card-desc mt-2 max-w-md text-sm text-ink-text-muted sm:text-base">
                         {product.description}
                       </p>
                       <div className="max-w-md">

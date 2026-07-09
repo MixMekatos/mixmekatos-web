@@ -1,5 +1,4 @@
 ﻿import HomeHero from "./components/home/HomeHero";
-import HomeCanales from "./components/home/HomeCanales";
 import HomeProductos from "./components/home/HomeProductos";
 import HomeCTA from "./components/home/HomeCTA";
 import HomeTrade from "./components/home/HomeTrade";
@@ -11,7 +10,6 @@ export default function InicioPage() {
     <main className="min-h-screen bg-(--color-bg)">
       <ToasterProvider />
       <HomeHero />
-      <HomeCanales />
       <HomeProductos />
       <HomeCTA
         titulo="Hay problemas que se resuelven con una empanada."

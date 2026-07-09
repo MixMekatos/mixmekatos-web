@@ -75,10 +75,24 @@ export default function Navbar() {
   // #scroll-sentinel) is removed entirely per direct feedback ("no se
   // porque el navbar cambia de color") — the sentinel div in app/layout.tsx
   // was removed alongside this, since nothing else referenced it.
+  //
+  // Stage 11: the 16px gap above the pill was previously produced by a
+  // `top-4` sticky offset with no padding, which meant that 16px strip sat
+  // OUTSIDE this header's own box (sticky pushes the box down to respect
+  // the offset, it doesn't grow the box to fill it). That strip had no
+  // background of its own, so `body`'s cream default showed through above
+  // the pill on every route ("hay un margen blanco arriba reservando el
+  // espacio del navbar"). Fixed locally, without touching `body`'s global
+  // rule (other routes like /contacto still rely on it): switched to
+  // `sticky top-0` + `pt-4` so that same 16px gap is now the header's own
+  // top padding, and gave the header itself an explicit `bg-ink` so that
+  // padding area — and the full-width bar behind the pill while scrolling —
+  // reads as dark instead of transparent. Navbar is already a shared,
+  // globally-dark-themed component, so this is consistent site-wide.
   return (
-    <header className="sticky top-4 z-50 px-4">
+    <header className="sticky top-0 z-50 bg-ink px-4 pt-4">
       <div className="mx-auto max-w-6xl">
-        <nav className="flex h-16 items-center justify-between gap-4 rounded-full border border-white/10 bg-ink-surface px-4 shadow-lg shadow-black/30 sm:h-[4.5rem] sm:px-6">
+        <nav className="flex h-12 items-center justify-between gap-4 rounded-full border border-white/10 bg-ink-surface px-4 shadow-lg shadow-black/30 sm:h-14 sm:px-6">
           <Link
             href="/"
             className="flex shrink-0 items-center"
@@ -90,7 +104,7 @@ export default function Navbar() {
               width={160}
               height={56}
               priority
-              className="h-9 w-auto object-contain sm:h-10"
+              className="h-7 w-auto object-contain sm:h-8"
             />
           </Link>
 

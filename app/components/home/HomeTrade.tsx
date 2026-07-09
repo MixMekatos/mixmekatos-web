@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   Store,
   Boxes,
@@ -13,6 +14,19 @@ import {
 import ScrollReveal from "@/app/components/motion/ScrollReveal";
 import StaggerGroup from "@/app/components/motion/StaggerGroup";
 import StaggerItem from "@/app/components/motion/StaggerItem";
+
+// Real retail partners currently carrying MixMekatos product. Migrated here
+// from the now-removed HomeCanales.tsx (stage 11): that section's own
+// content ("¿Cómo quieres tus mekatos?") had become a near-duplicate of this
+// section once its delivery-app channel was dropped in stage 10, so it was
+// removed entirely per direct feedback — but the real partner logos are
+// genuine, valuable content and were folded in here instead of being lost.
+const RETAIL_PARTNERS = [
+  { src: "/branding/almacenes_paraiso.png", alt: "Logo de Almacenes Paraíso" },
+  { src: "/branding/el_chispazo.png", alt: "Logo de Supermercado El Chispazo" },
+  { src: "/branding/la_granja.png", alt: "Logo de Autoservicio La Granja" },
+  { src: "/branding/pasadena.png", alt: "Logo de Pasadena Supermercados" },
+];
 
 interface TradeChannel {
   icon: LucideIcon;
@@ -89,6 +103,15 @@ const VALUE_PROPS: ValueProp[] = [
  * folded in underneath as a visually secondary supporting row, styled the
  * same way the old HomeValores strip was, so they read as a footnote to the
  * main content rather than a whole section of their own.
+ *
+ * Stage 11: HomeCanales.tsx was removed (its "¿Cómo quieres tus mekatos?"
+ * content had become a near-duplicate of this section's channel list), and
+ * its one piece of real, non-redundant content — the 4 actual retail-partner
+ * logos — was folded in here as a closing "dónde nos encuentras" trust strip,
+ * placed after the channel grid and value props so the section builds from
+ * broad channels to concrete proof. The logos are transparent PNGs designed
+ * for light backgrounds, so each keeps the same white backdrop chip
+ * treatment HomeCanales used, rather than sitting bare on the dark surface.
  */
 export default function HomeTrade() {
   return (
@@ -144,6 +167,33 @@ export default function HomeTrade() {
             </StaggerItem>
           ))}
         </StaggerGroup>
+
+        <ScrollReveal y={24} duration={0.5} className="mt-12 text-center">
+          <p className="font-nunito text-xs font-semibold uppercase tracking-[0.2em] text-ink-text-muted">
+            Nos encuentras en
+          </p>
+          <StaggerGroup
+            stagger={0.08}
+            className="mx-auto mt-5 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            {RETAIL_PARTNERS.map((partner) => (
+              <StaggerItem
+                key={partner.src}
+                y={16}
+                duration={0.4}
+                className="relative h-16 rounded-xl bg-white/95 p-3 sm:h-20"
+              >
+                <Image
+                  src={partner.src}
+                  alt={partner.alt}
+                  fill
+                  sizes="(min-width: 768px) 160px, 45vw"
+                  className="object-contain p-1"
+                />
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </ScrollReveal>
       </div>
     </section>
   );
