@@ -92,55 +92,54 @@ export default function HomeHero() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Toasted crust band */}
-      <div
-        ref={charBandRef}
-        className="relative bg-char px-4 pt-10 pb-14 text-center sm:pt-12 sm:pb-16 md:pt-16 md:pb-20"
-      >
+    <section ref={sectionRef} className="relative overflow-hidden bg-ink bg-grain">
+      {/* Toasted crust band, now the page's base tone rather than an
+          isolated dark strip. */}
+      <div ref={charBandRef} className="relative px-4 pt-10 pb-14 text-center sm:pt-12 sm:pb-16 md:pt-16 md:pb-20">
         <p
           ref={eyebrowRef}
-          className="inline-flex items-center gap-2 rounded-full bg-masa/15 px-4 py-1.5 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-masa"
+          className="relative inline-flex items-center gap-2 rounded-full bg-glow/15 px-4 py-1.5 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-glow"
         >
           De la planta a tu góndola · Medellín, Colombia
         </p>
       </div>
 
-      {/* Warm masa band */}
+      {/* Same ink base, lifted with a soft surface-to-ink gradient instead
+          of the old masa-to-cream band, so the two halves read as one
+          unified dark scene. */}
       <div
         ref={masaBandRef}
-        className="relative bg-gradient-to-b from-masa/12 to-(--color-bg) px-4 pt-6 pb-16 text-center sm:pb-20"
+        className="relative bg-gradient-to-b from-ink-surface/50 to-ink px-4 pt-6 pb-16 text-center sm:pb-20"
       >
         <h1
           ref={headlineRef}
-          className="mx-auto max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-(--color-text) sm:text-5xl md:text-6xl"
+          className="relative mx-auto max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-ink-text sm:text-5xl md:text-6xl"
         >
           El sabor que buscabas,{" "}
-          <span className="text-accent">lo hacemos nosotros.</span>
+          <span className="text-glow drop-shadow-[0_0_18px_rgba(240,178,62,0.35)]">
+            lo hacemos nosotros.
+          </span>
         </h1>
-        <p
-          ref={subcopyRef}
-          className="mx-auto mt-6 max-w-xl text-lg text-(--color-text-muted)"
-        >
+        <p ref={subcopyRef} className="relative mx-auto mt-6 max-w-xl text-lg text-ink-text-muted">
           Empanadas de maíz horneadas, palos de queso y más mekatos irresistibles,
           directo a supermercados, restaurantes, eventos y comedores institucionales
           de toda la región.
         </p>
-        <div ref={ctaRef} className="mt-9 flex flex-wrap justify-center gap-4">
+        <div ref={ctaRef} className="relative mt-9 flex flex-wrap justify-center gap-4">
           <Link
             href="/productos"
-            className="inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-hover hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-glow px-7 py-3 text-sm font-semibold text-ink shadow-[0_8px_30px_-8px_rgba(240,178,62,0.55)] transition hover:bg-glow-hover hover:shadow-[0_10px_36px_-6px_rgba(240,178,62,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             Ver catálogo
           </Link>
           <Link
             href="/contacto"
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-accent px-7 py-3 text-sm font-semibold text-accent transition hover:bg-orange-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-glow px-7 py-3 text-sm font-semibold text-glow transition hover:bg-glow/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             Hablemos de tu pedido
           </Link>
         </div>
-        <p ref={captionRef} className="mt-5 font-nunito text-xs text-(--color-text-muted)">
+        <p ref={captionRef} className="relative mt-5 font-nunito text-xs text-ink-text-muted">
           Distribución directa · Pedidos por mayor y para eventos
         </p>
       </div>

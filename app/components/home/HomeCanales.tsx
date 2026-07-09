@@ -14,29 +14,32 @@ interface Canal {
   cta: { label: string; href: string };
 }
 
+// All three channels share the exact same glow treatment (Color
+// Consistency Lock, taste-skill 4.2): the icon glyphs themselves, not three
+// different hues, do the distinguishing work.
 const CANALES: Canal[] = [
   {
     icon: ShoppingBag,
     title: "Pídelo a domicilio",
     desc: "Estamos en Rappi y DiDi Food. Tu antojo llega caliente a la puerta.",
-    accentClass: "text-accent",
-    bgClass: "bg-accent/10",
+    accentClass: "text-glow",
+    bgClass: "bg-glow/12",
     cta: { label: "Ver apps", href: "/#delivery" },
   },
   {
     icon: Store,
     title: "En supermercados",
     desc: "Encuentra nuestros congelados prefritos en puntos de venta seleccionados en Medellín.",
-    accentClass: "text-masa",
-    bgClass: "bg-masa/15",
+    accentClass: "text-glow",
+    bgClass: "bg-glow/12",
     cta: { label: "¿Dónde?", href: "/donde-estamos" },
   },
   {
     icon: CalendarHeart,
     title: "Para eventos",
     desc: "Venta al por mayor de producto congelado prefrito. Perfecto para sociales, empresas y catering.",
-    accentClass: "text-bar",
-    bgClass: "bg-bar/10",
+    accentClass: "text-glow",
+    bgClass: "bg-glow/12",
     cta: { label: "Cotizar", href: "/contacto" },
   },
 ];
@@ -52,20 +55,20 @@ const RETAIL_PARTNERS = [
 
 export default function HomeCanales() {
   return (
-    <section className="bg-stone-50 px-4 py-14">
+    <section className="bg-ink px-4 py-14">
       <div className="mx-auto max-w-5xl">
         <ScrollReveal y={16} duration={0.45}>
-          <h2 className="mb-10 text-center font-display text-2xl font-semibold text-(--color-text) sm:text-3xl">
+          <h2 className="mb-10 text-center font-display text-2xl font-semibold text-ink-text sm:text-3xl">
             ¿Cómo quieres tus mekatos?
           </h2>
         </ScrollReveal>
 
         {/* Rail/ticket layout: one continuous card, channels separated by a
-            dashed "tear line" instead of three isolated tiles — distinct
+            dashed "tear line" instead of three isolated tiles, distinct
             from the bordered-card grid used elsewhere on the page. */}
         <StaggerGroup
           stagger={0.08}
-          className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm divide-y divide-dashed divide-stone-200 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:divide-x"
+          className="overflow-hidden rounded-3xl border border-white/10 bg-ink-surface shadow-sm divide-y divide-dashed divide-white/10 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:divide-x"
         >
           {CANALES.map(({ icon: Icon, title, desc, accentClass, bgClass, cta }) => (
             <StaggerItem key={title} y={20} duration={0.45} className="flex flex-col gap-4 p-6 sm:p-7">
@@ -76,24 +79,27 @@ export default function HomeCanales() {
               </span>
 
               <div>
-                <h3 className="text-base font-semibold text-(--color-text)">{title}</h3>
-                <p className="mt-1 text-sm text-(--color-text-muted)">{desc}</p>
+                <h3 className="text-base font-semibold text-ink-text">{title}</h3>
+                <p className="mt-1 text-sm text-ink-text-muted">{desc}</p>
               </div>
 
               {title === "En supermercados" && (
                 <div className="mt-1">
-                  <p className="font-nunito text-[11px] uppercase tracking-wide text-(--color-text-muted)">
+                  <p className="font-nunito text-[11px] uppercase tracking-wide text-ink-text-muted">
                     Nos encuentras en
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
                     {RETAIL_PARTNERS.map((partner) => (
-                      <div key={partner.src} className="relative h-9 w-24 sm:h-10 sm:w-28">
+                      <div
+                        key={partner.src}
+                        className="relative h-9 w-24 rounded-md bg-white/95 p-1.5 sm:h-10 sm:w-28"
+                      >
                         <Image
                           src={partner.src}
                           alt={partner.alt}
                           fill
                           sizes="112px"
-                          className="object-contain"
+                          className="object-contain p-1"
                         />
                       </div>
                     ))}
@@ -103,7 +109,7 @@ export default function HomeCanales() {
 
               <Link
                 href={cta.href}
-                className="mt-auto inline-flex min-h-11 w-fit items-center gap-1 rounded-sm text-sm font-semibold text-accent underline-offset-2 transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="mt-auto inline-flex min-h-11 w-fit items-center gap-1 rounded-sm text-sm font-semibold text-glow underline-offset-2 transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               >
                 {cta.label} →
               </Link>

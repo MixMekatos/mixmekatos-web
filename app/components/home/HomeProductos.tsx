@@ -152,12 +152,12 @@ export default function HomeProductos() {
   }, []);
 
   return (
-    <section className="bg-(--color-bg) py-14">
+    <section className="bg-ink py-14">
       <div className="mx-auto max-w-5xl px-4 text-center">
-        <p className="mx-auto mb-3 inline-flex w-fit rounded-full bg-accent/10 px-4 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
+        <p className="mx-auto mb-3 inline-flex w-fit rounded-full bg-glow/12 px-4 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-glow">
           Nuestros productos
         </p>
-        <h2 className="mb-10 font-display text-2xl font-semibold text-(--color-text) sm:text-3xl">
+        <h2 className="mb-10 font-display text-2xl font-semibold text-ink-text sm:text-3xl">
           Hechos para que repitas
         </h2>
       </div>
@@ -194,9 +194,9 @@ export default function HomeProductos() {
                   )}
                   <div
                     aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-char/90 via-char/25 to-transparent"
+                    className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent"
                   />
-                  <span className="absolute top-6 right-6 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-bar shadow-sm backdrop-blur-sm sm:top-8 sm:right-8">
+                  <span className="absolute top-6 right-6 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-ink shadow-sm backdrop-blur-sm sm:top-8 sm:right-8">
                     {product.eyebrow}
                   </span>
                   <div className="relative w-full p-6 sm:p-10 md:p-14">
@@ -209,19 +209,19 @@ export default function HomeProductos() {
                   </div>
                 </>
               ) : (
-                <div className="relative flex h-full w-full flex-col justify-between bg-char p-6 sm:p-10 md:p-14">
+                <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-6 sm:p-10 md:p-14">
                   <div
                     aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-br from-masa/20 via-transparent to-transparent"
+                    className="absolute inset-0 bg-gradient-to-br from-glow/15 via-transparent to-transparent"
                   />
-                  <span className="relative w-fit rounded-full bg-masa/15 px-3 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.15em] text-masa">
+                  <span className="relative w-fit rounded-full bg-glow/15 px-3 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.15em] text-glow">
                     {product.eyebrow}
                   </span>
                   <div className="relative">
-                    <h3 className="font-display text-3xl font-semibold text-white sm:text-4xl md:text-5xl">
+                    <h3 className="font-display text-3xl font-semibold text-ink-text sm:text-4xl md:text-5xl">
                       {product.title}
                     </h3>
-                    <p className="mt-3 max-w-md text-base text-white/75 sm:text-lg">
+                    <p className="mt-3 max-w-md text-base text-ink-text-muted sm:text-lg">
                       {product.description}
                     </p>
                   </div>
@@ -235,9 +235,9 @@ export default function HomeProductos() {
       <div className="mx-auto mt-10 max-w-5xl px-4 text-center">
         <Link
           href="/productos"
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-bar px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-glow px-8 py-3 text-sm font-semibold text-ink shadow-sm transition hover:bg-glow-hover hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
-          Ver todos los productos
+          Ver catálogo
         </Link>
       </div>
     </section>

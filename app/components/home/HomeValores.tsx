@@ -33,11 +33,11 @@ const VALORES: Valor[] = [
 // visual weight.
 export default function HomeValores() {
   return (
-    <section className="border-y border-stone-200 bg-(--color-bg) px-4 py-2 sm:py-0">
+    <section className="border-y border-white/10 bg-ink px-4 py-2 sm:py-0">
       <h2 className="sr-only">Por qué elegir MixMekatos</h2>
       <StaggerGroup
         stagger={0.06}
-        className="mx-auto flex max-w-5xl flex-col divide-y divide-stone-200 sm:flex-row sm:items-center sm:divide-y-0 sm:divide-x sm:divide-dashed"
+        className="mx-auto flex max-w-5xl flex-col divide-y divide-white/10 sm:flex-row sm:items-center sm:divide-y-0 sm:divide-x sm:divide-dashed"
       >
         {VALORES.map(({ icon: Icon, label, desc }) => (
           <StaggerItem
@@ -46,10 +46,10 @@ export default function HomeValores() {
             duration={0.35}
             className="flex items-center gap-3 py-3 sm:flex-1 sm:justify-center sm:px-5 sm:py-4"
           >
-            <Icon className="h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
+            <Icon className="h-5 w-5 shrink-0 text-glow" aria-hidden="true" />
             <p className="text-sm leading-snug">
-              <span className="font-semibold text-(--color-text)">{label}.</span>{" "}
-              <span className="text-(--color-text-muted)">{desc}</span>
+              <span className="font-semibold text-ink-text">{label}.</span>{" "}
+              <span className="text-ink-text-muted">{desc}</span>
             </p>
           </StaggerItem>
         ))}
