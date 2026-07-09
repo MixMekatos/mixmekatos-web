@@ -1,44 +1,132 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Signature motif: a torn, jagged edge marks where the toasted "crust" band
-// opens up into the warm masa-gold band below — visually echoing the product
-// itself (crisp shell, warm filling revealed). It's about the food, not a
-// "hidden kitchen" business story, and it also replaces the old carousel's
-// three repeated placeholder photos with a deliberate color/type moment.
-const TORN_EDGE_PATH =
-  "M0,0 L0,18 L60,32 L120,10 L180,38 L240,14 L300,42 L360,8 L420,34 L480,16 L540,44 L600,6 L660,30 L720,20 L780,40 L840,12 L900,36 L960,18 L1020,42 L1080,10 L1140,32 L1200,16 L1260,40 L1320,8 L1380,34 L1440,20 L1440,60 L0,60 Z";
+gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * Hero opening moment, driven entirely by GSAP (isolated from the Framer
+ * Motion primitives used elsewhere on the page, per the animation-engine
+ * split: GSAP for heavy scroll choreography, Framer Motion for simple
+ * viewport reveals). Replaces the old static torn-edge SVG divider between
+ * the "char" and "masa" bands with a scroll-scrubbed parallax: the two bands
+ * drift at different rates as the hero scrolls out of view, so the
+ * transition is a live scroll-linked effect instead of a fixed graphic.
+ */
 export default function HomeHero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const charBandRef = useRef<HTMLDivElement>(null);
+  const masaBandRef = useRef<HTMLDivElement>(null);
+  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+  const subcopyRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const captionRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const ctx = gsap.context(() => {
+      const entranceEls = (
+        [
+          eyebrowRef.current,
+          headlineRef.current,
+          subcopyRef.current,
+          ctaRef.current,
+          captionRef.current,
+        ] as (HTMLElement | null)[]
+      ).filter((el): el is HTMLElement => el !== null);
+
+      if (prefersReducedMotion) {
+        // No entrance choreography, no scroll-linked parallax: content
+        // renders in its final state immediately.
+        gsap.set(entranceEls, { opacity: 1, y: 0 });
+        return;
+      }
+
+      gsap.set(entranceEls, { opacity: 0, y: 24 });
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out", duration: 0.7 },
+      });
+      tl.to(eyebrowRef.current, { opacity: 1, y: 0 })
+        .to(headlineRef.current, { opacity: 1, y: 0 }, "-=0.45")
+        .to(subcopyRef.current, { opacity: 1, y: 0 }, "-=0.4")
+        .to(ctaRef.current, { opacity: 1, y: 0 }, "-=0.35")
+        .to(captionRef.current, { opacity: 1, y: 0 }, "-=0.3");
+
+      // Scroll-scrubbed parallax: the char band drifts up and scales
+      // slightly faster than the masa band as the hero exits, replacing the
+      // old torn-edge SVG with a live scroll-linked transition device.
+      gsap.to(charBandRef.current, {
+        yPercent: -10,
+        scale: 1.06,
+        opacity: 0.92,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+
+      gsap.to(masaBandRef.current, {
+        yPercent: -4,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative overflow-hidden">
+    <section ref={sectionRef} className="relative overflow-hidden">
       {/* Toasted crust band */}
-      <div className="relative bg-char px-4 pt-10 pb-14 text-center sm:pt-12 sm:pb-16 md:pt-16 md:pb-20">
-        <p className="motion-safe:animate-hero-in inline-flex items-center gap-2 rounded-full bg-masa/15 px-4 py-1.5 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-masa">
+      <div
+        ref={charBandRef}
+        className="relative bg-char px-4 pt-10 pb-14 text-center sm:pt-12 sm:pb-16 md:pt-16 md:pb-20"
+      >
+        <p
+          ref={eyebrowRef}
+          className="inline-flex items-center gap-2 rounded-full bg-masa/15 px-4 py-1.5 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-masa"
+        >
           De la planta a tu góndola · Medellín, Colombia
         </p>
-
-        <svg
-          className="absolute inset-x-0 bottom-0 h-10 w-full text-(--color-bg) sm:h-12 md:h-14"
-          viewBox="0 0 1440 60"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path d={TORN_EDGE_PATH} fill="currentColor" />
-        </svg>
       </div>
 
       {/* Warm masa band */}
-      <div className="relative bg-gradient-to-b from-masa/12 to-(--color-bg) px-4 pt-6 pb-16 text-center sm:pb-20">
-        <h1 className="motion-safe:animate-hero-in [animation-delay:60ms] mx-auto max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-(--color-text) sm:text-5xl md:text-6xl">
+      <div
+        ref={masaBandRef}
+        className="relative bg-gradient-to-b from-masa/12 to-(--color-bg) px-4 pt-6 pb-16 text-center sm:pb-20"
+      >
+        <h1
+          ref={headlineRef}
+          className="mx-auto max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-(--color-text) sm:text-5xl md:text-6xl"
+        >
           El sabor que buscabas,{" "}
           <span className="text-accent">lo hacemos nosotros.</span>
         </h1>
-        <p className="motion-safe:animate-hero-in [animation-delay:120ms] mx-auto mt-6 max-w-xl text-lg text-(--color-text-muted)">
+        <p
+          ref={subcopyRef}
+          className="mx-auto mt-6 max-w-xl text-lg text-(--color-text-muted)"
+        >
           Empanadas de maíz horneadas, palos de queso y más mekatos irresistibles,
           directo a supermercados, restaurantes, eventos y comedores institucionales
           de toda la región.
         </p>
-        <div className="motion-safe:animate-hero-in [animation-delay:180ms] mt-9 flex flex-wrap justify-center gap-4">
+        <div ref={ctaRef} className="mt-9 flex flex-wrap justify-center gap-4">
           <Link
             href="/productos"
             className="inline-flex min-h-11 items-center justify-center rounded-full bg-accent px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-hover hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
@@ -52,7 +140,7 @@ export default function HomeHero() {
             Hablemos de tu pedido
           </Link>
         </div>
-        <p className="motion-safe:animate-hero-in [animation-delay:220ms] mt-5 font-nunito text-xs text-(--color-text-muted)">
+        <p ref={captionRef} className="mt-5 font-nunito text-xs text-(--color-text-muted)">
           Distribución directa · Pedidos por mayor y para eventos
         </p>
       </div>

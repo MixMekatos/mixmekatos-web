@@ -1,146 +1,244 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import ScrollReveal from "@/app/components/motion/ScrollReveal";
-import StaggerGroup from "@/app/components/motion/StaggerGroup";
-import StaggerItem from "@/app/components/motion/StaggerItem";
-import Parallax from "@/app/components/motion/Parallax";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+gsap.registerPlugin(ScrollTrigger);
+
+type Product = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  variant: "photo" | "typography";
+  image?: string;
+  imageAlt?: string;
+  imagePosition?: string;
+  duotone?: boolean;
+};
+
+const PRODUCTS: Product[] = [
+  {
+    id: "empanadas",
+    eyebrow: "Lo más pedido",
+    title: "Empanadas de maíz 🫓",
+    description:
+      "Horneadas, crujientes por fuera y rellenas de puro sabor por dentro. La estrella de la casa.",
+    variant: "photo",
+    // TEMP stock photo, swap for real product photography.
+    image: "/layout/banner-example.jpg",
+    imageAlt:
+      "Empanadas de maíz doradas servidas con salsa criolla y ají picante sobre un plato negro",
+    imagePosition: "object-[58%_42%]",
+    duotone: true,
+  },
+  {
+    id: "queso",
+    eyebrow: "Imperdible",
+    title: "Palos de queso 🧀",
+    description:
+      "Queso fundido envuelto en una mezcla dorada e irresistible. Para compartir, o no.",
+    variant: "photo",
+    // TEMP stock photo, swap for real product photography.
+    image: "/products/temp/temp-dedos-queso-pexels.jpg",
+    imageAlt:
+      "Palitos de queso empanizados y fritos, dorados y crocantes, servidos en un plato blanco",
+  },
+  {
+    id: "congelados",
+    eyebrow: "Supermercados & mayorista",
+    title: "Congelados prefritos ❄️",
+    description:
+      "Listos para calentar en minutos. Misma calidad MixMekatos en tu casa o negocio.",
+    variant: "typography",
+  },
+];
+
+/**
+ * The standout scroll moment of the page: a GSAP ScrollTrigger sticky-stack.
+ * Each product pins at the top of the viewport as the next one arrives,
+ * scaling and fading back to reveal the one behind it, with its own photo
+ * drifting via a separate scroll-scrubbed parallax tween. Isolated from the
+ * Framer Motion primitives used elsewhere on the page (GSAP and Framer
+ * Motion must never share a component tree), and gated by
+ * `ScrollTrigger.matchMedia` so the heavier pin choreography only runs at
+ * tablet width and up, avoiding a janky pin on small phones.
+ */
 export default function HomeProductos() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion || !containerRef.current) {
+      // Static stacked layout: cards simply flow and scroll normally, no
+      // pin, no scale, no parallax.
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const cardEls = gsap.utils.toArray<HTMLElement>(".stack-card");
+      const imageEls = gsap.utils.toArray<HTMLElement>(".stack-card-image");
+
+      ScrollTrigger.matchMedia({
+        // Desktop/tablet: full pin + scale-back stack, plus a stronger
+        // photo parallax while each card holds the top of the viewport.
+        "(min-width: 768px)": () => {
+          cardEls.forEach((card, i) => {
+            if (i === cardEls.length - 1) return;
+
+            ScrollTrigger.create({
+              trigger: card,
+              start: "top top",
+              endTrigger: cardEls[cardEls.length - 1],
+              end: "top top",
+              pin: true,
+              pinSpacing: false,
+            });
+
+            gsap.to(card, {
+              scale: 0.92,
+              opacity: 0.55,
+              ease: "none",
+              scrollTrigger: {
+                trigger: cardEls[i + 1],
+                start: "top bottom",
+                end: "top top",
+                scrub: true,
+              },
+            });
+          });
+
+          imageEls.forEach((imgWrap) => {
+            gsap.to(imgWrap, {
+              y: 70,
+              ease: "none",
+              scrollTrigger: {
+                trigger: imgWrap.closest(".stack-card"),
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            });
+          });
+        },
+
+        // Mobile: no pin (avoids a heavy/janky pin on small screens with
+        // large product photos), just a lighter photo parallax so the
+        // section still feels alive while scrolling.
+        "(max-width: 767px)": () => {
+          imageEls.forEach((imgWrap) => {
+            gsap.to(imgWrap, {
+              y: 36,
+              ease: "none",
+              scrollTrigger: {
+                trigger: imgWrap.closest(".stack-card"),
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            });
+          });
+        },
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="bg-(--color-bg) px-4 py-14">
-      <div className="mx-auto max-w-5xl">
-        <ScrollReveal y={16} duration={0.45} className="mb-10 text-center">
-          <p className="mx-auto mb-3 inline-flex w-fit rounded-full bg-accent/10 px-4 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
-            Nuestros productos
-          </p>
-          <h2 className="font-display text-2xl font-semibold text-(--color-text) sm:text-3xl">
-            Hechos para que repitas
-          </h2>
-        </ScrollReveal>
+    <section className="bg-(--color-bg) py-14">
+      <div className="mx-auto max-w-5xl px-4 text-center">
+        <p className="mx-auto mb-3 inline-flex w-fit rounded-full bg-accent/10 px-4 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">
+          Nuestros productos
+        </p>
+        <h2 className="mb-10 font-display text-2xl font-semibold text-(--color-text) sm:text-3xl">
+          Hechos para que repitas
+        </h2>
+      </div>
 
-        {/* Asymmetric showcase: one tall featured tile + two stacked tiles,
-            so the product visuals themselves carry the layout instead of
-            sitting behind small decorative icons — deliberately different
-            from Canales' horizontal ticket rail above it. This is the
-            standout motion moment of the page: the featured tile "arrives"
-            first and with the most pronounced entrance, the two smaller
-            tiles follow with a shorter stagger. */}
-        <StaggerGroup
-          stagger={0.12}
-          delayChildren={0.05}
-          amount={0.15}
-          className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:grid-rows-2"
-        >
-          {/* Featured: Empanadas de maíz */}
-          <StaggerItem
-            y={36}
-            scale={0.95}
-            duration={0.65}
-            className="group relative min-h-[380px] overflow-hidden rounded-3xl lg:row-span-2 lg:min-h-0"
-          >
-            {/* TEMP stock photo — swap for real product photography */}
-            <Parallax range={20}>
-              <Image
-                src="/layout/banner-example.jpg"
-                alt="Empanadas de maíz doradas servidas con salsa criolla y ají picante sobre un plato negro"
-                fill
-                sizes="(min-width: 1024px) 45vw, 100vw"
-                className="object-cover object-[58%_42%] transition duration-300 motion-safe:group-hover:scale-105"
-              />
-            </Parallax>
-            {/* Duotone wash toward the brand's masa gold, so the photo's
-                clashing teal backdrop reads as part of the site's palette
-                instead of fighting it. */}
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-masa opacity-40 mix-blend-color"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-char/90 via-char/25 to-transparent"
-            />
-            <span className="absolute top-5 right-5 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-bar shadow-sm backdrop-blur-sm">
-              Lo más pedido
-            </span>
-            <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-              <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl">
-                Empanadas de maíz 🫓
-              </h3>
-              <p className="mt-2 max-w-sm text-sm text-white/85">
-                Horneadas, crujientes por fuera y rellenas de puro sabor por dentro. La estrella de
-                la casa.
-              </p>
-            </div>
-          </StaggerItem>
-
-          {/* Palos de queso */}
-          <StaggerItem
-            y={26}
-            scale={0.97}
-            duration={0.55}
-            className="group relative min-h-[220px] overflow-hidden rounded-3xl sm:min-h-[260px]"
-          >
-            {/* TEMP stock photo — swap for real product photography */}
-            <Parallax range={14}>
-              <Image
-                src="/products/temp/temp-dedos-queso-pexels.jpg"
-                alt="Palitos de queso empanizados y fritos, dorados y crocantes, servidos en un plato blanco"
-                fill
-                sizes="(min-width: 1024px) 45vw, 100vw"
-                className="object-cover transition duration-300 motion-safe:group-hover:scale-105"
-              />
-            </Parallax>
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-char/85 via-char/15 to-transparent"
-            />
-            <span className="absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-bar shadow-sm backdrop-blur-sm">
-              Imperdible
-            </span>
-            <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-              <h3 className="font-display text-xl font-semibold text-white sm:text-2xl">
-                Palos de queso 🧀
-              </h3>
-              <p className="mt-1 max-w-xs text-sm text-white/85">
-                Queso fundido envuelto en una mezcla dorada e irresistible. Para compartir… o no.
-              </p>
-            </div>
-          </StaggerItem>
-
-          {/* Congelados prefritos — no suitable photo found yet, carried by
-              type and color instead of a mediocre stock image. */}
-          <StaggerItem
-            y={26}
-            scale={0.97}
-            duration={0.55}
-            className="relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl bg-char p-6 sm:min-h-[260px] sm:p-7"
-          >
-            <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-br from-masa/20 via-transparent to-transparent"
-            />
-            <span className="relative w-fit rounded-full bg-masa/15 px-3 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.15em] text-masa">
-              Supermercados &amp; mayorista
-            </span>
-            <div className="relative">
-              <h3 className="font-display text-xl font-semibold text-white sm:text-2xl">
-                Congelados prefritos ❄️
-              </h3>
-              <p className="mt-1 max-w-xs text-sm text-white/75">
-                Listos para calentar en minutos. Misma calidad MixMekatos en tu casa o negocio.
-              </p>
-            </div>
-          </StaggerItem>
-        </StaggerGroup>
-
-        <div className="mt-10 text-center">
-          <Link
-            href="/productos"
-            className="inline-flex min-h-11 items-center justify-center rounded-full bg-bar px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-          >
-            Ver todos los productos
-          </Link>
+      <div ref={containerRef} className="relative px-4">
+        <div className="mx-auto flex max-w-6xl flex-col">
+          {PRODUCTS.map((product, index) => (
+            <article
+              key={product.id}
+              className="stack-card group relative flex min-h-[100dvh] items-end overflow-hidden rounded-3xl"
+              style={{ zIndex: index + 1 }}
+            >
+              {product.variant === "photo" ? (
+                <>
+                  <div
+                    className="stack-card-image absolute inset-x-0"
+                    style={{ top: -80, bottom: -80 }}
+                  >
+                    <Image
+                      src={product.image as string}
+                      alt={product.imageAlt as string}
+                      fill
+                      sizes="(min-width: 768px) 80vw, 100vw"
+                      className={`object-cover transition duration-300 motion-safe:group-hover:scale-105 ${
+                        product.imagePosition ?? ""
+                      }`}
+                    />
+                  </div>
+                  {product.duotone && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-masa opacity-40 mix-blend-color"
+                    />
+                  )}
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-char/90 via-char/25 to-transparent"
+                  />
+                  <span className="absolute top-6 right-6 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-bar shadow-sm backdrop-blur-sm sm:top-8 sm:right-8">
+                    {product.eyebrow}
+                  </span>
+                  <div className="relative w-full p-6 sm:p-10 md:p-14">
+                    <h3 className="font-display text-3xl font-semibold text-white sm:text-4xl md:text-5xl">
+                      {product.title}
+                    </h3>
+                    <p className="mt-3 max-w-md text-base text-white/85 sm:text-lg">
+                      {product.description}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div className="relative flex h-full w-full flex-col justify-between bg-char p-6 sm:p-10 md:p-14">
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-br from-masa/20 via-transparent to-transparent"
+                  />
+                  <span className="relative w-fit rounded-full bg-masa/15 px-3 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.15em] text-masa">
+                    {product.eyebrow}
+                  </span>
+                  <div className="relative">
+                    <h3 className="font-display text-3xl font-semibold text-white sm:text-4xl md:text-5xl">
+                      {product.title}
+                    </h3>
+                    <p className="mt-3 max-w-md text-base text-white/75 sm:text-lg">
+                      {product.description}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </article>
+          ))}
         </div>
+      </div>
+
+      <div className="mx-auto mt-10 max-w-5xl px-4 text-center">
+        <Link
+          href="/productos"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-bar px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        >
+          Ver todos los productos
+        </Link>
       </div>
     </section>
   );
