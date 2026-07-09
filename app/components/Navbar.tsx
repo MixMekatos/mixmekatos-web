@@ -102,20 +102,20 @@ export default function Navbar() {
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/"
-            className="relative h-16 w-28 shrink-0 sm:h-20 sm:w-36 md:h-24 md:w-44"
+            className="relative h-[54px] w-[95px] shrink-0 sm:h-[68px] sm:w-[122px] md:h-[82px] md:w-[150px]"
             onClick={() => setMenuOpen(false)}
           >
             <Image
               src="/logo.png"
               alt="MixMekatos"
               fill
-              sizes="(min-width: 768px) 176px, 112px"
+              sizes="(min-width: 768px) 150px, 95px"
               className="object-contain object-left"
               priority
             />
           </Link>
 
-          <nav className="flex h-12 items-center justify-between gap-4 rounded-full border border-white/10 bg-ink-surface px-4 shadow-lg shadow-black/30 sm:h-14 sm:px-6">
+          <nav className="flex h-[41px] items-center justify-between gap-4 rounded-full border border-white/10 bg-ink-surface px-4 shadow-lg shadow-black/30 sm:h-[48px] sm:px-6">
             {showHamburger ? (
               <button
                 type="button"
