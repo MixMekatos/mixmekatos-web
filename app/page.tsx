@@ -2,8 +2,7 @@
 import HomeCanales from "./components/home/HomeCanales";
 import HomeProductos from "./components/home/HomeProductos";
 import HomeCTA from "./components/home/HomeCTA";
-import HomeValores from "./components/home/HomeValores";
-import HomeMayorista from "./components/home/HomeMayorista";
+import HomeTrade from "./components/home/HomeTrade";
 import ToasterProvider from "./components/ToasterProvider";
 
 
@@ -20,8 +19,7 @@ export default function InicioPage() {
         ctaLabel="Quiero mis empanadas ahora"
         ctaHref="/productos"
       />
-      <HomeValores />
-      <HomeMayorista />
+      <HomeTrade />
     </main>
   );
 }

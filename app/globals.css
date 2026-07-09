@@ -35,18 +35,30 @@
      tested as the single most-common "AI tell" for premium-food briefs
      (taste-skill 4.2, PREMIUM-CONSUMER PALETTE BAN). This is a Black and
      Tan family (true near-black + one warm incandescent gold), not the
-     banned beige/brass/oxblood family. */
-  --color-ink: #1f130c; /* primary bg: toasted near-black, not pure #000 */
-  --color-ink-surface: #3a2419; /* elevated surface, one step lighter than ink */
-  --color-ink-text: #f5f1ea; /* primary text on ink (~16.1:1, reused from .dark) */
-  --color-ink-text-muted: #b6ada3; /* secondary text on ink (~8.2:1, reused from .dark) */
+     banned beige/brass/oxblood family.
+
+     Stage 10: --color-ink/--color-ink-surface swapped from a toasted
+     brown-black (#1f130c / #3a2419) to a genuinely neutral charcoal, per
+     direct feedback that the brown reading was disliked ("me gusta el
+     concepto de algo dark pero es que cafe como que nahh") while the dark
+     concept itself was kept. #171717 / #262626 are true grays (R=G=B, zero
+     hue bias) rather than a desaturated warm tone. --color-ink-text and
+     --color-ink-text-muted are unchanged: both were re-checked against the
+     new background via the WCAG relative-luminance formula and still clear
+     AA by a wide margin (~15.9:1 and ~8.1:1 respectively, versus ~16.1:1 /
+     ~8.2:1 before), so the existing warm off-white doesn't need retuning. */
+  --color-ink: #171717; /* primary bg: neutral charcoal, no brown/warm hue bias */
+  --color-ink-surface: #262626; /* elevated surface, one step lighter than ink */
+  --color-ink-text: #f5f1ea; /* primary text on ink (~15.9:1) */
+  --color-ink-text-muted: #b6ada3; /* secondary text on ink (~8.1:1) */
   /* Stage 8: desaturated from the original #f0b23e (86% saturation, read as
      an incandescent/glowing neon-adjacent gold) to a restrained brushed-
      brass tone (44% saturation, same hue family) per explicit "no
-     saturado" direction. Contrast against --color-ink (#1f130c), manually
-     computed via the WCAG relative-luminance formula: glow ~6.96:1,
-     glow-hover ~8.37:1 — both comfortably above the 4.5:1 AA text
-     threshold. */
+     saturado" direction. Contrast re-checked against the stage 10 neutral
+     --color-ink (#171717), manually computed via the WCAG relative-
+     luminance formula: glow ~6.88:1, glow-hover ~8.26:1 — both comfortably
+     above the 4.5:1 AA text threshold, and if anything a stronger pairing
+     now that the background is a true neutral rather than brown-toned. */
   --color-glow: #c19a5f; /* the ONE dominant accent: muted brass/gold */
   --color-glow-hover: #ccab7b; /* hover state for glow-filled buttons */
 

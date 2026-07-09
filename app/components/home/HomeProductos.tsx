@@ -3,13 +3,30 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Star } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import productsData from "@/app/data/products.json";
+import { formatPrice, type Product } from "@/app/lib/products";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type Product = {
+// Real catalog, the same 8-SKU source used on /productos, wired into the
+// home page for the first time (stage 9): each card below surfaces real
+// price/weight/rating data pulled from here instead of hardcoded copy.
+const CATALOG = productsData as unknown as Product[];
+
+function getSku(id: string): Product {
+  const sku = CATALOG.find((product) => product.id === id);
+  if (!sku) {
+    throw new Error(`HomeProductos: SKU "${id}" not found in app/data/products.json`);
+  }
+  return sku;
+}
+
+type CardCopy = {
   id: string;
+  skuId: string;
   eyebrow: string;
   title: string;
   description: string;
@@ -18,11 +35,13 @@ type Product = {
   imageAlt?: string;
   imagePosition?: string;
   duotone?: boolean;
+  dataRowTone: "onPhoto" | "onSurface";
 };
 
-const PRODUCTS: Product[] = [
+const PRODUCTS: CardCopy[] = [
   {
     id: "empanadas",
+    skuId: "emp-maiz-x6",
     eyebrow: "Lo más pedido",
     title: "Empanadas de maíz",
     description:
@@ -34,9 +53,11 @@ const PRODUCTS: Product[] = [
       "Empanadas de maíz doradas servidas con salsa criolla y ají picante sobre un plato negro",
     imagePosition: "object-[58%_42%]",
     duotone: true,
+    dataRowTone: "onPhoto",
   },
   {
     id: "queso",
+    skuId: "dedos-queso-x6",
     eyebrow: "Imperdible",
     title: "Palos de queso",
     description:
@@ -46,26 +67,63 @@ const PRODUCTS: Product[] = [
     image: "/products/temp/temp-dedos-queso-pexels.jpg",
     imageAlt:
       "Palitos de queso empanizados y fritos, dorados y crocantes, servidos en un plato blanco",
+    dataRowTone: "onPhoto",
   },
   {
     id: "congelados",
+    skuId: "congelado-emp-x12",
     eyebrow: "Supermercados & mayorista",
     title: "Congelados prefritos",
     description:
       "Listos para calentar en minutos. Misma calidad MixMekatos en tu casa o negocio.",
     variant: "typography",
+    dataRowTone: "onSurface",
   },
 ];
 
+/** Confident-specificity data row: price, weight/unit, rating - 3 data
+ * points max, styled as a thin divided strip rather than a spec table.
+ * Only one middle-dot on the whole row (inside the weight/unit segment) to
+ * respect the project's separator-rationing convention; the other two
+ * segments are split with hairline dividers instead of repeated dots. */
+function ProductDataRow({ sku, tone }: { sku: Product; tone: "onPhoto" | "onSurface" }) {
+  const textClass = tone === "onPhoto" ? "text-white/90" : "text-ink-text";
+  const borderClass = tone === "onPhoto" ? "border-white/20" : "border-glow/20";
+  const dividerClass = tone === "onPhoto" ? "border-white/25" : "border-glow/25";
+
+  return (
+    <div
+      className={`relative mt-4 flex flex-wrap items-center border-t pt-3 text-sm font-semibold sm:text-base ${borderClass} ${textClass}`}
+    >
+      <span className="pr-4">{formatPrice(sku.price)}</span>
+      <span className={`border-l pl-4 pr-4 ${dividerClass}`}>
+        {sku.weight} · {sku.unit}
+      </span>
+      <span className={`inline-flex items-center gap-1 border-l pl-4 ${dividerClass}`}>
+        <Star className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
+        {sku.rating} ({sku.ratingCount})
+      </span>
+    </div>
+  );
+}
+
 /**
- * The standout scroll moment of the page: a GSAP ScrollTrigger sticky-stack.
- * Each product pins at the top of the viewport as the next one arrives,
- * scaling and fading back to reveal the one behind it, with its own photo
- * drifting via a separate scroll-scrubbed parallax tween. Isolated from the
- * Framer Motion primitives used elsewhere on the page (GSAP and Framer
- * Motion must never share a component tree), and gated by
- * `ScrollTrigger.matchMedia` so the heavier pin choreography only runs at
- * tablet width and up, avoiding a janky pin on small phones.
+ * Stage 10 rebuild: the previous version pinned each card at full-viewport
+ * height (`min-h-[100dvh]`), which read as bloated and made the
+ * `rounded-3xl` corner radius visually imperceptible at that scale ("una
+ * card sale hasta sin bordes redondeados"). Cards are now a fixed, generous
+ * but genuinely finite height (520px / 600px at sm+) so the radius is
+ * actually visible and the section reads as a confident showcase rather
+ * than a screen takeover.
+ *
+ * The pin/stack mechanic is replaced with a pronounced per-card scroll
+ * entrance (scale 0.85 -> 1, y 80 -> 0, fade in) via GSAP ScrollTrigger,
+ * plus the same photo parallax from the previous stage (kept, magnitude
+ * tuned down to match the smaller card). Isolated from the Framer Motion
+ * primitives used elsewhere on the page (GSAP and Framer Motion must never
+ * share a component tree). `ScrollTrigger.matchMedia` still gates the
+ * parallax magnitude by breakpoint; the entrance reveal itself is cheap
+ * enough (no pin, no layout thrash) to run at every width.
  */
 export default function HomeProductos() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,7 +135,7 @@ export default function HomeProductos() {
 
     if (prefersReducedMotion || !containerRef.current) {
       // Static stacked layout: cards simply flow and scroll normally, no
-      // pin, no scale, no parallax.
+      // entrance animation, no parallax.
       return;
     }
 
@@ -85,38 +143,33 @@ export default function HomeProductos() {
       const cardEls = gsap.utils.toArray<HTMLElement>(".stack-card");
       const imageEls = gsap.utils.toArray<HTMLElement>(".stack-card-image");
 
-      ScrollTrigger.matchMedia({
-        // Desktop/tablet: full pin + scale-back stack, plus a stronger
-        // photo parallax while each card holds the top of the viewport.
-        "(min-width: 768px)": () => {
-          cardEls.forEach((card, i) => {
-            if (i === cardEls.length - 1) return;
-
-            ScrollTrigger.create({
+      // Pronounced entrance: each card scales/fades/rises into place as it
+      // crosses into view. This is the section's signature scroll moment
+      // now that full-viewport pinning is gone.
+      cardEls.forEach((card) => {
+        gsap.fromTo(
+          card,
+          { autoAlpha: 0, scale: 0.85, y: 80 },
+          {
+            autoAlpha: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
               trigger: card,
-              start: "top top",
-              endTrigger: cardEls[cardEls.length - 1],
-              end: "top top",
-              pin: true,
-              pinSpacing: false,
-            });
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
 
-            gsap.to(card, {
-              scale: 0.92,
-              opacity: 0.55,
-              ease: "none",
-              scrollTrigger: {
-                trigger: cardEls[i + 1],
-                start: "top bottom",
-                end: "top top",
-                scrub: true,
-              },
-            });
-          });
-
+      ScrollTrigger.matchMedia({
+        "(min-width: 768px)": () => {
           imageEls.forEach((imgWrap) => {
             gsap.to(imgWrap, {
-              y: 70,
+              y: 40,
               ease: "none",
               scrollTrigger: {
                 trigger: imgWrap.closest(".stack-card"),
@@ -128,13 +181,10 @@ export default function HomeProductos() {
           });
         },
 
-        // Mobile: no pin (avoids a heavy/janky pin on small screens with
-        // large product photos), just a lighter photo parallax so the
-        // section still feels alive while scrolling.
         "(max-width: 767px)": () => {
           imageEls.forEach((imgWrap) => {
             gsap.to(imgWrap, {
-              y: 36,
+              y: 20,
               ease: "none",
               scrollTrigger: {
                 trigger: imgWrap.closest(".stack-card"),
@@ -163,72 +213,80 @@ export default function HomeProductos() {
       </div>
 
       <div ref={containerRef} className="relative px-4">
-        <div className="mx-auto flex max-w-6xl flex-col">
-          {PRODUCTS.map((product, index) => (
-            <article
-              key={product.id}
-              className="stack-card group relative flex min-h-[100dvh] items-end overflow-hidden rounded-3xl"
-              style={{ zIndex: index + 1 }}
-            >
-              {product.variant === "photo" ? (
-                <>
-                  <div
-                    className="stack-card-image absolute inset-x-0"
-                    style={{ top: -80, bottom: -80 }}
-                  >
-                    <Image
-                      src={product.image as string}
-                      alt={product.imageAlt as string}
-                      fill
-                      sizes="(min-width: 768px) 80vw, 100vw"
-                      className={`object-cover transition duration-300 motion-safe:group-hover:scale-105 ${
-                        product.imagePosition ?? ""
-                      }`}
-                    />
-                  </div>
-                  {product.duotone && (
+        <div className="mx-auto flex max-w-6xl flex-col gap-8 sm:gap-10">
+          {PRODUCTS.map((product) => {
+            const sku = getSku(product.skuId);
+            return (
+              <article
+                key={product.id}
+                className="stack-card group relative flex h-[520px] items-end overflow-hidden rounded-3xl sm:h-[600px]"
+              >
+                {product.variant === "photo" ? (
+                  <>
+                    <div
+                      className="stack-card-image absolute inset-x-0"
+                      style={{ top: -60, bottom: -60 }}
+                    >
+                      <Image
+                        src={product.image as string}
+                        alt={product.imageAlt as string}
+                        fill
+                        sizes="(min-width: 768px) 80vw, 100vw"
+                        className={`object-cover transition duration-300 motion-safe:group-hover:scale-105 ${
+                          product.imagePosition ?? ""
+                        }`}
+                      />
+                    </div>
+                    {product.duotone && (
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0 bg-masa opacity-40 mix-blend-color"
+                      />
+                    )}
                     <div
                       aria-hidden="true"
-                      className="absolute inset-0 bg-masa opacity-40 mix-blend-color"
+                      className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent"
                     />
-                  )}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/25 to-transparent"
-                  />
-                  <span className="absolute top-6 right-6 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-ink shadow-sm backdrop-blur-sm sm:top-8 sm:right-8">
-                    {product.eyebrow}
-                  </span>
-                  <div className="relative w-full p-6 sm:p-10 md:p-14">
-                    <h3 className="font-display text-3xl font-semibold text-white sm:text-4xl md:text-5xl">
-                      {product.title}
-                    </h3>
-                    <p className="mt-3 max-w-md text-base text-white/85 sm:text-lg">
-                      {product.description}
-                    </p>
+                    <span className="absolute top-6 right-6 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-ink shadow-sm backdrop-blur-sm sm:top-8 sm:right-8">
+                      {product.eyebrow}
+                    </span>
+                    <div className="relative w-full p-6 sm:p-8 md:p-10">
+                      <h3 className="font-display text-2xl font-semibold text-white sm:text-3xl md:text-4xl">
+                        {product.title}
+                      </h3>
+                      <p className="mt-3 max-w-md text-base text-white/85 sm:text-lg">
+                        {product.description}
+                      </p>
+                      <div className="max-w-md">
+                        <ProductDataRow sku={sku} tone={product.dataRowTone} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-6 sm:p-8 md:p-10">
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-br from-glow/15 via-transparent to-transparent"
+                    />
+                    <span className="relative w-fit rounded-full bg-glow/15 px-3 py-1 font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-glow">
+                      {product.eyebrow}
+                    </span>
+                    <div className="relative">
+                      <h3 className="font-display text-2xl font-semibold text-ink-text sm:text-3xl md:text-4xl">
+                        {product.title}
+                      </h3>
+                      <p className="mt-3 max-w-md text-base text-ink-text-muted sm:text-lg">
+                        {product.description}
+                      </p>
+                      <div className="max-w-md">
+                        <ProductDataRow sku={sku} tone={product.dataRowTone} />
+                      </div>
+                    </div>
                   </div>
-                </>
-              ) : (
-                <div className="relative flex h-full w-full flex-col justify-between bg-ink-surface p-6 sm:p-10 md:p-14">
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-gradient-to-br from-glow/15 via-transparent to-transparent"
-                  />
-                  <span className="relative w-fit rounded-full bg-glow/15 px-3 py-1 font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-glow">
-                    {product.eyebrow}
-                  </span>
-                  <div className="relative">
-                    <h3 className="font-display text-3xl font-semibold text-ink-text sm:text-4xl md:text-5xl">
-                      {product.title}
-                    </h3>
-                    <p className="mt-3 max-w-md text-base text-ink-text-muted sm:text-lg">
-                      {product.description}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </article>
-          ))}
+                )}
+              </article>
+            );
+          })}
         </div>
       </div>
 

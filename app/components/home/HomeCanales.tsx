@@ -1,51 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Store, CalendarHeart, type LucideIcon } from "lucide-react";
+import { CalendarHeart, Store } from "lucide-react";
 import ScrollReveal from "@/app/components/motion/ScrollReveal";
 import StaggerGroup from "@/app/components/motion/StaggerGroup";
 import StaggerItem from "@/app/components/motion/StaggerItem";
 
-interface Canal {
-  icon: LucideIcon;
-  title: string;
-  desc: string;
-  accentClass: string;
-  bgClass: string;
-  cta: { label: string; href: string };
-}
-
-// All three channels share the exact same glow treatment (Color
-// Consistency Lock, taste-skill 4.2): the icon glyphs themselves, not three
-// different hues, do the distinguishing work.
-const CANALES: Canal[] = [
-  {
-    icon: ShoppingBag,
-    title: "Pídelo a domicilio",
-    desc: "Estamos en Rappi y DiDi Food. Tu antojo llega caliente a la puerta.",
-    accentClass: "text-glow",
-    bgClass: "bg-glow/12",
-    cta: { label: "Ver apps", href: "/#delivery" },
-  },
-  {
-    icon: Store,
-    title: "En supermercados",
-    desc: "Encuentra nuestros congelados prefritos en puntos de venta seleccionados en Medellín.",
-    accentClass: "text-glow",
-    bgClass: "bg-glow/12",
-    cta: { label: "¿Dónde?", href: "/donde-estamos" },
-  },
-  {
-    icon: CalendarHeart,
-    title: "Para eventos",
-    desc: "Venta al por mayor de producto congelado prefrito. Perfecto para sociales, empresas y catering.",
-    accentClass: "text-glow",
-    bgClass: "bg-glow/12",
-    cta: { label: "Cotizar", href: "/contacto" },
-  },
-];
-
 // Real retail partners currently carrying MixMekatos product. Logged here
-// once as the single source of truth for this "dónde nos encuentras" strip.
+// once as the single source of truth for this "dónde nos encuentras" block.
 const RETAIL_PARTNERS = [
   { src: "/branding/almacenes_paraiso.png", alt: "Logo de Almacenes Paraíso" },
   { src: "/branding/el_chispazo.png", alt: "Logo de Supermercado El Chispazo" },
@@ -53,9 +14,18 @@ const RETAIL_PARTNERS = [
   { src: "/branding/pasadena.png", alt: "Logo de Pasadena Supermercados" },
 ];
 
+/**
+ * Structural rebuild (stage 9), rebalanced in stage 10: the "Pídelo a
+ * domicilio" channel (Rappi/DiDi Food) was removed entirely per business
+ * decision — MixMekatos isn't operating as a ghost kitchen yet, so those
+ * delivery-app references aren't accurate. With only two real channels left
+ * (eventos, supermercados), the layout moved from an asymmetric [3fr_2fr]
+ * two-column split to a straightforward even two-column grid so neither
+ * block reads as a leftover gap.
+ */
 export default function HomeCanales() {
   return (
-    <section className="bg-ink px-4 py-14">
+    <section className="bg-ink px-4 py-14 md:py-20">
       <div className="mx-auto max-w-5xl">
         <ScrollReveal y={32} duration={0.5}>
           <h2 className="mb-10 text-center font-display text-2xl font-semibold text-ink-text sm:text-3xl">
@@ -63,67 +33,75 @@ export default function HomeCanales() {
           </h2>
         </ScrollReveal>
 
-        {/* Rail/ticket layout: one continuous card, channels separated by a
-            dashed "tear line" instead of three isolated tiles, distinct
-            from the bordered-card grid used elsewhere on the page. */}
         <StaggerGroup
-          stagger={0.08}
-          className="overflow-hidden rounded-3xl border border-white/10 bg-ink-surface shadow-sm divide-y divide-dashed divide-white/10 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:divide-x"
+          stagger={0.1}
+          className="grid grid-cols-1 gap-5 md:grid-cols-2 md:items-stretch"
         >
-          {CANALES.map(({ icon: Icon, title, desc, accentClass, bgClass, cta }, index) => (
-            <StaggerItem
-              key={title}
-              // Each cell slides in from a different direction for variety
-              // (real component translation, not a uniform fade-up): first
-              // from the left, second from below, third from the right.
-              y={index === 1 ? 40 : 0}
-              x={index === 0 ? -40 : index === 2 ? 40 : undefined}
-              duration={0.55}
-              className="flex flex-col gap-4 p-6 sm:p-7"
+          <StaggerItem
+            x={-32}
+            y={0}
+            duration={0.55}
+            className="flex flex-col gap-4 rounded-3xl border border-white/10 bg-ink-surface p-6 sm:p-7"
+          >
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-glow/12 text-glow">
+              <CalendarHeart className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <div>
+              <h3 className="text-base font-semibold text-ink-text">Para eventos</h3>
+              <p className="mt-1 text-sm text-ink-text-muted">
+                Venta al por mayor de producto congelado prefrito, listo para sociales,
+                empresas y catering.
+              </p>
+            </div>
+            <Link
+              href="/contacto"
+              className="mt-auto inline-flex min-h-11 w-fit items-center gap-1 rounded-sm text-sm font-semibold text-glow underline-offset-2 transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
-              <span
-                className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${bgClass} ${accentClass}`}
-              >
-                <Icon className="h-6 w-6" aria-hidden="true" />
-              </span>
+              Cotizar →
+            </Link>
+          </StaggerItem>
 
-              <div>
-                <h3 className="text-base font-semibold text-ink-text">{title}</h3>
-                <p className="mt-1 text-sm text-ink-text-muted">{desc}</p>
-              </div>
+          <StaggerItem
+            x={32}
+            y={0}
+            duration={0.6}
+            className="flex flex-col gap-6 rounded-3xl border border-glow/25 bg-ink-surface p-7 sm:p-9"
+          >
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-glow/12 text-glow">
+              <Store className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <div>
+              <h3 className="text-base font-semibold text-ink-text">En supermercados</h3>
+              <p className="mt-1 text-sm text-ink-text-muted">
+                Encuentra nuestros congelados prefritos en puntos de venta seleccionados
+                en Medellín.
+              </p>
+            </div>
 
-              {title === "En supermercados" && (
-                <div className="mt-1">
-                  <p className="font-nunito text-[11px] uppercase tracking-wide text-ink-text-muted">
-                    Nos encuentras en
-                  </p>
-                  <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-3">
-                    {RETAIL_PARTNERS.map((partner) => (
-                      <div
-                        key={partner.src}
-                        className="relative h-9 w-24 rounded-md bg-white/95 p-1.5 sm:h-10 sm:w-28"
-                      >
-                        <Image
-                          src={partner.src}
-                          alt={partner.alt}
-                          fill
-                          sizes="112px"
-                          className="object-contain p-1"
-                        />
-                      </div>
-                    ))}
-                  </div>
+            <div className="grid grid-cols-2 gap-3">
+              {RETAIL_PARTNERS.map((partner) => (
+                <div
+                  key={partner.src}
+                  className="relative h-16 rounded-xl bg-white/95 p-3 sm:h-20"
+                >
+                  <Image
+                    src={partner.src}
+                    alt={partner.alt}
+                    fill
+                    sizes="(min-width: 768px) 160px, 45vw"
+                    className="object-contain p-1"
+                  />
                 </div>
-              )}
+              ))}
+            </div>
 
-              <Link
-                href={cta.href}
-                className="mt-auto inline-flex min-h-11 w-fit items-center gap-1 rounded-sm text-sm font-semibold text-glow underline-offset-2 transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
-              >
-                {cta.label} →
-              </Link>
-            </StaggerItem>
-          ))}
+            <Link
+              href="/donde-estamos"
+              className="mt-auto inline-flex min-h-11 w-fit items-center gap-1 rounded-sm text-sm font-semibold text-glow underline-offset-2 transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+            >
+              ¿Dónde? →
+            </Link>
+          </StaggerItem>
         </StaggerGroup>
       </div>
     </section>
