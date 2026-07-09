@@ -14,6 +14,7 @@ import {
 import ScrollReveal from "@/app/components/motion/ScrollReveal";
 import StaggerGroup from "@/app/components/motion/StaggerGroup";
 import StaggerItem from "@/app/components/motion/StaggerItem";
+import ParallaxGlow from "@/app/components/motion/ParallaxGlow";
 
 // Real retail partners currently carrying MixMekatos product. Migrated here
 // from the now-removed HomeCanales.tsx (stage 11): that section's own
@@ -115,8 +116,9 @@ const VALUE_PROPS: ValueProp[] = [
  */
 export default function HomeTrade() {
   return (
-    <section className="bg-ink px-4 py-14 md:py-20">
-      <div className="mx-auto max-w-5xl">
+    <section className="relative overflow-hidden bg-ink px-4 py-14 md:py-20">
+      <ParallaxGlow range={50} />
+      <div className="relative mx-auto max-w-5xl">
         <ScrollReveal y={32} duration={0.5} className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-2xl font-semibold text-ink-text sm:text-3xl">
             Hacemos parte de tu negocio, sea cual sea.

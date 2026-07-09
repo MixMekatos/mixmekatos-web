@@ -21,12 +21,20 @@ interface ScrollRevealProps extends Omit<HTMLMotionProps<"div">, "children"> {
   delay?: number;
   /** Fraction of the element that must be visible before it triggers (0–1). */
   amount?: number;
+  /**
+   * Replay the animation every time the element crosses the viewport
+   * boundary, in both scroll directions (reveals on the way down, reverses
+   * on the way back up), instead of triggering once and staying. Defaults
+   * to `true` so the page reads as alive on both scroll directions.
+   */
+  repeat?: boolean;
 }
 
 /**
- * Fades (+ optionally slides/scales) content into place once it enters the
- * viewport. Triggers a single time (`viewport.once`) so scrolling back up
- * and down never re-plays the animation. Only animates `opacity`/`transform`.
+ * Fades (+ optionally slides/scales) content into place as it enters the
+ * viewport, and — by default — reverses the same way when it leaves, so
+ * scrolling back up un-reveals content instead of leaving it static. Only
+ * animates `opacity`/`transform`.
  *
  * Under `prefers-reduced-motion`, falls back to an opacity-only fade with no
  * translate/scale so content never appears to "fly in" or get stuck offset.
@@ -39,6 +47,7 @@ export default function ScrollReveal({
   duration = 0.5,
   delay = 0,
   amount = 0.2,
+  repeat = true,
   className,
   ...rest
 }: ScrollRevealProps) {
@@ -66,7 +75,7 @@ export default function ScrollReveal({
       className={className}
       initial={hidden}
       whileInView={visible}
-      viewport={{ once: true, amount }}
+      viewport={{ once: !repeat, amount }}
       transition={{
         duration: shouldReduceMotion ? 0.3 : duration,
         delay: shouldReduceMotion ? 0 : delay,

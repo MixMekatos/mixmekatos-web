@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ScrollReveal from "@/app/components/motion/ScrollReveal";
+import ParallaxGlow from "@/app/components/motion/ParallaxGlow";
 
 interface HomeCTAProps {
   titulo: string;
@@ -15,8 +16,9 @@ export default function HomeCTA({
   ctaHref,
 }: HomeCTAProps) {
   return (
-    <section className="px-4 py-16 text-center bg-ink-surface">
-      <ScrollReveal y={36} duration={0.55}>
+    <section className="relative overflow-hidden px-4 py-16 text-center bg-ink-surface">
+      <ParallaxGlow range={30} />
+      <ScrollReveal y={36} duration={0.55} className="relative">
         <h2 className="mx-auto max-w-xl font-display text-3xl font-semibold leading-tight text-ink-text sm:text-4xl md:text-5xl">
           {titulo}
         </h2>
