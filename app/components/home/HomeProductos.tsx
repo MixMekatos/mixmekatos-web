@@ -169,12 +169,29 @@ export default function HomeProductos() {
       const cardEls = gsap.utils.toArray<HTMLElement>(".stack-card");
       const imageEls = gsap.utils.toArray<HTMLElement>(".stack-card-image");
 
-      // Orchestrated entrance: the card container reveals first (scale +
-      // slight rotate + rise + fade), then its content reveals itself in a
-      // short staggered sequence (eyebrow -> title -> description -> data
-      // row) rather than arriving as one flat block. Each card gets its own
-      // timeline/ScrollTrigger so cards further down the page don't wait on
-      // ones above them.
+      // Stage 16: previously each card got its OWN ScrollTrigger based on
+      // its own position ("top 92%" -> "top 55%"). That made sense for the
+      // old single-column stacked layout, but since stage 14 the cards sit
+      // side by side in a grid row - three near-identical, independent
+      // triggers on elements at almost the same vertical position turned
+      // out fragile: "estoy justo donde deberia ver los productos y veo
+      // solo uno, los otros dos nada que aparecen." Rebuilt as ONE
+      // ScrollTrigger on the grid container driving a SINGLE scrubbed
+      // timeline, with each card's reveal placed at its own small time
+      // offset inside that one timeline (a real GSAP stagger, not three
+      // separate measurements) - a single source of truth for the trigger
+      // math, which is both more robust and the more correct pattern for a
+      // grid row that should reveal together, not one full trigger per
+      // sibling.
+      const gridTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          end: "top 40%",
+          scrub: 0.3,
+        },
+      });
+
       cardEls.forEach((card, index) => {
         const innerEls = gsap.utils.toArray<HTMLElement>(
           [
@@ -191,37 +208,21 @@ export default function HomeProductos() {
         // arriving identically - a small touch that reads as more crafted
         // once the cards are a modest grid size rather than full-width bars.
         const rotateFrom = index % 2 === 0 ? -4 : 4;
+        const offset = index * 0.18;
 
-        // Stage 15: `toggleActions: "play reverse play reverse"` used a
-        // fixed-duration tween (0.9s+) triggered by discrete play/reverse
-        // calls - on any real scroll speed the animation couldn't keep up
-        // with the trigger crossings, so the card's still-playing entrance
-        // and its just-fired exit would collide mid-flight ("voy saliendo
-        // cuando entran"). A `scrub`-linked tween has no independent
-        // duration to outrun: its progress IS the scroll position, sampled
-        // every frame, so it is mechanically impossible for it to lag
-        // behind or fire out of order regardless of scroll speed.
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: card,
-            start: "top 92%",
-            end: "top 55%",
-            scrub: 0.3,
-          },
-        });
-
-        tl.fromTo(
+        gridTl.fromTo(
           card,
           { autoAlpha: 0, scale: 0.78, y: 100, rotate: rotateFrom },
-          { autoAlpha: 1, scale: 1, y: 0, rotate: 0, ease: "none" }
+          { autoAlpha: 1, scale: 1, y: 0, rotate: 0, ease: "none" },
+          offset
         );
 
         if (innerEls.length) {
           gsap.set(innerEls, { opacity: 0, y: 20 });
-          tl.to(
+          gridTl.to(
             innerEls,
-            { opacity: 1, y: 0, ease: "none", stagger: 0.1 },
-            "-=0.45"
+            { opacity: 1, y: 0, ease: "none", stagger: 0.05 },
+            offset + 0.1
           );
         }
       });
