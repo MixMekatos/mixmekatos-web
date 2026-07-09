@@ -1,5 +1,4 @@
-﻿import HeroCarousel from "./components/HeroCarousel";
-import HomeHero from "./components/home/HomeHero";
+﻿import HomeHero from "./components/home/HomeHero";
 import HomeCanales from "./components/home/HomeCanales";
 import HomeProductos from "./components/home/HomeProductos";
 import HomeCTA from "./components/home/HomeCTA";
@@ -12,7 +11,6 @@ export default function InicioPage() {
   return (
     <main className="min-h-screen bg-(--color-bg)">
       <ToasterProvider />
-      <HeroCarousel />
       <HomeHero />
       <HomeCanales />
       <HomeProductos />

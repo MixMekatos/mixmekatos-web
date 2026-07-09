@@ -7,7 +7,7 @@ interface Valor {
 }
 
 const VALORES: Valor[] = [
-  { icon: ChefHat, label: "Cocina oculta artesanal", desc: "Preparamos con dedicación y sin atajos." },
+  { icon: ChefHat, label: "Elaboración artesanal", desc: "Preparamos y controlamos cada lote con el mismo cuidado, sin atajos." },
   { icon: Flame, label: "Sabor que enamora", desc: "Recetas propias con ingredientes de calidad." },
   { icon: BadgeCheck, label: "Congelado sin perder calidad", desc: "Proceso certificado para que el sabor llegue intacto." },
 ];
