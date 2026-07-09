@@ -30,12 +30,21 @@ gsap.registerPlugin(ScrollTrigger);
  * is limited to the entrance timeline and the scroll-scrubbed parallax
  * below; no idle/continuous animation.
  *
- * Stage 13: the entrance timeline is now gated by a ScrollTrigger
- * (`toggleActions: "play reverse play none"`) instead of firing once on
- * mount - it still plays immediately on load, but now genuinely reverses
- * as the hero scrolls out of view (handing off to Productos) and replays
- * if the user scrolls back up into it, matching the scroll-scrubbed
- * parallax's own reactivity instead of sitting static after the first play.
+ * Stage 13: the entrance became scroll-reactive - it now reverses as the
+ * hero scrolls out of view (handing off to Productos) and replays if the
+ * user scrolls back up into it, instead of sitting static after the first
+ * play.
+ *
+ * Stage 15: reworked how that scroll-reactivity is wired. Attaching
+ * `scrollTrigger` directly to the timeline relied on ScrollTrigger
+ * detecting the trigger's start condition as already satisfied at scrollY
+ * 0 on mount and firing onEnter immediately - unreliable in practice
+ * ("no veo animaciones en el hero aun"). Now the timeline is a plain
+ * `paused: true` timeline that gets `.play()` called on it directly on
+ * mount (guaranteed to run), and a separate, minimal `ScrollTrigger.create`
+ * only handles the scroll-reactive part (`onLeave` reverses it,
+ * `onEnterBack` replays it) - that half doesn't need any "already past"
+ * detection since the user has to actually scroll for those to fire.
  */
 export default function HomeHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -75,21 +84,21 @@ export default function HomeHero() {
       gsap.set(eyebrowRef.current, { opacity: 0, x: -60 });
       gsap.set(dataPanelRef.current, { opacity: 0, y: 60, scale: 0.82, rotate: -3 });
 
-      // Tied to a ScrollTrigger (not just mount) so it isn't a one-shot: it
-      // plays immediately on load (the hero already satisfies "top top" at
-      // scrollY 0), reverses out as the hero scrolls past and Productos
-      // takes over ("bottom top"), and replays if the user scrolls back up
-      // into the hero. Previously this timeline had no ScrollTrigger at
-      // all and only ever played once on mount, which read as static on
-      // scroll ("no tienen scroll arriba, siguen estaticos").
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          toggleActions: "play reverse play none",
-        },
-      });
+      // Stage 15: attaching `scrollTrigger` directly to the timeline relied
+      // on ScrollTrigger detecting that "top top" was already satisfied at
+      // scrollY 0 on mount and firing onEnter immediately - unreliable in
+      // practice (initial-state detection depends on refresh timing), and
+      // the report was "no veo animaciones en el hero aun" (no entrance at
+      // all, not just a missing reverse). Split into two independent
+      // pieces: the timeline itself is a plain, unattached, paused
+      // timeline that gets `.play()` called on it directly below -
+      // guaranteed to run on mount regardless of ScrollTrigger's initial
+      // measurement. A separate, minimal ScrollTrigger then only handles
+      // the scroll-reactive part (reverse on exit, replay on re-entry),
+      // which doesn't depend on any "already past start" detection since
+      // by definition the user has to actually scroll for onLeave/
+      // onEnterBack to fire.
+      const tl = gsap.timeline({ paused: true });
       tl.to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" })
         .to(
           headlineRef.current,
@@ -111,6 +120,23 @@ export default function HomeHero() {
           { opacity: 1, y: 0, scale: 1, rotate: 0, duration: 1, ease: "expo.out" },
           "-=0.75"
         );
+
+      // Guaranteed play on mount - not dependent on any ScrollTrigger
+      // initial-state check.
+      tl.play();
+
+      // Scroll-reactive layer, separate from the entrance timeline itself:
+      // reverse it out as the hero scrolls past (handing off to Productos),
+      // replay it if the user scrolls back up into the hero. No `start`
+      // dependency on "already past" detection - onLeave/onEnterBack only
+      // fire on an actual scroll crossing.
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top top",
+        end: "bottom top",
+        onLeave: () => tl.reverse(),
+        onEnterBack: () => tl.play(),
+      });
 
       // Scroll-scrubbed parallax: the data panel drifts up and scales
       // slightly faster than the text column as the hero exits, so the two

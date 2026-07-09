@@ -192,46 +192,35 @@ export default function HomeProductos() {
         // once the cards are a modest grid size rather than full-width bars.
         const rotateFrom = index % 2 === 0 ? -4 : 4;
 
+        // Stage 15: `toggleActions: "play reverse play reverse"` used a
+        // fixed-duration tween (0.9s+) triggered by discrete play/reverse
+        // calls - on any real scroll speed the animation couldn't keep up
+        // with the trigger crossings, so the card's still-playing entrance
+        // and its just-fired exit would collide mid-flight ("voy saliendo
+        // cuando entran"). A `scrub`-linked tween has no independent
+        // duration to outrun: its progress IS the scroll position, sampled
+        // every frame, so it is mechanically impossible for it to lag
+        // behind or fire out of order regardless of scroll speed.
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: card,
-            start: "top 88%",
-            end: "bottom 12%",
-            // Genuine enter/exit in both scroll directions: play on enter
-            // scrolling down, reverse on leave scrolling down (the card
-            // exits the same way it entered instead of staying static once
-            // revealed), replay on enter scrolling back up, reverse again
-            // on leave scrolling up. Previously "play none none reverse"
-            // only ever reversed on re-entry from below, so scrolling a
-            // card away downward left it visually frozen in place.
-            toggleActions: "play reverse play reverse",
+            start: "top 92%",
+            end: "top 55%",
+            scrub: 0.3,
           },
         });
 
         tl.fromTo(
           card,
           { autoAlpha: 0, scale: 0.78, y: 100, rotate: rotateFrom },
-          {
-            autoAlpha: 1,
-            scale: 1,
-            y: 0,
-            rotate: 0,
-            duration: 0.9,
-            ease: "expo.out",
-          }
+          { autoAlpha: 1, scale: 1, y: 0, rotate: 0, ease: "none" }
         );
 
         if (innerEls.length) {
           gsap.set(innerEls, { opacity: 0, y: 20 });
           tl.to(
             innerEls,
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.5,
-              ease: "power2.out",
-              stagger: 0.1,
-            },
+            { opacity: 1, y: 0, ease: "none", stagger: 0.1 },
             "-=0.45"
           );
         }
