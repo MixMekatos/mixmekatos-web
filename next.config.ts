@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    // Works around local TLS interception (antivirus/corporate proxy) that
+    // otherwise breaks Turbopack's fetch of next/font/google files.
+    turbopackUseSystemTlsCerts: true,
+  },
 };
 
 export default withFlowbiteReact(nextConfig);
