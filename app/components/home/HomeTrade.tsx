@@ -119,7 +119,7 @@ export default function HomeTrade() {
     <section className="relative overflow-hidden bg-ink px-4 py-14 md:py-20">
       <ParallaxGlow range={50} />
       <div className="relative mx-auto max-w-5xl">
-        <ScrollReveal y={32} duration={0.5} className="mx-auto max-w-2xl text-center">
+        <ScrollReveal y={40} scale={0.96} duration={0.55} className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-2xl font-semibold text-ink-text sm:text-3xl">
             Hacemos parte de tu negocio, sea cual sea.
           </h2>
@@ -136,8 +136,9 @@ export default function HomeTrade() {
           {TRADE_CHANNELS.map(({ icon: Icon, label, desc }) => (
             <StaggerItem
               key={label}
-              y={24}
-              duration={0.45}
+              y={36}
+              scale={0.94}
+              duration={0.5}
               className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-ink-surface p-5"
             >
               <Icon className="h-5 w-5 text-glow" aria-hidden="true" />
@@ -157,8 +158,8 @@ export default function HomeTrade() {
             <StaggerItem
               key={label}
               y={0}
-              x={-24}
-              duration={0.4}
+              x={-40}
+              duration={0.45}
               className="flex items-center gap-3 py-3 sm:flex-1 sm:justify-center sm:px-5 sm:py-4"
             >
               <Icon className="h-5 w-5 shrink-0 text-glow" aria-hidden="true" />

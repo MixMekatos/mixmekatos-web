@@ -29,6 +29,13 @@ gsap.registerPlugin(ScrollTrigger);
  * the transparent PNG reads directly against the page background. Motion
  * is limited to the entrance timeline and the scroll-scrubbed parallax
  * below; no idle/continuous animation.
+ *
+ * Stage 13: the entrance timeline is now gated by a ScrollTrigger
+ * (`toggleActions: "play reverse play none"`) instead of firing once on
+ * mount - it still plays immediately on load, but now genuinely reverses
+ * as the hero scrolls out of view (handing off to Productos) and replays
+ * if the user scrolls back up into it, matching the scroll-scrubbed
+ * parallax's own reactivity instead of sitting static after the first play.
  */
 export default function HomeHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -63,8 +70,21 @@ export default function HomeHero() {
       gsap.set(eyebrowRef.current, { x: -28 });
       gsap.set(dataPanelRef.current, { opacity: 0, y: 32, scale: 0.94 });
 
+      // Tied to a ScrollTrigger (not just mount) so it isn't a one-shot: it
+      // plays immediately on load (the hero already satisfies "top top" at
+      // scrollY 0), reverses out as the hero scrolls past and Productos
+      // takes over ("bottom top"), and replays if the user scrolls back up
+      // into the hero. Previously this timeline had no ScrollTrigger at
+      // all and only ever played once on mount, which read as static on
+      // scroll ("no tienen scroll arriba, siguen estaticos").
       const tl = gsap.timeline({
         defaults: { ease: "power3.out", duration: 0.7 },
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom top",
+          toggleActions: "play reverse play none",
+        },
       });
       tl.to(eyebrowRef.current, { opacity: 1, y: 0, x: 0 })
         .to(headlineRef.current, { opacity: 1, y: 0 }, "-=0.45")

@@ -133,6 +133,12 @@ function ProductDataRow({ sku, tone }: { sku: Product; tone: "onPhoto" | "onSurf
  * Motion must never share a component tree). `ScrollTrigger.matchMedia`
  * still gates the parallax magnitude by breakpoint; the entrance reveal
  * itself is cheap enough (no pin, no layout thrash) to run at every width.
+ *
+ * Stage 13: `toggleActions` changed from "play none none reverse" to
+ * "play reverse play reverse" - each card now genuinely exits (reverses)
+ * as it scrolls away in either direction, not just when re-entering from
+ * below. Previously a card that scrolled off the top going down stayed
+ * frozen in its revealed state indefinitely.
  */
 export default function HomeProductos() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -173,7 +179,15 @@ export default function HomeProductos() {
           scrollTrigger: {
             trigger: card,
             start: "top 85%",
-            toggleActions: "play none none reverse",
+            end: "bottom 15%",
+            // Genuine enter/exit in both scroll directions: play on enter
+            // scrolling down, reverse on leave scrolling down (the card
+            // exits the same way it entered instead of staying static once
+            // revealed), replay on enter scrolling back up, reverse again
+            // on leave scrolling up. Previously "play none none reverse"
+            // only ever reversed on re-entry from below, so scrolling a
+            // card away downward left it visually frozen in place.
+            toggleActions: "play reverse play reverse",
           },
         });
 

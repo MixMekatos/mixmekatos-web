@@ -18,7 +18,7 @@ export default function HomeCTA({
   return (
     <section className="relative overflow-hidden px-4 py-16 text-center bg-ink-surface">
       <ParallaxGlow range={30} />
-      <ScrollReveal y={36} duration={0.55} className="relative">
+      <ScrollReveal y={48} scale={0.95} duration={0.6} className="relative">
         <h2 className="mx-auto max-w-xl font-display text-3xl font-semibold leading-tight text-ink-text sm:text-4xl md:text-5xl">
           {titulo}
         </h2>
