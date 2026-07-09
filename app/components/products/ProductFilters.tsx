@@ -49,7 +49,7 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
   const body = (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-ink-text mb-3">
           Categoría
         </p>
         <ul className="flex flex-col gap-2">
@@ -60,10 +60,10 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
                   type="checkbox"
                   checked={filters.categories.includes(cat)}
                   onChange={() => toggleCategory(cat)}
-                  className="h-4 w-4 rounded border-stone-300 cursor-pointer"
-                  style={{ accentColor: "var(--color-accent)" }}
+                  className="h-4 w-4 rounded border-ink-text-muted/40 bg-ink cursor-pointer"
+                  style={{ accentColor: "var(--color-glow)" }}
                 />
-                <span className="text-sm text-(--color-text) group-hover:text-accent transition">
+                <span className="text-sm text-ink-text group-hover:text-glow transition">
                   {CATEGORIES[cat]}
                 </span>
               </label>
@@ -73,14 +73,14 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
       </div>
 
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-ink-text mb-3">
           Precio
         </p>
         <div className="flex flex-col gap-3">
           <div>
-            <div className="flex justify-between text-xs text-(--color-text-muted) mb-1.5">
+            <div className="flex justify-between text-xs text-ink-text-muted mb-1.5">
               <span>Mínimo</span>
-              <span className="font-medium text-(--color-text)">{formatPrice(filters.priceMin)}</span>
+              <span className="font-medium text-ink-text">{formatPrice(filters.priceMin)}</span>
             </div>
             <input
               type="range"
@@ -93,13 +93,13 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
                 if (v < filters.priceMax) onChange({ ...filters, priceMin: v });
               }}
               className="w-full cursor-pointer"
-              style={{ accentColor: "var(--color-accent)" }}
+              style={{ accentColor: "var(--color-glow)" }}
             />
           </div>
           <div>
-            <div className="flex justify-between text-xs text-(--color-text-muted) mb-1.5">
+            <div className="flex justify-between text-xs text-ink-text-muted mb-1.5">
               <span>Máximo</span>
-              <span className="font-medium text-(--color-text)">{formatPrice(filters.priceMax)}</span>
+              <span className="font-medium text-ink-text">{formatPrice(filters.priceMax)}</span>
             </div>
             <input
               type="range"
@@ -112,14 +112,14 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
                 if (v > filters.priceMin) onChange({ ...filters, priceMax: v });
               }}
               className="w-full cursor-pointer"
-              style={{ accentColor: "var(--color-accent)" }}
+              style={{ accentColor: "var(--color-glow)" }}
             />
           </div>
         </div>
       </div>
 
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-3">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-ink-text mb-3">
           Etiquetas
         </p>
         <div className="flex flex-wrap gap-2">
@@ -127,10 +127,10 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
             <button
               key={tag}
               onClick={() => toggleTag(tag)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
+              className={`min-h-11 rounded-full border px-3 py-1 text-xs font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink-surface ${
                 filters.tags.includes(tag)
-                  ? "border-accent bg-accent text-white"
-                  : "border-stone-200 bg-white text-(--color-text-muted) hover:border-accent hover:text-accent"
+                  ? "border-glow bg-glow text-ink"
+                  : "border-glow/20 bg-ink text-ink-text-muted hover:border-glow hover:text-glow"
               }`}
             >
               {TAG_LABELS[tag]}
@@ -140,7 +140,7 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
       </div>
 
       <div>
-        <label className="text-[11px] font-bold uppercase tracking-wider text-(--color-text) mb-2 block">
+        <label className="text-[11px] font-bold uppercase tracking-wider text-ink-text mb-2 block">
           Ordenar por
         </label>
         <select
@@ -148,7 +148,7 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
           onChange={(e) =>
             onChange({ ...filters, sortBy: e.target.value as FilterState["sortBy"] })
           }
-          className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-(--color-text) focus:border-accent focus:outline-none"
+          className="w-full rounded-lg border border-glow/20 bg-ink px-3 py-2 text-sm text-ink-text focus:border-glow focus:outline-none"
         >
           <option value="relevance">Relevancia</option>
           <option value="price-asc">Menor precio</option>
@@ -160,7 +160,7 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
       {hasActive && (
         <button
           onClick={clearAll}
-          className="flex items-center gap-1.5 text-sm font-medium text-rose-500 hover:text-rose-600 transition"
+          className="flex min-h-11 items-center gap-1.5 text-sm font-medium text-rose-400 hover:text-rose-300 transition"
         >
           <X className="h-4 w-4" />
           Limpiar filtros
@@ -174,33 +174,33 @@ export default function ProductFilters({ filters, onChange, totalResults }: Prop
       <div className="lg:hidden mb-4">
         <button
           onClick={() => setMobileOpen((o) => !o)}
-          className="flex items-center gap-2 rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-(--color-text) shadow-sm hover:border-accent transition w-full"
+          className="flex min-h-11 items-center gap-2 rounded-xl border border-glow/20 bg-ink-surface px-4 py-2.5 text-sm font-semibold text-ink-text shadow-sm hover:border-glow transition w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
-          <SlidersHorizontal className="h-4 w-4 text-accent" />
+          <SlidersHorizontal className="h-4 w-4 text-glow" />
           <span>
             Filtros{activeCount > 0 ? ` (${activeCount})` : ""}
           </span>
-          <span className="ml-auto text-xs text-(--color-text-muted)">
+          <span className="ml-auto text-xs text-ink-text-muted">
             {totalResults} resultado{totalResults !== 1 ? "s" : ""}
           </span>
           {mobileOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
         </button>
 
         {mobileOpen && (
-          <div className="mt-2 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+          <div className="mt-2 rounded-2xl border border-glow/15 bg-ink-surface p-5 shadow-sm">
             {body}
           </div>
         )}
       </div>
 
       <aside className="hidden lg:block w-56 shrink-0">
-        <div className="sticky top-24 rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+        <div className="sticky top-24 rounded-2xl border border-glow/15 bg-ink-surface p-5 shadow-sm">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-accent" />
-              <h3 className="font-bold text-sm text-(--color-text)">Filtros</h3>
+              <SlidersHorizontal className="h-4 w-4 text-glow" />
+              <h3 className="font-display font-bold text-sm text-ink-text">Filtros</h3>
             </div>
-            <span className="text-xs text-(--color-text-muted)">
+            <span className="text-xs text-ink-text-muted">
               {totalResults} resultado{totalResults !== 1 ? "s" : ""}
             </span>
           </div>

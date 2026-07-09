@@ -39,10 +39,10 @@ export default function ProductosPageClient({ initialProducts }: Props) {
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="mb-7">
-        <h1 className="text-2xl sm:text-3xl font-bold text-(--color-text)">
+        <h1 className="font-display text-2xl font-semibold text-ink-text sm:text-3xl">
           Nuestros Productos
         </h1>
-        <p className="mt-1 text-sm text-(--color-text-muted)">
+        <p className="mt-1 text-sm text-ink-text-muted">
           Empanadas artesanales, dedos de queso y más mekatos irresistibles
         </p>
       </div>

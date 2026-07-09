@@ -9,7 +9,7 @@ import {
   TAG_LABELS,
   TAG_CHIP_STYLE,
   TAG_CHIP_PRIORITY,
-  CATEGORY_EMOJI,
+  CATEGORY_ICON,
   CATEGORY_BG,
 } from "@/app/lib/products";
 import ProductModal from "./ProductModal";
@@ -23,8 +23,8 @@ function StarsMini({ rating }: { rating: number }) {
           key={s}
           className={`h-3 w-3 ${
             s <= Math.round(rating)
-              ? "fill-amber-400 text-amber-400"
-              : "fill-stone-200 text-stone-300"
+              ? "fill-glow text-glow"
+              : "fill-ink-text-muted/20 text-ink-text-muted/30"
           }`}
         />
       ))}
@@ -43,13 +43,14 @@ export default function ProductCard({ product }: Props) {
   const mainImage = product.images[0];
   const showPlaceholder = !mainImage || imgError;
   const tagChip = TAG_CHIP_PRIORITY.find((t) => product.tags?.includes(t));
+  const CategoryIcon = CATEGORY_ICON[product.category];
 
   return (
     <>
-      <article className="group flex flex-col rounded-2xl border border-stone-200 bg-white shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+      <article className="group flex flex-col rounded-2xl border border-glow/15 bg-ink-surface shadow-sm hover:shadow-md hover:border-glow/30 transition-[box-shadow,border-color] overflow-hidden">
         <button
           onClick={() => setOpen(true)}
-          className="relative w-full aspect-4/3 overflow-hidden focus:outline-none"
+          className="relative w-full aspect-4/3 overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-inset"
           aria-label={`Ver detalles de ${product.name}`}
         >
           {showPlaceholder ? (
@@ -58,7 +59,7 @@ export default function ProductCard({ product }: Props) {
                 CATEGORY_BG[product.category]
               }`}
             >
-              <span className="text-6xl select-none">{CATEGORY_EMOJI[product.category]}</span>
+              <CategoryIcon className="h-14 w-14 text-glow/40" aria-hidden="true" />
             </div>
           ) : (
             <Image
@@ -78,7 +79,7 @@ export default function ProductCard({ product }: Props) {
             {tagChip && (
               <span
                 className={`rounded-full px-2 py-0.5 text-[11px] font-semibold shadow-sm ${
-                  TAG_CHIP_STYLE[tagChip] ?? "bg-stone-700 text-white"
+                  TAG_CHIP_STYLE[tagChip] ?? "bg-glow text-ink"
                 }`}
               >
                 {TAG_LABELS[tagChip]}
@@ -92,33 +93,33 @@ export default function ProductCard({ product }: Props) {
         </button>
 
         <div className="flex flex-col gap-2 p-4 flex-1">
-          <h3 className="font-semibold text-(--color-text) text-sm leading-snug line-clamp-2">
+          <h3 className="font-display font-semibold text-ink-text text-sm leading-snug line-clamp-2">
             {product.name}
           </h3>
 
           <div className="flex items-center gap-1.5">
             <StarsMini rating={product.rating} />
-            <span className="text-xs text-(--color-text-muted)">({product.ratingCount})</span>
+            <span className="text-xs text-ink-text-muted">({product.ratingCount})</span>
           </div>
 
-          <p className="text-xs text-(--color-text-muted)">
+          <p className="text-xs text-ink-text-muted">
             {product.weight} · {product.unit}
           </p>
 
           <div className="mt-auto pt-2 flex items-end justify-between gap-2">
             <div>
-              <p className="text-base font-bold text-(--color-text)">
+              <p className="text-base font-bold text-glow">
                 {formatPrice(product.price)}
               </p>
               {product.originalPrice && (
-                <p className="text-xs text-(--color-text-muted) line-through -mt-0.5">
+                <p className="text-xs text-ink-text-muted line-through -mt-0.5">
                   {formatPrice(product.originalPrice)}
                 </p>
               )}
             </div>
             <button
               onClick={() => setOpen(true)}
-              className="rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-accent-hover active:scale-95 shrink-0"
+              className="min-h-11 rounded-full bg-glow px-3 py-1.5 text-xs font-semibold text-ink transition hover:bg-glow-hover active:scale-95 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink-surface"
             >
               Ver más
             </button>

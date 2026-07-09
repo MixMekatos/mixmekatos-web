@@ -62,19 +62,19 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
 
   if (done) {
     return (
-      <div className="flex items-center gap-3 rounded-2xl bg-green-50 border border-green-200 px-4 py-4">
-        <CheckCircle className="h-5 w-5 text-green-600 shrink-0" />
+      <div className="flex items-center gap-3 rounded-2xl bg-green-500/10 border border-green-500/25 px-4 py-4">
+        <CheckCircle className="h-5 w-5 text-green-400 shrink-0" />
         <div>
-          <p className="text-sm font-semibold text-green-800">¡Gracias por tu reseña!</p>
-          <p className="text-xs text-green-700 mt-0.5">Ya está publicada para que otros clientes la vean.</p>
+          <p className="text-sm font-semibold text-green-300">¡Gracias por tu reseña!</p>
+          <p className="text-xs text-green-400/80 mt-0.5">Ya está publicada para que otros clientes la vean.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl bg-stone-50 border border-stone-100 p-4">
-      <h4 className="text-sm font-bold text-(--color-text)">Deja tu reseña</h4>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl bg-ink border border-glow/10 p-4">
+      <h4 className="font-display text-sm font-bold text-ink-text">Deja tu reseña</h4>
 
       <div className="flex items-center gap-1" role="group" aria-label="Calificación">
         {[1, 2, 3, 4, 5].map((s) => (
@@ -85,12 +85,13 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
             onMouseEnter={() => setHovered(s)}
             onMouseLeave={() => setHovered(0)}
             aria-label={`${s} estrella${s > 1 ? "s" : ""}`}
+            className="flex h-11 w-11 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow rounded-full"
           >
             <Star
               className={`h-7 w-7 transition-colors ${
                 s <= (hovered || rating)
-                  ? "fill-amber-400 text-amber-400"
-                  : "fill-stone-200 text-stone-300"
+                  ? "fill-glow text-glow"
+                  : "fill-ink-text-muted/20 text-ink-text-muted/30"
               }`}
             />
           </button>
@@ -98,7 +99,7 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="review-name" className="text-xs font-semibold text-(--color-text-muted) uppercase tracking-wide">
+        <label htmlFor="review-name" className="text-xs font-semibold text-ink-text-muted uppercase tracking-wide">
           Tu nombre
         </label>
         <input
@@ -109,12 +110,12 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
           placeholder="Ej: Valentina M."
           maxLength={60}
           required
-          className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-(--color-text) placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-accent"
+          className="rounded-xl border border-glow/20 bg-ink-surface px-3 py-2 text-sm text-ink-text placeholder:text-ink-text-muted/60 focus:outline-none focus:ring-2 focus:ring-glow"
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="review-body" className="text-xs font-semibold text-(--color-text-muted) uppercase tracking-wide">
+        <label htmlFor="review-body" className="text-xs font-semibold text-ink-text-muted uppercase tracking-wide">
           Tu opinión
         </label>
         <textarea
@@ -125,9 +126,9 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
           maxLength={1000}
           required
           rows={3}
-          className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-(--color-text) placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-accent resize-none"
+          className="rounded-xl border border-glow/20 bg-ink-surface px-3 py-2 text-sm text-ink-text placeholder:text-ink-text-muted/60 focus:outline-none focus:ring-2 focus:ring-glow resize-none"
         />
-        <p className="text-xs text-(--color-text-muted) text-right">{body.length}/1000</p>
+        <p className="text-xs text-ink-text-muted text-right">{body.length}/1000</p>
       </div>
 
       <input
@@ -141,13 +142,13 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
       />
 
       {error && (
-        <p className="text-xs text-rose-600 font-medium">{error}</p>
+        <p className="text-xs text-rose-400 font-medium">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="flex items-center justify-center gap-2 rounded-full bg-accent py-2.5 text-sm font-bold text-white transition hover:bg-accent-hover disabled:opacity-60"
+        className="flex min-h-11 items-center justify-center gap-2 rounded-full bg-glow py-2.5 text-sm font-bold text-ink transition hover:bg-glow-hover disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
       >
         {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
         {loading ? "Enviando..." : "Publicar reseña"}

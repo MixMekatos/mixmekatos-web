@@ -16,6 +16,52 @@
   --color-bg: #fefdfb;
   --color-nav: #ffffff;
 
+  /* Extended family for the home redesign: rust (bar) -> burnt orange
+     (accent) -> corn-dough gold (masa). --color-char is the toasted-crust
+     dark tone used for the hero's signature "crunch" band. Kept for
+     backward compatibility (still referenced by non-home surfaces); the
+     home page's dark theme below uses its own --color-ink/--color-glow
+     family instead of reaching for these directly. */
+  --color-masa: #e0a938;
+  --color-char: #2b1810;
+
+  /* Stage 7 home redesign: dedicated dark-dominant palette for the home
+     page content sections ONLY (app/components/home/*.tsx). Deliberately
+     separate from --color-bg/--color-text/--color-nav/--color-bar/
+     --color-accent above (still used site-wide, e.g. Navbar, Footer,
+     productos, contacto) and from the .dark class block below (an unused
+     light/dark MODE toggle from stage 1) so neither is regressed.
+     Rationale: the previous cream+brass+espresso palette on this page
+     tested as the single most-common "AI tell" for premium-food briefs
+     (taste-skill 4.2, PREMIUM-CONSUMER PALETTE BAN). This is a Black and
+     Tan family (true near-black + one warm incandescent gold), not the
+     banned beige/brass/oxblood family.
+
+     Stage 10: --color-ink/--color-ink-surface swapped from a toasted
+     brown-black (#1f130c / #3a2419) to a genuinely neutral charcoal, per
+     direct feedback that the brown reading was disliked ("me gusta el
+     concepto de algo dark pero es que cafe como que nahh") while the dark
+     concept itself was kept. #171717 / #262626 are true grays (R=G=B, zero
+     hue bias) rather than a desaturated warm tone. --color-ink-text and
+     --color-ink-text-muted are unchanged: both were re-checked against the
+     new background via the WCAG relative-luminance formula and still clear
+     AA by a wide margin (~15.9:1 and ~8.1:1 respectively, versus ~16.1:1 /
+     ~8.2:1 before), so the existing warm off-white doesn't need retuning. */
+  --color-ink: #171717; /* primary bg: neutral charcoal, no brown/warm hue bias */
+  --color-ink-surface: #262626; /* elevated surface, one step lighter than ink */
+  --color-ink-text: #f5f1ea; /* primary text on ink (~15.9:1) */
+  --color-ink-text-muted: #b6ada3; /* secondary text on ink (~8.1:1) */
+  /* Stage 8: desaturated from the original #f0b23e (86% saturation, read as
+     an incandescent/glowing neon-adjacent gold) to a restrained brushed-
+     brass tone (44% saturation, same hue family) per explicit "no
+     saturado" direction. Contrast re-checked against the stage 10 neutral
+     --color-ink (#171717), manually computed via the WCAG relative-
+     luminance formula: glow ~6.88:1, glow-hover ~8.26:1 — both comfortably
+     above the 4.5:1 AA text threshold, and if anything a stronger pairing
+     now that the background is a true neutral rather than brown-toned. */
+  --color-glow: #c19a5f; /* the ONE dominant accent: muted brass/gold */
+  --color-glow-hover: #ccab7b; /* hover state for glow-filled buttons */
+
   /* WhatsApp brand green (official hex #25D366). Single source of truth so
      Footer.tsx and ProductModal.tsx don't each hardcode/duplicate the color. */
   --color-whatsapp: #25d366;
@@ -66,7 +112,22 @@
   --color-bar: var(--color-bar);
   --color-accent: var(--color-accent);
   --color-accent-hover: var(--color-accent-hover);
-  --font-sans: var(--font-sans);
+  --color-masa: var(--color-masa);
+  --color-char: var(--color-char);
+  --color-ink: var(--color-ink);
+  --color-ink-surface: var(--color-ink-surface);
+  --color-ink-text: var(--color-ink-text);
+  --color-ink-text-muted: var(--color-ink-text-muted);
+  --color-glow: var(--color-glow);
+  --color-glow-hover: var(--color-glow-hover);
+
+  /* Poppins is the primary reading/UI face (replaces Geist). */
+  --font-sans: var(--font-poppins);
+  /* Bricolage Grotesque is the display face for headings, used at heading
+     scale only (stage 8: replaces Fredoka, see app/layout.tsx). */
+  --font-display: var(--font-display);
+  /* Nunito: reserved for secondary/muted supporting text. */
+  --font-nunito: var(--font-nunito);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -124,6 +185,14 @@ body {
   --color-bg: #171310;
   --color-nav: #241d17;
 
+  /* Masa brightened for legibility on dark backgrounds; char lifted off
+     --color-bg so it still reads as a distinct "toasted" surface instead of
+     disappearing into it. Contrast checked (manual WCAG calc): masa-on-char
+     ~7.98:1, char-on-masa ~7.98:1 (light mode); masa-on-char ~5.92:1 (dark
+     mode) — all comfortably above the 4.5:1 AA text threshold. */
+  --color-masa: #e8b655;
+  --color-char: #593221;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -155,6 +224,30 @@ body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* Stage 7 home redesign: barely-perceptible grain texture for the home
+   page's dark theme (taste-skill 4.4 / 6.E, "flat design with zero texture
+   feels sterile"). A single background-image layer painted once per host
+   element, NOT tied to scroll/animation frames, so it costs one paint, not
+   continuous GPU repaint. Applied to the section itself (a normal in-flow
+   block, not an internally-scrolling container) rather than as a
+   viewport-fixed overlay, so it stays contained to that section instead of
+   bleeding over the (out-of-scope, still-light) Navbar/Footer. Host element
+   needs `position: relative` (added alongside this class) and any content
+   that must paint above it should get `position: relative` too. */
+.bg-grain {
+  position: relative;
+}
+.bg-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
 }
 
 @layer base {

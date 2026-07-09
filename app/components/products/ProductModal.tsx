@@ -16,7 +16,7 @@ import {
   CATEGORIES,
   TAG_LABELS,
   TAG_BADGE_STYLE,
-  CATEGORY_EMOJI,
+  CATEGORY_ICON,
   CATEGORY_BG,
 } from "@/app/lib/products";
 import ReviewForm from "./ReviewForm";
@@ -32,8 +32,8 @@ function Stars({ rating, size = "md" }: { rating: number; size?: "sm" | "md" }) 
           key={s}
           className={`${sz} ${
             s <= Math.round(rating)
-              ? "fill-amber-400 text-amber-400"
-              : "fill-stone-200 text-stone-300"
+              ? "fill-glow text-glow"
+              : "fill-ink-text-muted/20 text-ink-text-muted/30"
           }`}
         />
       ))}
@@ -69,13 +69,14 @@ interface GalleryPanelProps {
 function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClick, onImgError }: GalleryPanelProps) {
   const hasImages = product.images.length > 0;
   const currentImgOk = hasImages && !imgError[imgIndex];
+  const CategoryIcon = CATEGORY_ICON[product.category];
 
   return (
     <div className="flex flex-col gap-3">
       <div
         className={`relative w-full rounded-2xl overflow-hidden
           aspect-square lg:aspect-auto lg:flex-1
-          ${!currentImgOk ? `${CATEGORY_BG[product.category]} flex items-center justify-center` : "bg-stone-100"}`}
+          ${!currentImgOk ? `${CATEGORY_BG[product.category]} flex items-center justify-center` : "bg-ink-surface"}`}
         style={{ minHeight: "220px" }}
       >
         {currentImgOk ? (
@@ -86,9 +87,7 @@ function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClic
             onError={() => onImgError(imgIndex)}
           />
         ) : (
-          <span className="text-[96px] select-none leading-none">
-            {CATEGORY_EMOJI[product.category]}
-          </span>
+          <CategoryIcon className="h-24 w-24 text-glow/40" aria-hidden="true" />
         )}
 
         {product.discount && (
@@ -127,7 +126,7 @@ function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClic
                 onClick={() => onThumbClick(i)}
                 className={`shrink-0 h-14 w-14 rounded-xl overflow-hidden border-2 transition-all ${
                   i === imgIndex
-                    ? "border-accent opacity-100 scale-105"
+                    ? "border-glow opacity-100 scale-105"
                     : "border-transparent opacity-55 hover:opacity-80"
                 }`}
               >
@@ -140,9 +139,12 @@ function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClic
                   />
                 ) : (
                   <div
-                    className={`w-full h-full flex items-center justify-center text-xl ${CATEGORY_BG[product.category]}`}
+                    className={`w-full h-full flex items-center justify-center ${CATEGORY_BG[product.category]}`}
                   >
-                    {CATEGORY_EMOJI[product.category]}
+                    <CategoryIcon
+                      className="h-6 w-6 text-glow/40"
+                      aria-hidden="true"
+                    />
                   </div>
                 )}
               </button>
@@ -163,14 +165,14 @@ function DetailsPanel({ product }: { product: Product }) {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap gap-2">
-        <span className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs font-medium text-(--color-text-muted)">
+        <span className="rounded-full border border-glow/20 bg-ink px-3 py-1 text-xs font-medium text-ink-text-muted">
           {CATEGORIES[product.category]}
         </span>
         {visibleTags.map((tag) => (
           <span
             key={tag}
             className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              TAG_BADGE_STYLE[tag] ?? "bg-stone-100 text-stone-600"
+              TAG_BADGE_STYLE[tag] ?? "bg-ink text-ink-text-muted"
             }`}
           >
             {TAG_LABELS[tag]}
@@ -179,16 +181,16 @@ function DetailsPanel({ product }: { product: Product }) {
       </div>
 
       <div className="flex items-end flex-wrap gap-x-3 gap-y-1">
-        <p className="text-3xl font-extrabold text-(--color-text)">
+        <p className="font-display text-3xl font-extrabold text-glow">
           {formatPrice(product.price)}
         </p>
         {product.originalPrice && (
-          <p className="text-lg text-(--color-text-muted) line-through">
+          <p className="text-lg text-ink-text-muted line-through">
             {formatPrice(product.originalPrice)}
           </p>
         )}
         {product.discount && product.originalPrice && (
-          <span className="text-sm font-bold text-rose-500">
+          <span className="text-sm font-bold text-rose-400">
             Ahorras {formatPrice(product.originalPrice - product.price)}
           </span>
         )}
@@ -196,46 +198,46 @@ function DetailsPanel({ product }: { product: Product }) {
 
       <div className="flex items-center gap-2">
         <Stars rating={product.rating} />
-        <span className="text-sm font-semibold text-(--color-text)">
+        <span className="text-sm font-semibold text-ink-text">
           {product.rating.toFixed(1)}
         </span>
-        <span className="text-sm text-(--color-text-muted)">
+        <span className="text-sm text-ink-text-muted">
           ({product.ratingCount} {product.ratingCount === 1 ? "resena" : "resenas"})
         </span>
       </div>
 
       <div className="grid grid-cols-2 gap-2.5">
-        <div className="flex items-center gap-2.5 rounded-xl bg-stone-50 border border-stone-100 p-3">
-          <Scale className="h-5 w-5 text-(--color-text-muted) shrink-0" />
+        <div className="flex items-center gap-2.5 rounded-xl bg-ink border border-glow/10 p-3">
+          <Scale className="h-5 w-5 text-glow shrink-0" />
           <div>
-            <p className="text-[10px] text-(--color-text-muted) uppercase tracking-wide">Peso</p>
-            <p className="text-sm font-semibold text-(--color-text)">{product.weight}</p>
+            <p className="text-[10px] text-ink-text-muted uppercase tracking-wide">Peso</p>
+            <p className="text-sm font-semibold text-ink-text">{product.weight}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2.5 rounded-xl bg-stone-50 border border-stone-100 p-3">
-          <Package className="h-5 w-5 text-(--color-text-muted) shrink-0" />
+        <div className="flex items-center gap-2.5 rounded-xl bg-ink border border-glow/10 p-3">
+          <Package className="h-5 w-5 text-glow shrink-0" />
           <div>
-            <p className="text-[10px] text-(--color-text-muted) uppercase tracking-wide">Presentacion</p>
-            <p className="text-sm font-semibold text-(--color-text)">{product.unit}</p>
+            <p className="text-[10px] text-ink-text-muted uppercase tracking-wide">Presentacion</p>
+            <p className="text-sm font-semibold text-ink-text">{product.unit}</p>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 className="text-sm font-bold text-(--color-text) mb-1.5">Descripcion</h3>
-        <p className="text-sm text-(--color-text-muted) leading-relaxed">
+        <h3 className="font-display text-sm font-bold text-ink-text mb-1.5">Descripcion</h3>
+        <p className="text-sm text-ink-text-muted leading-relaxed">
           {product.description}
         </p>
       </div>
 
       {product.ingredients && product.ingredients.length > 0 && (
         <div>
-          <h3 className="text-sm font-bold text-(--color-text) mb-2">Ingredientes</h3>
+          <h3 className="font-display text-sm font-bold text-ink-text mb-2">Ingredientes</h3>
           <div className="flex flex-wrap gap-1.5">
             {product.ingredients.map((ing) => (
               <span
                 key={ing}
-                className="rounded-full bg-stone-100 px-2.5 py-1 text-xs text-(--color-text-muted)"
+                className="rounded-full bg-ink px-2.5 py-1 text-xs text-ink-text-muted"
               >
                 {ing}
               </span>
@@ -254,7 +256,7 @@ function DetailsPanel({ product }: { product: Product }) {
               : "bg-red-500"
           }`}
         />
-        <span className="text-xs text-(--color-text-muted)">
+        <span className="text-xs text-ink-text-muted">
           {product.stock > 10
             ? "Disponible"
             : product.stock > 0
@@ -267,7 +269,7 @@ function DetailsPanel({ product }: { product: Product }) {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--color-whatsapp) py-3.5 text-sm font-bold text-white transition hover:brightness-90 active:scale-[0.98]"
+        className="flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-(--color-whatsapp) py-3.5 text-sm font-bold text-white transition hover:brightness-90 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink-surface"
       >
         <MessageCircle className="h-5 w-5" />
         Pedir por WhatsApp
@@ -311,7 +313,7 @@ export default function ProductModal({ product, onClose }: Props) {
     >
       <div
         className="
-          relative bg-white shadow-2xl w-full
+          relative bg-ink-surface shadow-2xl w-full
           rounded-t-3xl lg:rounded-3xl
           max-h-[95dvh] lg:max-h-[88dvh]
           lg:max-w-5xl
@@ -321,7 +323,7 @@ export default function ProductModal({ product, onClose }: Props) {
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-md text-(--color-text-muted) hover:bg-stone-100 transition"
+          className="absolute top-4 right-4 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-ink/90 shadow-md text-ink-text-muted hover:bg-ink hover:text-glow transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow"
           aria-label="Cerrar"
         >
           <X className="h-4 w-4" />
@@ -330,12 +332,12 @@ export default function ProductModal({ product, onClose }: Props) {
         <div
           className="
             lg:w-[42%] lg:shrink-0
-            lg:overflow-y-auto lg:border-r lg:border-stone-100
+            lg:overflow-y-auto lg:border-r lg:border-glow/10
             p-4 lg:p-6 lg:flex lg:flex-col lg:gap-4
             [&::-webkit-scrollbar]:hidden
           "
         >
-          <h2 className="lg:hidden font-bold text-(--color-text) text-lg leading-snug pr-10 mb-3">
+          <h2 className="lg:hidden font-display font-bold text-ink-text text-lg leading-snug pr-10 mb-3">
             {product.name}
           </h2>
           <GalleryPanel
@@ -349,9 +351,9 @@ export default function ProductModal({ product, onClose }: Props) {
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar-track]:bg-stone-50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-stone-300 [&::-webkit-scrollbar]:w-1.5">
+        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar-track]:bg-ink [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-glow/30 [&::-webkit-scrollbar]:w-1.5">
           <div className="p-5 lg:p-8 flex flex-col gap-0">
-            <h2 className="hidden lg:block font-bold text-(--color-text) text-2xl leading-snug mb-5">
+            <h2 className="hidden lg:block font-display font-bold text-ink-text text-2xl leading-snug mb-5">
               {product.name}
             </h2>
 

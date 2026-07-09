@@ -1,3 +1,5 @@
+import { Sandwich, Milk, Snowflake, Gift, type LucideIcon } from "lucide-react";
+
 export type ProductTag = "destacado" | "imperdible" | "recomendado" | "nuevo" | "mayorista";
 export type ProductCategory = "empanadas" | "dedos" | "congelados" | "combos";
 export type SortOption = "relevance" | "price-asc" | "price-desc" | "rating";
@@ -53,20 +55,33 @@ export const TAG_LABELS: Record<ProductTag, string> = {
   mayorista: "Mayorista",
 };
 
-export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
-  empanadas: "🫓",
-  dedos: "🧀",
-  congelados: "❄️",
-  combos: "🎁",
+// Fallback glyph shown in place of a product photo. A line icon per
+// category, not an emoji (stage 8: zero emoji site-wide).
+export const CATEGORY_ICON: Record<ProductCategory, LucideIcon> = {
+  empanadas: Sandwich,
+  dedos: Milk,
+  congelados: Snowflake,
+  combos: Gift,
 };
 
+// Stage 12: flattened to a single dark-system treatment (was four pastel
+// per-category hues, a light-mode-only pattern). This is purely a "no
+// photo yet" placeholder background, not information-bearing like the tag
+// badges below, so it consolidates cleanly under the Color Consistency
+// Lock rather than needing per-category adaptation.
 export const CATEGORY_BG: Record<ProductCategory, string> = {
-  empanadas: "bg-orange-100",
-  dedos: "bg-amber-100",
-  congelados: "bg-sky-100",
-  combos: "bg-rose-100",
+  empanadas: "bg-ink-surface",
+  dedos: "bg-ink-surface",
+  congelados: "bg-ink-surface",
+  combos: "bg-ink-surface",
 };
 
+// Solid, self-contained chips (own background + white text) that float on
+// top of product photography regardless of page theme, so they don't need
+// dark-mode adaptation. Kept as distinct semantic hues (discount urgency,
+// recommended, new, wholesale-only) rather than collapsed into the single
+// --color-glow accent: unlike a button or price, these carry real catalog
+// information a shopper would otherwise lose.
 export const TAG_CHIP_STYLE: Partial<Record<ProductTag, string>> = {
   imperdible: "bg-rose-500 text-white",
   recomendado: "bg-green-500 text-white",
@@ -74,12 +89,19 @@ export const TAG_CHIP_STYLE: Partial<Record<ProductTag, string>> = {
   mayorista: "bg-purple-500 text-white",
 };
 
+// Modal detail badges. Stage 12: re-tuned from light pastel (bg-*-100/
+// text-*-700) to translucent dark-friendly tints so they sit correctly on
+// --color-ink-surface instead of reading as light-mode chips dropped into
+// a dark dialog. "destacado" (featured) maps to the dominant --color-glow
+// accent instead of amber, since it signals prominence/highlight the same
+// way the home page's eyebrow pills do, rather than catalog-specific
+// status like the other four tags.
 export const TAG_BADGE_STYLE: Partial<Record<ProductTag, string>> = {
-  imperdible: "bg-rose-100 text-rose-700",
-  recomendado: "bg-green-100 text-green-700",
-  nuevo: "bg-teal-100 text-teal-700",
-  mayorista: "bg-purple-100 text-purple-700",
-  destacado: "bg-amber-100 text-amber-700",
+  imperdible: "bg-rose-500/15 text-rose-300",
+  recomendado: "bg-green-500/15 text-green-300",
+  nuevo: "bg-teal-500/15 text-teal-300",
+  mayorista: "bg-purple-500/15 text-purple-300",
+  destacado: "bg-glow/15 text-glow",
 };
 
 export const TAG_CHIP_PRIORITY: ProductTag[] = [

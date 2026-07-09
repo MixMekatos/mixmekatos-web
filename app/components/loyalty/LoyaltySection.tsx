@@ -2,7 +2,6 @@ import { Heart, Hash, Gift } from "lucide-react";
 
 const TIERS = [
   {
-    emoji: "❤️",
     tag: "Siguenos",
     icon: Heart,
     headerColor: "bg-pink-100 text-pink-700",
@@ -17,7 +16,6 @@ const TIERS = [
     ],
   },
   {
-    emoji: "📸",
     tag: "Etiquetanos",
     icon: Hash,
     headerColor: "bg-amber-100 text-amber-700",
@@ -53,6 +51,7 @@ export default function LoyaltySection() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {TIERS.map((tier) => {
+            const TierIcon = tier.icon;
             return (
               <div
                 key={tier.tag}
@@ -60,9 +59,9 @@ export default function LoyaltySection() {
               >
                 <div className="px-6 pt-6 pb-4 flex items-center gap-3">
                   <div
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl text-xl font-extrabold ${tier.headerColor}`}
+                    className={`flex h-12 w-12 items-center justify-center rounded-2xl ${tier.headerColor}`}
                   >
-                    {tier.emoji}
+                    <TierIcon className="h-5 w-5" aria-hidden="true" />
                   </div>
                   <div>
                     <span className="text-xs font-bold uppercase tracking-widest text-(--color-text-muted)">
