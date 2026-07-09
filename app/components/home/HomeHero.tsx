@@ -45,12 +45,14 @@ gsap.registerPlugin(ScrollTrigger);
  * only handles the scroll-reactive part (`onLeave` reverses it,
  * `onEnterBack` replays it) - that half doesn't need any "already past"
  * detection since the user has to actually scroll for those to fire.
+ *
+ * Stage 18: removed the "De la planta a tu góndola" eyebrow badge entirely
+ * per direct feedback - the headline now opens the hero directly.
  */
 export default function HomeHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const textColRef = useRef<HTMLDivElement>(null);
   const dataPanelRef = useRef<HTMLDivElement>(null);
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subcopyRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -62,10 +64,7 @@ export default function HomeHero() {
 
     const ctx = gsap.context(() => {
       const entranceEls = (
-        [eyebrowRef.current, headlineRef.current, subcopyRef.current, ctaRef.current] as (
-          | HTMLElement
-          | null
-        )[]
+        [headlineRef.current, subcopyRef.current, ctaRef.current] as (HTMLElement | null)[]
       ).filter((el): el is HTMLElement => el !== null);
 
       if (prefersReducedMotion) {
@@ -81,7 +80,6 @@ export default function HomeHero() {
       gsap.set(headlineRef.current, { opacity: 0, y: 70 });
       gsap.set(subcopyRef.current, { opacity: 0, y: 55 });
       gsap.set(ctaRef.current, { opacity: 0, y: 40 });
-      gsap.set(eyebrowRef.current, { opacity: 0, x: -60 });
       gsap.set(dataPanelRef.current, { opacity: 0, y: 60, scale: 0.82, rotate: -3 });
 
       // Stage 15: attaching `scrollTrigger` directly to the timeline relied
@@ -99,12 +97,7 @@ export default function HomeHero() {
       // by definition the user has to actually scroll for onLeave/
       // onEnterBack to fire.
       const tl = gsap.timeline({ paused: true });
-      tl.to(eyebrowRef.current, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" })
-        .to(
-          headlineRef.current,
-          { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" },
-          "-=0.4"
-        )
+      tl.to(headlineRef.current, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out" })
         .to(
           subcopyRef.current,
           { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
@@ -173,15 +166,9 @@ export default function HomeHero() {
     <section ref={sectionRef} className="relative overflow-hidden bg-ink bg-grain">
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 pb-16 pt-14 sm:pb-20 sm:pt-16 md:grid-cols-[3fr_2fr] md:items-center md:gap-10 md:pt-20">
         <div ref={textColRef} className="text-center md:text-left">
-          <p
-            ref={eyebrowRef}
-            className="relative inline-flex items-center gap-2 rounded-full bg-glow/15 px-4 py-1.5 font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-glow"
-          >
-            De la planta a tu góndola · Medellín, Colombia
-          </p>
           <h1
             ref={headlineRef}
-            className="relative mt-5 font-display text-4xl font-semibold leading-[1.05] text-ink-text sm:text-5xl md:text-6xl"
+            className="relative font-display text-4xl font-semibold leading-[1.05] text-ink-text sm:text-5xl md:text-6xl"
           >
             El sabor que buscabas,{" "}
             <span className="text-glow">lo hacemos nosotros.</span>

@@ -36,16 +36,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-ink text-ink-text">
-      <div className="border-y border-glow/20 bg-glow/5 py-4 px-4">
-        <p className="max-w-6xl mx-auto text-center text-sm font-medium tracking-wide text-ink-text-muted">
-          Tu paladar ya sabe lo que quiere.{" "}
-          <span className="font-semibold text-glow">
-            Un MEKATICO de MixMekatos.
-          </span>{" "}
-          Hazle caso.
-        </p>
-      </div>
-
       <div className="max-w-6xl mx-auto px-4 py-10">
         {/* Stage 10: was a 4-column grid (Síguenos / Pídelo por app / Contacto /
             Ubicación). "Pídelo por app" (Rappi + DiDi Food) is removed entirely
