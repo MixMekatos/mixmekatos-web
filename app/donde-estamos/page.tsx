@@ -1,5 +1,5 @@
 "use client";
-import { Map, Store, Clock, LucideIcon, MessageSquareText, ArrowRight, Phone, MapPin, SquareArrowOutUpRight } from "lucide-react";
+import { Map, Store, Clock, LucideIcon, MessageSquareText, ArrowRight, Phone, MapPin } from "lucide-react";
 import MapLocation from "./Map";
 import Image from "next/image";
 
@@ -29,14 +29,6 @@ export default function DondeEstamosPage() {
     image: string | LucideIcon,
     name: string,
     address: string[]
-  }
-
-  interface Platform {
-    id: number,
-    title: string,
-    description: string,
-    url: string,
-    image: string
   }
 
   const INFO_CARD: Card[] = [
@@ -112,30 +104,6 @@ export default function DondeEstamosPage() {
     }
   ]
 
-  const INFO_PLATFORM: Platform[] = [
-    {
-      id: 1,
-      title: "Rappi",
-      description: "Sabor artesanal a domicilio",
-      url: "https://rappi.com.co/",
-      image: "https://static.vecteezy.com/system/resources/previews/067/941/720/non_2x/rappi-logo-rounded-hd-free-png.png"
-    },
-    {
-      id: 2,
-      title: "Didi",
-      description: "Pide tus empanadas favoritas",
-      url: "https://web.didiglobal.com/co/pasajero/",
-      image: "/branding/didi.jpg"
-    },
-    {
-      id: 3,
-      title: "Uber",
-      description: "Pide a domicilio",
-      url: "https://www.uber.com/global/es/sign-in/",
-      image: "https://scontent.fbog23-1.fna.fbcdn.net/v/t39.30808-6/352395053_1301403327449484_5481400940176293068_n.png?_nc_cat=101&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=2enlSzQ142kQ7kNvwFCHDtZ&_nc_oc=AdlJ9lCsCJKA-2YQ9L7ZMTRUHkp9YIEf5sGocOjmsjxq5ckSWWqDXUw4aV2x6slTUdM&_nc_zt=23&_nc_ht=scontent.fbog23-1.fna&_nc_gid=bXN5wsDqMNMgmtb_Sc4Eng&_nc_ss=8&oh=00_Afw8cJ48-J8cJTGQQ1g-kMDvCZIdeQTQqZ3CYsCWAgPVHQ&oe=69B7D8AD"
-    }
-  ]
-
   const TITLE_SECTIONS = ((title: string) => {
     return (
       <div className="flex justify-center mx-auto text-center pt-10">
@@ -191,19 +159,6 @@ export default function DondeEstamosPage() {
                   <span className="text-(--color-text-muted) text-sm">{address}</span>
                 </div>
               ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      {TITLE_SECTIONS("Pide por Apps de Domicilio")}
-      <div className="grid md:grid-cols-3 grid-cols-2 mx-auto max-w-5xl gap-5 pt-5">
-        {INFO_PLATFORM.map((platform) => (
-          <div key={platform.id} className="flex flex-col border border-stone-200 rounded-xl bg-white items-center justify-center shadow p-4 hover:scale-105 hover:shadow-xl transition-all duration-300">
-            <Image className="rounded-xl" src={platform.image} alt="" width={100} height={100} />
-            <div className="flex flex-col justify-center items-center p-2">
-              <p className="font-semibold text-2xl text-bar">{platform.title}</p>
-              <p className="text-sm text-(--color-text-muted) pt-2">{platform.description}</p>
-              <a href={platform.url} className="flex text-bar font-bold justify-center items-center gap-1 pt-4"> Abrir App <SquareArrowOutUpRight size={15} /></a>
             </div>
           </div>
         ))}
