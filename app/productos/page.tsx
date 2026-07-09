@@ -8,7 +8,7 @@ export default async function ProductosPage() {
   const featured = allProducts.filter((p) => p.tags?.includes("destacado"));
 
   return (
-    <main className="min-h-screen bg-(--color-bg)">
+    <main className="min-h-screen bg-ink">
       <FeaturedCarousel products={featured} />
       <ProductosPageClient initialProducts={allProducts} />
     </main>

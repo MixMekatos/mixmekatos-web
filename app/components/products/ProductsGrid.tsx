@@ -8,7 +8,7 @@ interface Props {
 }
 
 function ProductSkeleton() {
-  return <div className="rounded-2xl bg-stone-100 animate-pulse h-64" />;
+  return <div className="rounded-2xl bg-ink-surface animate-pulse h-64" />;
 }
 
 export default function ProductsGrid({ products, loading = false }: Props) {
@@ -25,9 +25,9 @@ export default function ProductsGrid({ products, loading = false }: Props) {
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-        <PackageOpen className="h-14 w-14 text-stone-300" />
-        <h3 className="font-semibold text-(--color-text) text-lg">Sin resultados</h3>
-        <p className="text-sm text-(--color-text-muted) max-w-xs">
+        <PackageOpen className="h-14 w-14 text-ink-text-muted/40" />
+        <h3 className="font-display font-semibold text-ink-text text-lg">Sin resultados</h3>
+        <p className="text-sm text-ink-text-muted max-w-xs">
           No encontramos productos con esos filtros. Intenta ajustar los criterios de búsqueda.
         </p>
       </div>

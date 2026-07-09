@@ -26,8 +26,8 @@ function Stars({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }) 
           key={s}
           className={`${sz} ${
             s <= Math.round(rating)
-              ? "fill-amber-400 text-amber-400"
-              : "fill-stone-200 text-stone-300"
+              ? "fill-glow text-glow"
+              : "fill-ink-text-muted/20 text-ink-text-muted/30"
           }`}
         />
       ))}
@@ -91,12 +91,12 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
   }
 
   return (
-    <div className="flex flex-col gap-5 pt-6 mt-4 border-t border-stone-100">
+    <div className="flex flex-col gap-5 pt-6 mt-4 border-t border-glow/10">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h3 className="font-bold text-(--color-text) text-base">
+        <h3 className="font-display font-bold text-ink-text text-base">
           Reseñas de clientes
           {displayReviews.length > 0 && (
-            <span className="ml-2 text-sm font-normal text-(--color-text-muted)">
+            <span className="ml-2 text-sm font-normal text-ink-text-muted">
               ({displayReviews.length})
             </span>
           )}
@@ -104,7 +104,7 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
         {displayReviews.length > 0 && (
           <div className="flex items-center gap-2">
             <Stars rating={computedRating} />
-            <span className="text-sm font-semibold text-(--color-text)">
+            <span className="text-sm font-semibold text-ink-text">
               {computedRating.toFixed(1)}
             </span>
           </div>
@@ -117,15 +117,15 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
             const pct = pctForStar(star);
             return (
               <div key={star} className="flex items-center gap-2.5 text-xs">
-                <span className="text-(--color-text-muted) w-3 shrink-0">{star}</span>
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400 shrink-0" />
-                <div className="flex-1 h-1.5 rounded-full bg-stone-100 overflow-hidden">
+                <span className="text-ink-text-muted w-3 shrink-0">{star}</span>
+                <Star className="h-3 w-3 fill-glow text-glow shrink-0" />
+                <div className="flex-1 h-1.5 rounded-full bg-ink overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-amber-400 transition-all"
+                    className="h-full rounded-full bg-glow transition-all"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <span className="text-(--color-text-muted) w-7 text-right shrink-0">{pct}%</span>
+                <span className="text-ink-text-muted w-7 text-right shrink-0">{pct}%</span>
               </div>
             );
           })}
@@ -136,10 +136,10 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
         <div className="flex flex-col gap-3">
           {[1, 2].map((i) => (
             <div key={i} className="flex gap-3 animate-pulse">
-              <div className="shrink-0 h-9 w-9 rounded-full bg-stone-200" />
+              <div className="shrink-0 h-9 w-9 rounded-full bg-ink" />
               <div className="flex-1 flex flex-col gap-2">
-                <div className="h-3 w-32 rounded bg-stone-200" />
-                <div className="h-3 w-full rounded bg-stone-100" />
+                <div className="h-3 w-32 rounded bg-ink" />
+                <div className="h-3 w-full rounded bg-ink" />
               </div>
             </div>
           ))}
@@ -147,11 +147,11 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
       )}
 
       {!loading && error && (
-        <p className="text-sm text-rose-500">{error}</p>
+        <p className="text-sm text-rose-400">{error}</p>
       )}
 
       {!loading && !error && displayReviews.length === 0 && (
-        <p className="text-sm text-(--color-text-muted)">
+        <p className="text-sm text-ink-text-muted">
           Aún no hay reseñas. ¡Sé el primero en opinar!
         </p>
       )}
@@ -160,26 +160,26 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
         <div className="flex flex-col gap-5">
           {displayReviews.map((review) => (
             <div key={review.id} className="flex gap-3">
-              <div className="shrink-0 h-9 w-9 rounded-full bg-bar flex items-center justify-center text-white text-xs font-bold uppercase">
+              <div className="shrink-0 h-9 w-9 rounded-full bg-glow flex items-center justify-center text-ink text-xs font-bold uppercase">
                 {avatarInitials(review.author_name)}
               </div>
               <div className="flex-1 flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <span className="text-sm font-semibold text-(--color-text)">{review.author_name}</span>
-                  <span className="text-xs text-(--color-text-muted)">{formatDate(review.created_at)}</span>
+                  <span className="text-sm font-semibold text-ink-text">{review.author_name}</span>
+                  <span className="text-xs text-ink-text-muted">{formatDate(review.created_at)}</span>
                 </div>
                 <Stars rating={review.rating} />
-                <p className="text-sm text-(--color-text-muted) leading-relaxed mt-0.5">{review.body}</p>
+                <p className="text-sm text-ink-text-muted leading-relaxed mt-0.5">{review.body}</p>
                 <button
                   onClick={() => setLiked((p) => ({ ...p, [review.id]: !p[review.id] }))}
-                  className={`flex items-center gap-1.5 text-xs mt-1 w-fit transition ${
+                  className={`flex min-h-11 items-center gap-1.5 text-xs mt-1 w-fit transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow ${
                     liked[review.id]
-                      ? "text-accent font-semibold"
-                      : "text-(--color-text-muted) hover:text-accent"
+                      ? "text-glow font-semibold"
+                      : "text-ink-text-muted hover:text-glow"
                   }`}
                 >
                   <ThumbsUp
-                    className={`h-3.5 w-3.5 ${liked[review.id] ? "fill-accent" : ""}`}
+                    className={`h-3.5 w-3.5 ${liked[review.id] ? "fill-glow" : ""}`}
                   />
                   Útil
                 </button>

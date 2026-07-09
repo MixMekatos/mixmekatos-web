@@ -23,14 +23,14 @@ export default function FeaturedCarousel({ products }: Props) {
   };
 
   return (
-    <section className="bg-stone-50 px-4 py-10 overflow-hidden">
+    <section className="bg-ink px-4 py-10 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-6 gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-accent mb-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-glow mb-1">
               Lo mejor de MixMekatos
             </p>
-            <h2 className="text-xl sm:text-2xl font-bold text-(--color-text)">
+            <h2 className="font-display text-xl font-semibold text-ink-text sm:text-2xl">
               Productos destacados
             </h2>
           </div>
@@ -39,21 +39,20 @@ export default function FeaturedCarousel({ products }: Props) {
             <button
               onClick={() => scroll("left")}
               aria-label="Anterior"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white text-(--color-text-muted) shadow-sm transition hover:border-accent hover:text-accent"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-glow/20 bg-ink-surface text-ink-text-muted shadow-sm transition hover:border-glow hover:text-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={() => scroll("right")}
               aria-label="Siguiente"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-white text-(--color-text-muted) shadow-sm transition hover:border-accent hover:text-accent"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-glow/20 bg-ink-surface text-ink-text-muted shadow-sm transition hover:border-glow hover:text-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         </div>
 
-        
         <div
           ref={scrollRef}
           className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2

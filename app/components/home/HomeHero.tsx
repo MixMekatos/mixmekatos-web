@@ -2,28 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import productsData from "@/app/data/products.json";
-import type { Product } from "@/app/lib/products";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Real aggregate pulled from the actual product catalog, not an invented
-// statistic (taste-skill 4.9, "no fake-precise numbers"). Computed once at
-// module scope from app/data/products.json: the same 8-SKU catalog used on
-// the /productos page.
-const CATALOG = productsData as unknown as Product[];
-const RATED_PRODUCTS = CATALOG.filter((product) => typeof product.rating === "number");
-const AVERAGE_RATING =
-  RATED_PRODUCTS.reduce((sum, product) => sum + product.rating, 0) / RATED_PRODUCTS.length;
-const AVERAGE_RATING_DISPLAY = AVERAGE_RATING.toFixed(1);
-const TOTAL_REVIEWS = RATED_PRODUCTS.reduce(
-  (sum, product) => sum + (product.ratingCount ?? 0),
-  0
-);
-const FILLED_STARS = Math.round(AVERAGE_RATING);
 
 /**
  * Hero opening moment, driven entirely by GSAP (isolated from the Framer
@@ -33,11 +16,19 @@ const FILLED_STARS = Math.round(AVERAGE_RATING);
  *
  * Structural rebuild (stage 9): replaces the old centered, text-only, two-
  * band layout with a genuine asymmetric split. The left column (~60%)
- * carries the value proposition; the right column (~40%) is a real "proof"
- * panel built from the product catalog's actual rating data, so the hero
- * leads with evidence instead of promise-only copy. The scroll-scrubbed
- * parallax concept is preserved, now driving the text column and the data
- * panel at different rates instead of the old char/masa bands.
+ * carries the value proposition; the right column (~40%) is a visual
+ * panel. The scroll-scrubbed parallax concept is preserved, now driving
+ * the text column and the panel at different rates instead of the old
+ * char/masa bands.
+ *
+ * Stage 12: the right panel no longer shows the catalog's aggregate
+ * rating/star-count (that stat lived on the SKUs, not the brand, and read
+ * as a vague homepage claim rather than real evidence). It now shows an
+ * actual product photo (canasta.png, a real basket of fried empanadas) as
+ * the hero's visual centerpiece, rendered with no card/border/backdrop so
+ * the transparent PNG reads directly against the page background. Motion
+ * is limited to the entrance timeline and the scroll-scrubbed parallax
+ * below; no idle/continuous animation.
  */
 export default function HomeHero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -62,8 +53,8 @@ export default function HomeHero() {
       ).filter((el): el is HTMLElement => el !== null);
 
       if (prefersReducedMotion) {
-        // No entrance choreography, no scroll-linked parallax: content
-        // renders in its final state immediately.
+        // No entrance choreography, no scroll-linked parallax, no idle
+        // float: content renders in its final, static state immediately.
         gsap.set([...entranceEls, dataPanelRef.current], { opacity: 1, y: 0, scale: 1 });
         return;
       }
@@ -157,25 +148,16 @@ export default function HomeHero() {
 
         <div
           ref={dataPanelRef}
-          className="relative mx-auto flex w-full max-w-xs flex-col items-center gap-3 rounded-3xl border border-glow/20 bg-ink-surface/70 p-8 text-center backdrop-blur-sm sm:p-10 md:mx-0 md:max-w-none"
+          className="relative mx-auto aspect-square w-full max-w-xs md:mx-0 md:max-w-none"
         >
-          <span className="font-display text-7xl font-semibold leading-none text-glow sm:text-8xl">
-            {AVERAGE_RATING_DISPLAY}
-          </span>
-          <div className="flex items-center gap-1" aria-hidden="true">
-            {Array.from({ length: 5 }, (_, index) => (
-              <Star
-                key={index}
-                className={
-                  "h-5 w-5 " +
-                  (index < FILLED_STARS ? "fill-glow text-glow" : "text-ink-text-muted/40")
-                }
-              />
-            ))}
-          </div>
-          <p className="font-nunito text-xs uppercase tracking-[0.15em] text-ink-text-muted">
-            En {TOTAL_REVIEWS} reseñas de clientes
-          </p>
+          <Image
+            src="/canasta.png"
+            alt="Canasta de mimbre con empanadas de maíz recién hechas"
+            fill
+            sizes="(min-width: 768px) 40vw, 80vw"
+            className="object-contain"
+            priority
+          />
         </div>
       </div>
     </section>
