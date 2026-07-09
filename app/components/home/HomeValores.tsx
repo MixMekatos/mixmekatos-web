@@ -42,8 +42,12 @@ export default function HomeValores() {
         {VALORES.map(({ icon: Icon, label, desc }) => (
           <StaggerItem
             key={label}
-            y={10}
-            duration={0.35}
+            // Horizontal translation (not just a vertical nudge) since this
+            // is already a horizontal rail on desktop: each value slides in
+            // from the left, in reading order.
+            y={0}
+            x={-24}
+            duration={0.4}
             className="flex items-center gap-3 py-3 sm:flex-1 sm:justify-center sm:px-5 sm:py-4"
           >
             <Icon className="h-5 w-5 shrink-0 text-glow" aria-hidden="true" />

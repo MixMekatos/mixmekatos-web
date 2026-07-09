@@ -15,10 +15,9 @@ export default function InicioPage() {
       <HomeCanales />
       <HomeProductos />
       <HomeCTA
-        emoji="🫓"
         titulo="Hay problemas que se resuelven con una empanada."
         subtitulo="¿Hambre? Empanada. ¿Antojo? Empanada. ¿Reunión en la oficina? Empanadas para todos. La solución lleva maíz y queso."
-        ctaLabel="Quiero mis empanadas ahora 🌶️"
+        ctaLabel="Quiero mis empanadas ahora"
         ctaHref="/productos"
       />
       <HomeValores />

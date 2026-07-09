@@ -49,12 +49,17 @@ export default function HomeHero() {
         return;
       }
 
-      gsap.set(entranceEls, { opacity: 0, y: 24 });
+      // Wider vertical nudge than before (24px -> 40px) for a stronger sense
+      // of movement, plus a small horizontal component on the eyebrow badge
+      // so the opening moment reads as real component translation rather
+      // than a uniform fade-up.
+      gsap.set(entranceEls, { opacity: 0, y: 40 });
+      gsap.set(eyebrowRef.current, { x: -28 });
 
       const tl = gsap.timeline({
         defaults: { ease: "power3.out", duration: 0.7 },
       });
-      tl.to(eyebrowRef.current, { opacity: 1, y: 0 })
+      tl.to(eyebrowRef.current, { opacity: 1, y: 0, x: 0 })
         .to(headlineRef.current, { opacity: 1, y: 0 }, "-=0.45")
         .to(subcopyRef.current, { opacity: 1, y: 0 }, "-=0.4")
         .to(ctaRef.current, { opacity: 1, y: 0 }, "-=0.35")
@@ -98,7 +103,7 @@ export default function HomeHero() {
       <div ref={charBandRef} className="relative px-4 pt-10 pb-14 text-center sm:pt-12 sm:pb-16 md:pt-16 md:pb-20">
         <p
           ref={eyebrowRef}
-          className="relative inline-flex items-center gap-2 rounded-full bg-glow/15 px-4 py-1.5 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-glow"
+          className="relative inline-flex items-center gap-2 rounded-full bg-glow/15 px-4 py-1.5 font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-glow"
         >
           De la planta a tu góndola · Medellín, Colombia
         </p>
@@ -116,9 +121,7 @@ export default function HomeHero() {
           className="relative mx-auto max-w-3xl font-display text-4xl font-semibold leading-[1.05] text-ink-text sm:text-5xl md:text-6xl"
         >
           El sabor que buscabas,{" "}
-          <span className="text-glow drop-shadow-[0_0_18px_rgba(240,178,62,0.35)]">
-            lo hacemos nosotros.
-          </span>
+          <span className="text-glow">lo hacemos nosotros.</span>
         </h1>
         <p ref={subcopyRef} className="relative mx-auto mt-6 max-w-xl text-lg text-ink-text-muted">
           Empanadas de maíz horneadas, palos de queso y más mekatos irresistibles,
@@ -128,7 +131,7 @@ export default function HomeHero() {
         <div ref={ctaRef} className="relative mt-9 flex flex-wrap justify-center gap-4">
           <Link
             href="/productos"
-            className="inline-flex min-h-11 items-center justify-center rounded-full bg-glow px-7 py-3 text-sm font-semibold text-ink shadow-[0_8px_30px_-8px_rgba(240,178,62,0.55)] transition hover:bg-glow-hover hover:shadow-[0_10px_36px_-6px_rgba(240,178,62,0.65)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-glow px-7 py-3 text-sm font-semibold text-ink shadow-[0_4px_16px_-6px_rgba(193,154,95,0.35)] transition hover:bg-glow-hover hover:shadow-[0_6px_20px_-6px_rgba(193,154,95,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             Ver catálogo
           </Link>

@@ -36,14 +36,14 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-bar text-white">
-      <div className="bg-accent py-4 px-4">
-        <p className="max-w-6xl mx-auto text-center text-sm font-semibold tracking-wide text-white/95">
-          🫓 Tu paladar está leyendo esto y ya sabe lo que quiere.{" "}
-          <span className="underline decoration-white/50 underline-offset-2">
+    <footer className="bg-ink text-ink-text">
+      <div className="border-y border-glow/20 bg-glow/5 py-4 px-4">
+        <p className="max-w-6xl mx-auto text-center text-sm font-medium tracking-wide text-ink-text-muted">
+          Tu paladar ya sabe lo que quiere.{" "}
+          <span className="font-semibold text-glow">
             Un MEKATICO de MixMekatos.
           </span>{" "}
-          Hazle caso. 🌶️
+          Hazle caso.
         </p>
       </div>
 
@@ -51,7 +51,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
 
           <div className="col-span-2 md:col-span-1 flex flex-col gap-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-text-muted">
               Síguenos
             </h3>
             <ul className="flex gap-3">
@@ -61,7 +61,7 @@ export default function Footer() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/30 hover:scale-110"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-ink-surface text-ink-text-muted transition hover:bg-glow/15 hover:text-glow hover:scale-110"
                     aria-label={label}
                   >
                     <Icon className="h-4 w-4" />
@@ -72,14 +72,14 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-text-muted">
               Pídelo por app
             </h3>
             <a
               href="https://www.rappi.com.co"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-black/25 h-10 w-32 transition hover:bg-black/40"
+              className="inline-flex items-center justify-center rounded-lg bg-white/10 h-10 w-32 transition hover:bg-white/20"
             >
               <Image
                 src="https://upload.wikimedia.org/wikipedia/commons/0/06/Rappi_logo.svg"
@@ -110,7 +110,7 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-text-muted">
               Contacto
             </h3>
             <a
@@ -122,16 +122,16 @@ export default function Footer() {
               <MessageCircle className="h-4 w-4" />
               WhatsApp
             </a>
-            <p className="flex items-center gap-2 text-sm text-white/75">
+            <p className="flex items-center gap-2 text-sm text-ink-text-muted">
               <Phone className="h-4 w-4 shrink-0" />
               {PHONE_FAKE}
             </p>
-            <p className="text-xs text-white/55 -mt-1 pl-6">
+            <p className="text-xs text-ink-text-muted/70 -mt-1 pl-6">
               Pedidos y eventos
             </p>
             <Link
               href="/fidelizacion"
-              className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-stone-900 transition hover:bg-amber-300 hover:scale-[1.02] w-fit mt-1"
+              className="inline-flex items-center gap-2 rounded-full bg-glow px-4 py-2 text-sm font-semibold text-ink transition hover:bg-glow-hover hover:scale-[1.02] w-fit mt-1"
             >
               <Gift className="h-4 w-4" />
               Club MixMekatos
@@ -139,10 +139,10 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-white/70">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-text-muted">
               Ubicación
             </h3>
-            <p className="flex items-start gap-2 text-sm text-white/75">
+            <p className="flex items-start gap-2 text-sm text-ink-text-muted">
               <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
               <span>
                 Medellín, Colombia
@@ -151,20 +151,18 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
-            <p className="text-xs text-white/60">
+            <p className="text-xs text-ink-text-muted/70">
               © {year} MixMekatos. Todos los derechos reservados.
             </p>
-            <p className="mt-1 text-xs text-white/45">
-              Hecho con{" "}
-              <span aria-hidden>❤️</span>{" "}
-              por{" "}
+            <p className="mt-1 text-xs text-ink-text-muted/60">
+              Hecho con cariño por{" "}
               <a
                 href="https://nexcodex.co"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-white/70 underline underline-offset-2 hover:text-white"
+                className="font-semibold text-ink-text-muted underline underline-offset-2 hover:text-ink-text"
               >
                 NexCodex
               </a>

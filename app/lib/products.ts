@@ -1,3 +1,5 @@
+import { Sandwich, Milk, Snowflake, Gift, type LucideIcon } from "lucide-react";
+
 export type ProductTag = "destacado" | "imperdible" | "recomendado" | "nuevo" | "mayorista";
 export type ProductCategory = "empanadas" | "dedos" | "congelados" | "combos";
 export type SortOption = "relevance" | "price-asc" | "price-desc" | "rating";
@@ -53,11 +55,13 @@ export const TAG_LABELS: Record<ProductTag, string> = {
   mayorista: "Mayorista",
 };
 
-export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
-  empanadas: "🫓",
-  dedos: "🧀",
-  congelados: "❄️",
-  combos: "🎁",
+// Fallback glyph shown in place of a product photo. A line icon per
+// category, not an emoji (stage 8: zero emoji site-wide).
+export const CATEGORY_ICON: Record<ProductCategory, LucideIcon> = {
+  empanadas: Sandwich,
+  dedos: Milk,
+  congelados: Snowflake,
+  combos: Gift,
 };
 
 export const CATEGORY_BG: Record<ProductCategory, string> = {

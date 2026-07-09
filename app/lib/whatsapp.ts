@@ -12,10 +12,10 @@ export async function sendCouponViaWhatsApp(
   }
 
   const body =
-    `¡Hola ${requesterName}! 🎉 Gracias por seguir a MixMekatos.\n\n` +
+    `¡Hola ${requesterName}! Gracias por seguir a MixMekatos.\n\n` +
     `Tu cupón exclusivo:\n*${couponCode}*\n\n` +
     `Canjéalo en tu próximo pedido por WhatsApp o domicilio.\n` +
-    `⚠️ Es personal e intransferible. No lo compartas.`;
+    `Es personal e intransferible. No lo compartas.`;
 
   const params = new URLSearchParams({
     From: fromNumber,

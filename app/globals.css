@@ -40,8 +40,15 @@
   --color-ink-surface: #3a2419; /* elevated surface, one step lighter than ink */
   --color-ink-text: #f5f1ea; /* primary text on ink (~16.1:1, reused from .dark) */
   --color-ink-text-muted: #b6ada3; /* secondary text on ink (~8.2:1, reused from .dark) */
-  --color-glow: #f0b23e; /* the ONE dominant accent: incandescent masa gold */
-  --color-glow-hover: #f5c065; /* hover state for glow-filled buttons */
+  /* Stage 8: desaturated from the original #f0b23e (86% saturation, read as
+     an incandescent/glowing neon-adjacent gold) to a restrained brushed-
+     brass tone (44% saturation, same hue family) per explicit "no
+     saturado" direction. Contrast against --color-ink (#1f130c), manually
+     computed via the WCAG relative-luminance formula: glow ~6.96:1,
+     glow-hover ~8.37:1 — both comfortably above the 4.5:1 AA text
+     threshold. */
+  --color-glow: #c19a5f; /* the ONE dominant accent: muted brass/gold */
+  --color-glow-hover: #ccab7b; /* hover state for glow-filled buttons */
 
   /* WhatsApp brand green (official hex #25D366). Single source of truth so
      Footer.tsx and ProductModal.tsx don't each hardcode/duplicate the color. */
@@ -104,10 +111,9 @@
 
   /* Poppins is the primary reading/UI face (replaces Geist). */
   --font-sans: var(--font-poppins);
-  /* Fredoka is the display face for headings, used at heading scale only. */
-  --font-display: var(--font-fredoka);
-  /* Baloo 2: reserved for small playful eyebrows/badges/tags. */
-  --font-baloo: var(--font-baloo);
+  /* Bricolage Grotesque is the display face for headings, used at heading
+     scale only (stage 8: replaces Fredoka, see app/layout.tsx). */
+  --font-display: var(--font-display);
   /* Nunito: reserved for secondary/muted supporting text. */
   --font-nunito: var(--font-nunito);
   --color-sidebar-ring: var(--sidebar-ring);

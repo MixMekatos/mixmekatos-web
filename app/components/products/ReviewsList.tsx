@@ -178,8 +178,10 @@ export default function ReviewsList({ productId, optimisticReview, baseRating }:
                       : "text-(--color-text-muted) hover:text-accent"
                   }`}
                 >
-                  <ThumbsUp className="h-3.5 w-3.5" />
-                  Útil{liked[review.id] ? " ✓" : ""}
+                  <ThumbsUp
+                    className={`h-3.5 w-3.5 ${liked[review.id] ? "fill-accent" : ""}`}
+                  />
+                  Útil
                 </button>
               </div>
             </div>

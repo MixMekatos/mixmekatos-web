@@ -12,7 +12,7 @@ const links = [
   { href: "/productos", label: "Productos" },
   { href: "/trucos-de-la-casa", label: "Trucos de la casa" },
   { href: "/eventos", label: "Eventos" },
-  { href: "/fidelizacion", label: "Club MixMekatos 🎁" },
+  { href: "/fidelizacion", label: "Club MixMekatos" },
   { href: "/donde-estamos", label: "Dónde estamos" },
   { href: "/contacto", label: "Contacto" },
 ] as const;
@@ -26,11 +26,10 @@ export default function Navbar() {
   const isCompact = isShortViewport;
 
   return (
-    <header className="sticky top-0 z-50 shadow-sm">
+    <header className="sticky top-0 z-50">
       <div
-        className="text-white text-center px-4 text-sm transition-[padding] duration-200"
+        className="bg-ink-surface text-center px-4 text-sm text-ink-text-muted transition-[padding] duration-200"
         style={{
-          backgroundColor: "var(--color-bar)",
           paddingTop: isCompact ? "0.375rem" : "0.5rem",
           paddingBottom: isCompact ? "0.375rem" : "0.5rem",
         }}
@@ -40,7 +39,7 @@ export default function Navbar() {
         </p>
       </div>
 
-      <nav className="relative bg-(--color-nav) border-b border-stone-200/80">
+      <nav className="relative bg-ink border-b border-white/10">
         <div
           className="max-w-6xl mx-auto px-4 flex flex-row items-center justify-between gap-3 transition-[padding] duration-200"
           style={{
@@ -71,7 +70,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setMenuOpen((o) => !o)}
-                className="p-2 rounded-md text-(--color-text-muted) hover:text-accent hover:bg-stone-100 transition-colors"
+                className="p-2 rounded-md text-ink-text-muted hover:text-glow hover:bg-ink-surface transition-colors"
                 aria-expanded={menuOpen}
                 aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
               >
@@ -102,7 +101,7 @@ export default function Navbar() {
 
               {menuOpen && (
                 <div
-                  className="absolute top-full left-0 right-0 bg-white border-b border-stone-200/80 shadow-lg"
+                  className="absolute top-full left-0 right-0 bg-ink border-b border-white/10 shadow-lg"
                   style={{ marginTop: 0 }}
                 >
                   <ul className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1">
@@ -116,8 +115,8 @@ export default function Navbar() {
                             className={
                               "block py-2.5 px-3 rounded-md text-[15px] font-medium transition-colors " +
                               (isActive
-                                ? "text-accent bg-accent/10"
-                                : "text-(--color-text-muted) hover:text-accent hover:bg-stone-50")
+                                ? "text-glow bg-glow/10"
+                                : "text-ink-text-muted hover:text-glow hover:bg-ink-surface")
                             }
                           >
                             {label}
@@ -139,8 +138,8 @@ export default function Navbar() {
                       href={href}
                       className={
                         isActive
-                          ? "text-accent"
-                          : "text-(--color-text-muted) hover:text-accent transition-colors"
+                          ? "text-glow"
+                          : "text-ink-text-muted hover:text-glow transition-colors"
                       }
                     >
                       {label}

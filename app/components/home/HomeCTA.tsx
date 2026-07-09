@@ -2,7 +2,6 @@ import Link from "next/link";
 import ScrollReveal from "@/app/components/motion/ScrollReveal";
 
 interface HomeCTAProps {
-  emoji?: string;
   titulo: string;
   subtitulo: string;
   ctaLabel: string;
@@ -10,7 +9,6 @@ interface HomeCTAProps {
 }
 
 export default function HomeCTA({
-  emoji = "🫓",
   titulo,
   subtitulo,
   ctaLabel,
@@ -18,8 +16,7 @@ export default function HomeCTA({
 }: HomeCTAProps) {
   return (
     <section className="px-4 py-16 text-center bg-ink-surface">
-      <ScrollReveal y={20} duration={0.5}>
-        <p className="text-5xl mb-4">{emoji}</p>
+      <ScrollReveal y={36} duration={0.55}>
         <h2 className="mx-auto max-w-xl font-display text-3xl font-semibold leading-tight text-ink-text sm:text-4xl md:text-5xl">
           {titulo}
         </h2>

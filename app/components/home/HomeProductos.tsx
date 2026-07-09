@@ -24,7 +24,7 @@ const PRODUCTS: Product[] = [
   {
     id: "empanadas",
     eyebrow: "Lo más pedido",
-    title: "Empanadas de maíz 🫓",
+    title: "Empanadas de maíz",
     description:
       "Horneadas, crujientes por fuera y rellenas de puro sabor por dentro. La estrella de la casa.",
     variant: "photo",
@@ -38,7 +38,7 @@ const PRODUCTS: Product[] = [
   {
     id: "queso",
     eyebrow: "Imperdible",
-    title: "Palos de queso 🧀",
+    title: "Palos de queso",
     description:
       "Queso fundido envuelto en una mezcla dorada e irresistible. Para compartir, o no.",
     variant: "photo",
@@ -50,7 +50,7 @@ const PRODUCTS: Product[] = [
   {
     id: "congelados",
     eyebrow: "Supermercados & mayorista",
-    title: "Congelados prefritos ❄️",
+    title: "Congelados prefritos",
     description:
       "Listos para calentar en minutos. Misma calidad MixMekatos en tu casa o negocio.",
     variant: "typography",
@@ -154,7 +154,7 @@ export default function HomeProductos() {
   return (
     <section className="bg-ink py-14">
       <div className="mx-auto max-w-5xl px-4 text-center">
-        <p className="mx-auto mb-3 inline-flex w-fit rounded-full bg-glow/12 px-4 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.2em] text-glow">
+        <p className="mx-auto mb-3 inline-flex w-fit rounded-full bg-glow/12 px-4 py-1 font-display text-[11px] font-semibold uppercase tracking-[0.2em] text-glow">
           Nuestros productos
         </p>
         <h2 className="mb-10 font-display text-2xl font-semibold text-ink-text sm:text-3xl">
@@ -214,7 +214,7 @@ export default function HomeProductos() {
                     aria-hidden="true"
                     className="absolute inset-0 bg-gradient-to-br from-glow/15 via-transparent to-transparent"
                   />
-                  <span className="relative w-fit rounded-full bg-glow/15 px-3 py-1 font-baloo text-[11px] font-semibold uppercase tracking-[0.15em] text-glow">
+                  <span className="relative w-fit rounded-full bg-glow/15 px-3 py-1 font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-glow">
                     {product.eyebrow}
                   </span>
                   <div className="relative">

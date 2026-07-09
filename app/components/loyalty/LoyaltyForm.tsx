@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Loader2, CheckCircle, Upload, X, Clock } from "lucide-react";
+import { Loader2, CheckCircle, Upload, X, Clock, Heart, Hash } from "lucide-react";
 import Image from "next/image";
 
 type Platform = "instagram" | "tiktok" | "facebook";
@@ -18,9 +18,9 @@ const PLATFORM_OPTIONS: { value: Platform; label: string; color: string }[] = [
   { value: "facebook",  label: "Facebook",  color: "bg-blue-600"  },
 ];
 
-const TABS: { value: RewardType; emoji: string; label: string }[] = [
-  { value: "follow",  emoji: "❤️", label: "Siguenos"    },
-  { value: "hashtag", emoji: "📸", label: "Etiquetanos" },
+const TABS: { value: RewardType; icon: typeof Heart; label: string }[] = [
+  { value: "follow",  icon: Heart, label: "Siguenos"    },
+  { value: "hashtag", icon: Hash,  label: "Etiquetanos" },
 ];
 
 export default function LoyaltyForm() {
@@ -113,7 +113,7 @@ export default function LoyaltyForm() {
         </div>
         <div>
           <h3 className="text-xl font-bold text-(--color-text)">
-            Tu codigo esta en camino! 🎁
+            Tu codigo esta en camino!
           </h3>
           <p className="mt-2 text-sm text-(--color-text-muted)">
             {result.via_whatsapp
@@ -136,7 +136,7 @@ export default function LoyaltyForm() {
         </div>
         <div>
           <h3 className="text-xl font-bold text-(--color-text)">
-            Participacion registrada! ⏳
+            Participacion registrada!
           </h3>
           <p className="mt-2 text-sm text-(--color-text-muted)">
             Revisaremos tu publicacion en las proximas horas y te enviaremos
@@ -168,7 +168,7 @@ export default function LoyaltyForm() {
                 : "text-(--color-text-muted) hover:text-(--color-text)"
             }`}
           >
-            <span>{tab.emoji}</span>
+            <tab.icon className="h-4 w-4" aria-hidden="true" />
             <span>{tab.label}</span>
           </button>
         ))}
@@ -347,9 +347,9 @@ export default function LoyaltyForm() {
               Enviando...
             </>
           ) : isFollow ? (
-            "Reclamar mi regalo gratis ❤️"
+            "Reclamar mi regalo gratis"
           ) : (
-            "Enviar mi participacion 📸"
+            "Enviar mi participacion"
           )}
         </button>
 

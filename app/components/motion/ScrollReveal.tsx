@@ -6,6 +6,13 @@ interface ScrollRevealProps extends Omit<HTMLMotionProps<"div">, "children"> {
   children: React.ReactNode;
   /** Vertical offset (px) the content slides up from. Ignored under prefers-reduced-motion. */
   y?: number;
+  /**
+   * Horizontal offset (px) the content slides in from — negative slides in
+   * from the left, positive from the right. Opt-in and independent of `y`
+   * (pass `y={0}` alongside it for a pure horizontal translation). Ignored
+   * under prefers-reduced-motion.
+   */
+  x?: number;
   /** Optional scale-in, e.g. 0.94. Ignored under prefers-reduced-motion. */
   scale?: number;
   /** Animation duration in seconds. */
@@ -26,7 +33,8 @@ interface ScrollRevealProps extends Omit<HTMLMotionProps<"div">, "children"> {
  */
 export default function ScrollReveal({
   children,
-  y = 24,
+  y = 32,
+  x,
   scale,
   duration = 0.5,
   delay = 0,
@@ -38,10 +46,20 @@ export default function ScrollReveal({
 
   const hidden = shouldReduceMotion
     ? { opacity: 0 }
-    : { opacity: 0, y, ...(scale !== undefined ? { scale } : {}) };
+    : {
+        opacity: 0,
+        y,
+        ...(x !== undefined ? { x } : {}),
+        ...(scale !== undefined ? { scale } : {}),
+      };
   const visible = shouldReduceMotion
     ? { opacity: 1 }
-    : { opacity: 1, y: 0, ...(scale !== undefined ? { scale: 1 } : {}) };
+    : {
+        opacity: 1,
+        y: 0,
+        ...(x !== undefined ? { x: 0 } : {}),
+        ...(scale !== undefined ? { scale: 1 } : {}),
+      };
 
   return (
     <motion.div

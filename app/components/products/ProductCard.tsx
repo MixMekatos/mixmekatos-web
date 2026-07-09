@@ -9,7 +9,7 @@ import {
   TAG_LABELS,
   TAG_CHIP_STYLE,
   TAG_CHIP_PRIORITY,
-  CATEGORY_EMOJI,
+  CATEGORY_ICON,
   CATEGORY_BG,
 } from "@/app/lib/products";
 import ProductModal from "./ProductModal";
@@ -43,6 +43,7 @@ export default function ProductCard({ product }: Props) {
   const mainImage = product.images[0];
   const showPlaceholder = !mainImage || imgError;
   const tagChip = TAG_CHIP_PRIORITY.find((t) => product.tags?.includes(t));
+  const CategoryIcon = CATEGORY_ICON[product.category];
 
   return (
     <>
@@ -58,7 +59,7 @@ export default function ProductCard({ product }: Props) {
                 CATEGORY_BG[product.category]
               }`}
             >
-              <span className="text-6xl select-none">{CATEGORY_EMOJI[product.category]}</span>
+              <CategoryIcon className="h-14 w-14 text-(--color-text-muted)/50" aria-hidden="true" />
             </div>
           ) : (
             <Image

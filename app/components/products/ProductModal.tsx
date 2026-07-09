@@ -16,7 +16,7 @@ import {
   CATEGORIES,
   TAG_LABELS,
   TAG_BADGE_STYLE,
-  CATEGORY_EMOJI,
+  CATEGORY_ICON,
   CATEGORY_BG,
 } from "@/app/lib/products";
 import ReviewForm from "./ReviewForm";
@@ -69,6 +69,7 @@ interface GalleryPanelProps {
 function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClick, onImgError }: GalleryPanelProps) {
   const hasImages = product.images.length > 0;
   const currentImgOk = hasImages && !imgError[imgIndex];
+  const CategoryIcon = CATEGORY_ICON[product.category];
 
   return (
     <div className="flex flex-col gap-3">
@@ -86,9 +87,7 @@ function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClic
             onError={() => onImgError(imgIndex)}
           />
         ) : (
-          <span className="text-[96px] select-none leading-none">
-            {CATEGORY_EMOJI[product.category]}
-          </span>
+          <CategoryIcon className="h-24 w-24 text-(--color-text-muted)/50" aria-hidden="true" />
         )}
 
         {product.discount && (
@@ -140,9 +139,12 @@ function GalleryPanel({ product, imgIndex, imgError, onPrev, onNext, onThumbClic
                   />
                 ) : (
                   <div
-                    className={`w-full h-full flex items-center justify-center text-xl ${CATEGORY_BG[product.category]}`}
+                    className={`w-full h-full flex items-center justify-center ${CATEGORY_BG[product.category]}`}
                   >
-                    {CATEGORY_EMOJI[product.category]}
+                    <CategoryIcon
+                      className="h-6 w-6 text-(--color-text-muted)/50"
+                      aria-hidden="true"
+                    />
                   </div>
                 )}
               </button>

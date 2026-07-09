@@ -57,7 +57,7 @@ export default function HomeCanales() {
   return (
     <section className="bg-ink px-4 py-14">
       <div className="mx-auto max-w-5xl">
-        <ScrollReveal y={16} duration={0.45}>
+        <ScrollReveal y={32} duration={0.5}>
           <h2 className="mb-10 text-center font-display text-2xl font-semibold text-ink-text sm:text-3xl">
             ¿Cómo quieres tus mekatos?
           </h2>
@@ -70,8 +70,17 @@ export default function HomeCanales() {
           stagger={0.08}
           className="overflow-hidden rounded-3xl border border-white/10 bg-ink-surface shadow-sm divide-y divide-dashed divide-white/10 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:divide-x"
         >
-          {CANALES.map(({ icon: Icon, title, desc, accentClass, bgClass, cta }) => (
-            <StaggerItem key={title} y={20} duration={0.45} className="flex flex-col gap-4 p-6 sm:p-7">
+          {CANALES.map(({ icon: Icon, title, desc, accentClass, bgClass, cta }, index) => (
+            <StaggerItem
+              key={title}
+              // Each cell slides in from a different direction for variety
+              // (real component translation, not a uniform fade-up): first
+              // from the left, second from below, third from the right.
+              y={index === 1 ? 40 : 0}
+              x={index === 0 ? -40 : index === 2 ? 40 : undefined}
+              duration={0.55}
+              className="flex flex-col gap-4 p-6 sm:p-7"
+            >
               <span
                 className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${bgClass} ${accentClass}`}
               >

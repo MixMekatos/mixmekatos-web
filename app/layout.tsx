@@ -3,15 +3,20 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import OfferToastTrigger from "./components/OfferToastTrigger";
-import { Fredoka, Poppins, Baloo_2, Nunito } from "next/font/google";
+import { Bricolage_Grotesque, Poppins, Nunito } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-// Display face for headings — friendly, rounded, bold-but-not-shouty. Used
-// with restraint (headline scale only), never for body copy.
-const fredoka = Fredoka({
+// Display face for headings: a distinctive contemporary grotesk with real
+// character (used across current premium/editorial/creative-agency work),
+// replacing the previous playful/rounded Fredoka + Baloo 2 pairing, which
+// read as a children's-app/gaming-UI typeface family and directly
+// contradicted the brand's "elite, exclusive, premium" positioning. Used
+// with restraint (headline scale only), never for body copy. Weight 600/700
+// covers every current font-display call site (all font-semibold).
+const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
-  weight: ["500", "600"],
-  variable: "--font-fredoka",
+  weight: ["600", "700"],
+  variable: "--font-display",
 });
 
 // Primary reading/UI face, replaces Geist site-wide. Nothing outside the
@@ -23,16 +28,9 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-// Complementary face reserved for small, punchy labels (eyebrows/badges/tags)
-// where Fredoka's roundness reads even more playful — used sparingly.
-const baloo2 = Baloo_2({
-  subsets: ["latin"],
-  weight: ["600"],
-  variable: "--font-baloo",
-});
-
 // Complementary face reserved for secondary/muted supporting text where
-// Poppins would feel too heavy — used sparingly.
+// Poppins would feel too heavy — used sparingly (small captions only, e.g.
+// the hero's distribution caption and the "Nos encuentras en" label).
 const nunito = Nunito({
   subsets: ["latin"],
   weight: ["400", "600"],
@@ -52,9 +50,8 @@ export default function RootLayout({
       lang="es"
       className={cn(
         "font-sans",
-        fredoka.variable,
+        bricolageGrotesque.variable,
         poppins.variable,
-        baloo2.variable,
         nunito.variable
       )}
     >
