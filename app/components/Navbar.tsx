@@ -89,107 +89,119 @@ export default function Navbar() {
   // padding area — and the full-width bar behind the pill while scrolling —
   // reads as dark instead of transparent. Navbar is already a shared,
   // globally-dark-themed component, so this is consistent site-wide.
+  //
+  // Stage 17: the logo was living inside the pill, constrained to h-7/h-8
+  // to fit the pill's own compact height - "se ve muy pequeño". Moved out
+  // of the pill entirely: it now sits beside it, top-left, at roughly
+  // double the pill's height, so it reads as a real brand mark instead of
+  // a cramped wordmark squeezed into a nav bar row. The pill itself keeps
+  // its original compact height and now holds only the links.
   return (
     <header className="sticky top-0 z-50 bg-ink px-4 pt-4">
       <div className="mx-auto max-w-6xl">
-        <nav className="flex h-12 items-center justify-between gap-4 rounded-full border border-white/10 bg-ink-surface px-4 shadow-lg shadow-black/30 sm:h-14 sm:px-6">
+        <div className="flex items-center justify-between gap-4">
           <Link
             href="/"
-            className="flex shrink-0 items-center"
+            className="relative h-16 w-28 shrink-0 sm:h-20 sm:w-36 md:h-24 md:w-44"
             onClick={() => setMenuOpen(false)}
           >
             <Image
               src="/logo.png"
               alt="MixMekatos"
-              width={160}
-              height={56}
+              fill
+              sizes="(min-width: 768px) 176px, 112px"
+              className="object-contain object-left"
               priority
-              className="h-7 w-auto object-contain sm:h-8"
             />
           </Link>
 
-          {showHamburger ? (
-            <button
-              type="button"
-              onClick={() => setMenuOpen((open) => !open)}
-              className="flex h-11 w-11 items-center justify-center rounded-md text-ink-text-muted transition-colors hover:bg-ink hover:text-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow"
-              aria-expanded={menuOpen}
-              aria-controls="mobile-menu"
-              aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-            >
-              {menuOpen ? (
-                <X className="h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
-          ) : (
-            <div className="flex items-center gap-x-7 text-[15px] font-medium">
-              <ul className="flex items-center gap-x-7">
-                {PRIMARY_LINKS.map(({ href, label }) => {
-                  const isActive = pathname === href;
-                  return (
-                    <li key={href}>
-                      <Link
-                        href={href}
-                        className={
-                          isActive
-                            ? "text-glow"
-                            : "text-ink-text-muted transition-colors hover:text-glow"
-                        }
-                      >
-                        {label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-
-              <div ref={moreRef} className="relative">
-                <button
-                  type="button"
-                  onClick={() => setMoreOpen((open) => !open)}
-                  className="flex min-h-11 items-center gap-1 rounded-md px-2 text-ink-text-muted transition-colors hover:text-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow"
-                  aria-expanded={moreOpen}
-                  aria-haspopup="true"
-                >
-                  Menú
-                  <ChevronDown
-                    className={"h-4 w-4 transition-transform " + (moreOpen ? "rotate-180" : "")}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                {moreOpen && (
-                  <div
-                    role="menu"
-                    className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-white/10 bg-ink-surface p-2 shadow-lg shadow-black/30"
-                  >
-                    {SECONDARY_LINKS.map(({ href, label }) => {
-                      const isActive = pathname === href;
-                      return (
+          <nav className="flex h-12 items-center justify-between gap-4 rounded-full border border-white/10 bg-ink-surface px-4 shadow-lg shadow-black/30 sm:h-14 sm:px-6">
+            {showHamburger ? (
+              <button
+                type="button"
+                onClick={() => setMenuOpen((open) => !open)}
+                className="flex h-11 w-11 items-center justify-center rounded-md text-ink-text-muted transition-colors hover:bg-ink hover:text-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow"
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
+                aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+              >
+                {menuOpen ? (
+                  <X className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-6 w-6" aria-hidden="true" />
+                )}
+              </button>
+            ) : (
+              <div className="flex items-center gap-x-7 text-[15px] font-medium">
+                <ul className="flex items-center gap-x-7">
+                  {PRIMARY_LINKS.map(({ href, label }) => {
+                    const isActive = pathname === href;
+                    return (
+                      <li key={href}>
                         <Link
-                          key={href}
                           href={href}
-                          role="menuitem"
-                          onClick={() => setMoreOpen(false)}
                           className={
-                            "block min-h-11 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors flex items-center " +
-                            (isActive
-                              ? "bg-glow/10 text-glow"
-                              : "text-ink-text-muted hover:bg-ink/60 hover:text-glow")
+                            isActive
+                              ? "text-glow"
+                              : "text-ink-text-muted transition-colors hover:text-glow"
                           }
                         >
                           {label}
                         </Link>
-                      );
-                    })}
-                  </div>
-                )}
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div ref={moreRef} className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setMoreOpen((open) => !open)}
+                    className="flex min-h-11 items-center gap-1 rounded-md px-2 text-ink-text-muted transition-colors hover:text-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-glow"
+                    aria-expanded={moreOpen}
+                    aria-haspopup="true"
+                  >
+                    Menú
+                    <ChevronDown
+                      className={
+                        "h-4 w-4 transition-transform " +
+                        (moreOpen ? "rotate-180" : "")
+                      }
+                      aria-hidden="true"
+                    />
+                  </button>
+
+                  {moreOpen && (
+                    <div
+                      role="menu"
+                      className="absolute right-0 top-full mt-2 w-56 rounded-2xl border border-white/10 bg-ink-surface p-2 shadow-lg shadow-black/30"
+                    >
+                      {SECONDARY_LINKS.map(({ href, label }) => {
+                        const isActive = pathname === href;
+                        return (
+                          <Link
+                            key={href}
+                            href={href}
+                            role="menuitem"
+                            onClick={() => setMoreOpen(false)}
+                            className={
+                              "block min-h-11 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors flex items-center " +
+                              (isActive
+                                ? "bg-glow/10 text-glow"
+                                : "text-ink-text-muted hover:bg-ink/60 hover:text-glow")
+                            }
+                          >
+                            {label}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </nav>
+            )}
+          </nav>
+        </div>
 
         {showHamburger && menuOpen && (
           <div
