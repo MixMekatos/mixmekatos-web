@@ -1,9 +1,14 @@
 import Link from "next/link";
+import ScrollReveal from "@/app/components/motion/ScrollReveal";
 
 export default function HomeMayorista() {
   return (
     <section className="bg-(--color-bg) px-4 py-14">
-      <div className="max-w-4xl mx-auto rounded-3xl border border-masa/30 bg-masa/10 p-8 sm:p-12 flex flex-col sm:flex-row items-center gap-8">
+      <ScrollReveal
+        y={24}
+        duration={0.5}
+        className="max-w-4xl mx-auto rounded-3xl border border-masa/30 bg-masa/10 p-8 sm:p-12 flex flex-col sm:flex-row items-center gap-8"
+      >
         <div className="text-6xl shrink-0">📦</div>
         <div className="text-center sm:text-left">
           <h2 className="font-display text-xl font-semibold text-(--color-text) sm:text-2xl">
@@ -20,7 +25,7 @@ export default function HomeMayorista() {
             Saber más sobre eventos
           </Link>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

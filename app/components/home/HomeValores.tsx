@@ -1,4 +1,6 @@
 import { ChefHat, Flame, BadgeCheck, type LucideIcon } from "lucide-react";
+import StaggerGroup from "@/app/components/motion/StaggerGroup";
+import StaggerItem from "@/app/components/motion/StaggerItem";
 
 interface Valor {
   icon: LucideIcon;
@@ -33,10 +35,15 @@ export default function HomeValores() {
   return (
     <section className="border-y border-stone-200 bg-(--color-bg) px-4 py-2 sm:py-0">
       <h2 className="sr-only">Por qué elegir MixMekatos</h2>
-      <div className="mx-auto flex max-w-5xl flex-col divide-y divide-stone-200 sm:flex-row sm:items-center sm:divide-y-0 sm:divide-x sm:divide-dashed">
+      <StaggerGroup
+        stagger={0.06}
+        className="mx-auto flex max-w-5xl flex-col divide-y divide-stone-200 sm:flex-row sm:items-center sm:divide-y-0 sm:divide-x sm:divide-dashed"
+      >
         {VALORES.map(({ icon: Icon, label, desc }) => (
-          <div
+          <StaggerItem
             key={label}
+            y={10}
+            duration={0.35}
             className="flex items-center gap-3 py-3 sm:flex-1 sm:justify-center sm:px-5 sm:py-4"
           >
             <Icon className="h-5 w-5 shrink-0 text-accent" aria-hidden="true" />
@@ -44,9 +51,9 @@ export default function HomeValores() {
               <span className="font-semibold text-(--color-text)">{label}.</span>{" "}
               <span className="text-(--color-text-muted)">{desc}</span>
             </p>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
     </section>
   );
 }

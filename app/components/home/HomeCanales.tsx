@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, Store, CalendarHeart, type LucideIcon } from "lucide-react";
+import ScrollReveal from "@/app/components/motion/ScrollReveal";
+import StaggerGroup from "@/app/components/motion/StaggerGroup";
+import StaggerItem from "@/app/components/motion/StaggerItem";
 
 interface Canal {
   icon: LucideIcon;
@@ -51,16 +54,21 @@ export default function HomeCanales() {
   return (
     <section className="bg-stone-50 px-4 py-14">
       <div className="mx-auto max-w-5xl">
-        <h2 className="mb-10 text-center font-display text-2xl font-semibold text-(--color-text) sm:text-3xl">
-          ¿Cómo quieres tus mekatos?
-        </h2>
+        <ScrollReveal y={16} duration={0.45}>
+          <h2 className="mb-10 text-center font-display text-2xl font-semibold text-(--color-text) sm:text-3xl">
+            ¿Cómo quieres tus mekatos?
+          </h2>
+        </ScrollReveal>
 
         {/* Rail/ticket layout: one continuous card, channels separated by a
             dashed "tear line" instead of three isolated tiles — distinct
             from the bordered-card grid used elsewhere on the page. */}
-        <div className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm divide-y divide-dashed divide-stone-200 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:divide-x">
+        <StaggerGroup
+          stagger={0.08}
+          className="overflow-hidden rounded-3xl border border-stone-200 bg-white shadow-sm divide-y divide-dashed divide-stone-200 sm:grid sm:grid-cols-3 sm:divide-y-0 sm:divide-x"
+        >
           {CANALES.map(({ icon: Icon, title, desc, accentClass, bgClass, cta }) => (
-            <div key={title} className="flex flex-col gap-4 p-6 sm:p-7">
+            <StaggerItem key={title} y={20} duration={0.45} className="flex flex-col gap-4 p-6 sm:p-7">
               <span
                 className={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${bgClass} ${accentClass}`}
               >
@@ -99,9 +107,9 @@ export default function HomeCanales() {
               >
                 {cta.label} →
               </Link>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   );
