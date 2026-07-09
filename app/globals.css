@@ -16,6 +16,10 @@
   --color-bg: #fefdfb;
   --color-nav: #ffffff;
 
+  /* WhatsApp brand green (official hex #25D366). Single source of truth so
+     Footer.tsx and ProductModal.tsx don't each hardcode/duplicate the color. */
+  --color-whatsapp: #25d366;
+
   /* Breakpoints (sincronizados con app/lib/breakpoints.ts) */
   --bp-width-sm: 640px;
   --bp-width-md: 768px;
@@ -109,6 +113,17 @@ body {
 }
 
 .dark {
+  /* Dark-mode overrides for the brand tokens above. Same hue family as the
+     light palette, re-tuned for contrast against a dark background (checked
+     against WCAG AA — see COLOR-SYSTEM.md for the computed ratios). */
+  --color-bar: #a8503c;
+  --color-accent: #e07a3f;
+  --color-accent-hover: #ef8f57;
+  --color-text: #f5f1ea;
+  --color-text-muted: #b6ada3;
+  --color-bg: #171310;
+  --color-nav: #241d17;
+
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

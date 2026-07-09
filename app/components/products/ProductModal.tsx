@@ -267,7 +267,7 @@ function DetailsPanel({ product }: { product: Product }) {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] py-3.5 text-sm font-bold text-white transition hover:bg-[#20bd5a] active:scale-[0.98]"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-(--color-whatsapp) py-3.5 text-sm font-bold text-white transition hover:brightness-90 active:scale-[0.98]"
       >
         <MessageCircle className="h-5 w-5" />
         Pedir por WhatsApp

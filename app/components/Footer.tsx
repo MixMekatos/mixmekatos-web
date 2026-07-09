@@ -94,6 +94,8 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-lg h-10 w-32 overflow-hidden transition hover:opacity-90 hover:scale-105"
+              // Intentional exception: DiDi Food's own brand yellow, not a MixMekatos
+              // design token. Kept as a literal hex on purpose.
               style={{ backgroundColor: "#FFBB00" }}
             >
               <Image
@@ -115,7 +117,7 @@ export default function Footer() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#20bd5a] hover:scale-[1.02] w-fit"
+              className="inline-flex items-center gap-2 rounded-full bg-(--color-whatsapp) px-4 py-2 text-sm font-semibold text-white transition hover:brightness-90 hover:scale-[1.02] w-fit"
             >
               <MessageCircle className="h-4 w-4" />
               WhatsApp

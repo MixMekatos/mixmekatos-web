@@ -28,7 +28,15 @@ export function useRandomOfferToast() {
         description: oferta.description,
         position: "top-right",
         duration: 8000,
-        fill: "#8b3d2e",
+        // `fill` is forwarded by sileo straight onto an SVG <rect fill="...">
+        // (see node_modules/sileo internals), which is a CSS-compatible
+        // presentation attribute — the browser resolves var() there just
+        // like on any other CSS color property. Referencing the token here
+        // keeps this in sync with --color-bar in app/globals.css instead of
+        // duplicating the hex. If sileo ever changes to animate/interpolate
+        // this value frame-by-frame, a var() string may not tween — revisit
+        // then and fall back to a hardcoded hex kept in sync manually.
+        fill: "var(--color-bar)",
         button: {
           title: "Ver",
           onClick: () => {

@@ -27,6 +27,18 @@ const defaultStyles = {
 
 type Theme = "light" | "dark";
 
+// Default marker/route colors for this generic map UI primitive. These are
+// component-API defaults (every consumer can override them via props —
+// `color`, `pointColor`, `clusterColors`), not MixMekatos brand tokens, so
+// they intentionally stay local instead of living in globals.css.
+const DEFAULT_ROUTE_COLOR = "#4285F4"; // Google Maps blue, used for MapRoute's default line color
+const DEFAULT_CLUSTER_POINT_COLOR = "#3b82f6"; // Tailwind blue-500, default unclustered point
+const DEFAULT_CLUSTER_STEP_COLORS: [string, string, string] = [
+  "#22c55e", // green-500 — small clusters
+  "#eab308", // yellow-500 — medium clusters
+  "#ef4444", // red-500 — large clusters
+];
+
 // Check document class for theme (works with next-themes, etc.)
 function getDocumentTheme(): Theme | null {
   if (typeof document === "undefined") return null;
@@ -1050,7 +1062,7 @@ type MapRouteProps = {
 function MapRoute({
   id: propId,
   coordinates,
-  color = "#4285F4",
+  color = DEFAULT_ROUTE_COLOR,
   width = 3,
   opacity = 0.8,
   dashArray,
@@ -1199,9 +1211,9 @@ function MapClusterLayer<
   data,
   clusterMaxZoom = 14,
   clusterRadius = 50,
-  clusterColors = ["#22c55e", "#eab308", "#ef4444"],
+  clusterColors = DEFAULT_CLUSTER_STEP_COLORS,
   clusterThresholds = [100, 750],
-  pointColor = "#3b82f6",
+  pointColor = DEFAULT_CLUSTER_POINT_COLOR,
   onPointClick,
   onClusterClick,
 }: MapClusterLayerProps<P>) {
